@@ -191,7 +191,7 @@ def display_high_contrast_colormap (idx, target, prediction, prefix="", colormap
         pcm = ax[1].pcolormesh(prediction_plot, cmap=colormap, vmin=np.min(target), vmax = percent * np.max(target))
         ax[1].set_title("Prediction")
         fig.colorbar(pcm, ax=ax[1], extend='both', orientation='vertical')
-        fig.canvas.set_window_title(prefix+"High_Contrast_Depth_Evaluation")
+        fig.canvas.manager.set_window_title(prefix+"High_Contrast_Depth_Evaluation")
     if folder_name is not None:
         plt.savefig('%s/frame_%010d.png' % (folder_name, idx))
         plt.close(fig)
