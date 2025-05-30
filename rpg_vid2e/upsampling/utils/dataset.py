@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Union
 
 from fractions import Fraction
-from PIL import Image
+from PIL import Image, ImageOps
 import skvideo.io
 import numpy as np
 
@@ -52,18 +52,28 @@ class ImageSequence(Sequence):
 
     @staticmethod
     def _pil_loader(path):
+        # breakpoint()
         with open(path, 'rb') as f:
             img = Image.open(f)
             img = img.convert('RGB')
 
+            # breakpoint()
             w_orig, h_orig = img.size
-            w, h = w_orig//32*32, h_orig//32*32
+            pad_right = 32 - (w_orig % 32)
+            pad_bottom = 32 - (h_orig % 32)
+            # Pad: (left, top, right, bottom)
+            img = ImageOps.expand(img, border=(0, 0, pad_right, pad_bottom), fill=0)
+            # breakpoint()
 
-            left = (w_orig - w)//2
-            upper = (h_orig - h)//2
-            right = left + w
-            lower = upper + h
-            img = img.crop((left, upper, right, lower))
+
+            # w_orig, h_orig = img.size
+            # w, h = w_orig//32*32, h_orig//32*32
+
+            # left = (w_orig - w)//2
+            # upper = (h_orig - h)//2
+            # right = left + w
+            # lower = upper + h
+            # img = img.crop((left, upper, right, lower))
             return np.array(img).astype("float32") / 255
 
     def _get_path_from_name(self, file_names: Union[list, str]) -> Union[list, str]:

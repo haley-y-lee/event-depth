@@ -1,15 +1,15 @@
 {
-    "name": "e2depth_si_grad_loss",
+    "name": "testing14",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
         "train": {
-            "type": "SequenceSynchronizedFramesEventsDataset",
-            "base_folder": "small_train",
-            "depth_folder": "depth/data",
-            "frame_folder": "",
+            "type": "UpsampledFramesDataset",
+            "base_folder": "small_upsampled",
+            "depth_folder": "depths",
+            "frame_folder": "frames",
             "flow_folder": "",
-            "event_folder": "events/voxels",
+            "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
             "step_size": 1,
@@ -30,7 +30,7 @@
             "scale_factor": 0.5
         },
         "batch_size": 20,
-        "num_workers": 4,
+        "num_workers": 0,
         "pin_memory": true,
         "normalize": true,
         "shuffle": true,

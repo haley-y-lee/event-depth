@@ -1,8 +1,14 @@
-import pandas as pd
+# import pandas as pd
 import numpy as np
 import math
 import torch
 import os
+import matplotlib.pyplot as plt
+import glob
+import cv2
+
+import esim_torch
+
 
 def events_to_voxel_grid(events, num_bins, width, height):
     """
@@ -12,7 +18,7 @@ def events_to_voxel_grid(events, num_bins, width, height):
     :param num_bins: number of bins in the temporal axis of the voxel grid
     :param width, height: dimensions of the voxel grid
     """
-    breakpoint()
+
     assert(events.shape[1] == 4)
     assert(num_bins > 0)
     assert(width > 0)
@@ -55,9 +61,113 @@ def events_to_voxel_grid(events, num_bins, width, height):
 
     return voxel_grid
 
+
+
+def events_to_voxel_grid_torch(events, num_bins, width, height):
+    """
+    Build a voxel grid with bilinear interpolation in the time domain from a set of events.
+
+    :param events: a [N x 4] NumPy array containing one event per row in the form: [timestamp, x, y, polarity]
+    :param num_bins: number of bins in the temporal axis of the voxel grid
+    :param width, height: dimensions of the voxel grid
+    """
+
+    assert(events.shape[1] == 4)
+    assert(num_bins > 0)
+    assert(width > 0)
+    assert(height > 0)
+
+    voxel_grid = np.zeros((num_bins, height, width), np.float32).ravel()
+
+    # normalize the event timestamps so that they lie between 0 and num_bins
+    last_stamp = events[-1, 0]
+    first_stamp = events[0, 0]
+    deltaT = last_stamp - first_stamp
+
+    if deltaT == 0:
+        deltaT = 1.0
+
+    events[:, 0] = (num_bins - 1) * (events[:, 0] - first_stamp) / deltaT
+    ts = events[:, 0]
+    xs = events[:, 1].astype(int)
+    ys = events[:, 2].astype(int)
+    pols = events[:, 3]
+    pols[pols == 0] = -1  # polarity should be +1 / -1
+
+    tis = ts.astype(int)
+    dts = ts - tis
+    vals_left = pols * (1.0 - dts)
+    vals_right = pols * dts
+
+    valid_indices = tis < num_bins
+    try:
+        np.add.at(voxel_grid, xs[valid_indices] + ys[valid_indices] * width +
+                tis[valid_indices] * width * height, vals_left[valid_indices])
+    except:
+        breakpoint()
+
+    valid_indices = (tis + 1) < num_bins
+    np.add.at(voxel_grid, xs[valid_indices] + ys[valid_indices] * width +
+              (tis[valid_indices] + 1) * width * height, vals_right[valid_indices])
+
+    voxel_grid = np.reshape(voxel_grid, (num_bins, height, width))
+
+    return voxel_grid
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+breakpoint()
+esim = esim_torch.ESIM(contrast_threshold_neg=0.2,
+                        contrast_threshold_pos=0.2,
+                        refractory_period_ns=0)
+
+print("Loading images")
+image_files = sorted(glob.glob("../../../../DENSE/very_small/train_sequence_00_town01/rgb/frames/*.png"))
+images = np.stack([cv2.imread(f, cv2.IMREAD_GRAYSCALE) for f in image_files])
+timestamps_s = np.genfromtxt("../../../../DENSE/very_small/train_sequence_00_town01/rgb/frames/timestamps.txt")
+timestamps_ns = (timestamps_s * 1e9).astype("int64")
+
+log_images = np.log(images.astype("float32") / 255 + 1e-4)
+
+# generate torch tensors
+print("Loading data to GPU")
+device = "cuda:0"
+log_images = torch.from_numpy(log_images).to(device)
+timestamps_ns = torch.from_numpy(timestamps_ns).to(device)
+
+log_images.requires_grad_()
+# timestamps_ns.requires_grad_()
+
+# generate events with GPU support
+# print("Generating events")
+events = esim.forward(log_images, timestamps_ns)
+breakpoint()
+
+# render events 
+image = images[0]
+
+# print("Plotting")
+# first_few_events = {k: v[:10000].cpu().numpy() for k,v in events.items()}
+# image_color = np.stack([image,image,image],-1)
+# image_color[first_few_events['y'], first_few_events['x'], :] = 0
+# image_color[first_few_events['y'], first_few_events['x'], first_few_events['p']] = 255
+
+# breakpoint()
+
 vid_name = "driving_sample"
 
-df = pd.read_csv(f"../../input_csv/{vid_name}.csv", header=None)
+df = pd.read_csv(f"{vid_name}.csv", header=None)
 
 # swap columns to match expected format
 df[[0, 1, 2, 3]] = df[[3, 0, 1, 2]]

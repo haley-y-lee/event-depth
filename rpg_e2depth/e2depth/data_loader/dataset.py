@@ -7,6 +7,7 @@ from torch.utils.data import Dataset
 from .event_dataset import VoxelGridDataset
 from skimage import io
 from os.path import join
+import os
 import numpy as np
 from utils.util import first_element_greater_than, last_element_less_than
 import random
@@ -81,6 +82,7 @@ class SequenceSynchronizedFramesEventsDataset(Dataset):
         # add the first element (i.e. do not start with a pause)
         k = 0
         j = i * self.step_size
+        # breakpoint()
         item = self.dataset.__getitem__(j, seed)
         sequence.append(item)
 
@@ -110,6 +112,7 @@ class SequenceSynchronizedFramesEventsDataset(Dataset):
                 item = self.dataset.__getitem__(j + k, seed)
                 sequence.append(item)
 
+        # breakpoint()
         # down sample data
         if self.scale_factor < 1.0:
             for data_items in sequence:
@@ -178,11 +181,13 @@ class SynchronizedFramesEventsDataset(Dataset):
         # Check that the latest frame in the dataset has a timestamp >= the latest event frame
         assert(
             self.stamps[-1] >= self.event_dataset.get_last_stamp())
+        breakpoint()
 
     def __len__(self):
         return self.length
 
     def __getitem__(self, i, seed=None, reg_factor=3.70378):
+        # breakpoint()
         assert(i >= 0)
         assert(i < self.length)
 
@@ -268,7 +273,9 @@ class SynchronizedFramesEventsDataset(Dataset):
 
         # Get RGB frames
         if self.frame_folder is not None:
+            # breakpoint()
             try:
+                # breakpoint()
                 rgb_frame = io.imread(join(self.frame_folder, 'frame_{:010d}.png'.format(frame_idx)), as_gray=False).astype(np.float32)
                 if rgb_frame.shape[2] > 1:
                     gray_frame = rgb2gray(rgb_frame) #[H x W]
@@ -332,6 +339,229 @@ class SynchronizedFramesEventsDataset(Dataset):
                 item = {'frame': frame,
                         **events}
             return item
+        
+
+
+
+
+
+class SequenceUpsampledFramesDataset(Dataset):
+    """TODO Description"""
+
+    def __init__(self, base_folder, event_folder, depth_folder='frames', frame_folder='rgb', flow_folder='flow', semantic_folder='semantic',
+                 start_time=0.0, stop_time=0.0,
+                 sequence_length=2, transform=None,
+                 proba_pause_when_running=0.0, proba_pause_when_paused=0.0,
+                 step_size=20,
+                 clip_distance=100.0,
+                 normalize=True,
+                 scale_factor = 1.0, inverse=False):
+        assert(sequence_length > 0)
+        assert(step_size > 0)
+        assert(clip_distance > 0)
+        self.L = sequence_length
+        # breakpoint()
+        self.dataset = UpsampledFramesDataset(base_folder, event_folder, depth_folder, frame_folder, flow_folder, semantic_folder,
+                                                       start_time, stop_time, clip_distance,
+                                                       transform, normalize=normalize, inverse=inverse)
+        # self.event_dataset = self.dataset.event_dataset
+        self.step_size = step_size
+        if self.L >= self.dataset.length:
+            self.length = 0
+        else:
+            self.length = (self.dataset.length - self.L) // self.step_size + 1
+
+        # TODO handle scaling
+        self.scale_factor = scale_factor
+
+    def __len__(self):
+        return self.length
+    
+    def __getitem__(self, i):
+        """ TODO description
+        """
+        assert(i >= 0)
+        assert(i < self.length)
+
+        # generate a random seed here, that we will pass to the transform function
+        # of each item, to make sure all the items in the sequence are transformed
+        # in the same way
+        seed = random.randint(0, 2**32)
+
+        # data augmentation: add random, virtual "pauses",
+        # i.e. zero out random event tensors and repeat the last frame
+        sequence = []
+
+        # add the first element (i.e. do not start with a pause)
+        k = 0
+        j = i * self.step_size
+        # breakpoint()
+        item = self.dataset.__getitem__(j, seed)
+        sequence.append(item)
+
+        paused = False
+        for n in range(self.L - 1):
+
+            # decide whether we should make a "pause" at this step
+            # the probability of "pause" is conditioned on the previous state (to encourage long sequences)
+            u = np.random.rand()
+            if paused:
+                probability_pause = self.proba_pause_when_paused
+            else:
+                probability_pause = self.proba_pause_when_running
+            paused = (u < probability_pause)
+
+            if paused:
+                # add a tensor filled with zeros, paired with the last frame
+                # do not increase the counter
+                item = self.dataset.__getitem__(j + k, seed)
+                item['events'].fill_(0.0)
+                if 'flow' in item:
+                    item['flow'].fill_(0.0)
+                sequence.append(item)
+            else:
+                # normal case: append the next item to the list
+                k += 1
+                item = self.dataset.__getitem__(j + k, seed)
+                sequence.append(item)
+
+        # breakpoint()
+        # down sample data
+        if self.scale_factor < 1.0:
+            for data_items in sequence:
+                for k, item in data_items.items():
+                    if k is not "times":
+                        item = item[None]
+                        item = f.interpolate(item, scale_factor=self.scale_factor, mode='bilinear', align_corners=True)
+                        item = item[0]
+                        data_items[k] = item
+        return sequence
+
+
+
+
+class UpsampledFramesDataset(Dataset):
+    """
+    TODO add description
+    """
+
+    def __init__(self, base_folder, event_folder, depth_folder='frames', frame_folder='rgb', flow_folder='flow', semantic_folder='semantic',
+                 start_time=0.0, stop_time=0.0,
+                 sequence_length=2, transform=None,
+                 proba_pause_when_running=0.0, proba_pause_when_paused=0.0,
+                 step_size=20,
+                 clip_distance=100.0,
+                 normalize=True,
+                 scale_factor = 1.0, inverse=False):
+
+        self.base_folder = base_folder
+        self.depth_folder = join(self.base_folder, depth_folder if depth_folder is not None else 'frames')
+        self.frame_folder = join(self.base_folder, frame_folder if frame_folder is not None else 'rgb')
+        self.transform = transform
+        self.eps = 1e-06
+        self.clip_distance = clip_distance
+        self.inverse = inverse
+        self.normalize = normalize
+
+        self.depth_stamps = np.loadtxt(
+            join(self.depth_folder, 'timestamps.txt'))[:, 1]
+        
+        self.depth_stamps = self.depth_stamps - self.depth_stamps[0]    # shift so that stamps start at zero
+
+        self.frame_stamps = np.loadtxt(
+            join(self.frame_folder, 'timestamps.txt'))
+        
+        self.frame_stamps = self.frame_stamps - self.frame_stamps[0] 
+        
+        self.boundaries = np.loadtxt(
+            join(self.frame_folder, 'boundaries.txt'), dtype=int)
+        
+        self.length = self.depth_stamps.shape[0]
+        breakpoint()
+        
+        
+    def __len__(self):
+        return self.length
+    
+
+    def load_frames(self, start_idx, end_idx, seed):
+        frames = []
+        for i in range(start_idx, end_idx + 1):  # inclusive range
+            filename = f"{i:08d}.png"
+            filepath = join(self.frame_folder, filename)
+
+            if os.path.exists(filepath):
+                img = io.imread(filepath)
+                frames.append(img)
+            else:
+                print(f"Warning: {filepath} not found.")
+
+        frames = np.array(frames)
+        frames = frames.astype(np.float32)
+
+        if self.normalize:
+            frames /= 255.0 #normalize
+            frames = np.expand_dims(frames, axis=0) #expand to [1 x H x W]
+
+        frames = torch.from_numpy(frames)
+        if self.transform:
+            random.seed(seed)
+            num_frames = frames.shape[1]
+            frames = torch.stack([self.transform(frames[:,i]) for i in range(num_frames)])
+            # frames = frames.permute(1, 0, 2, 3) 
+
+        # SHAPE: num_frames x 1 x 260 x 346 TODO figure out whether this is correct
+
+        return frames
+
+    
+    def __getitem__(self, i, seed=None, reg_factor=3.70378):
+        if seed is None:
+            # if no specific random seed was passed, generate our own.
+            # otherwise, use the seed that was passed to us
+            seed = random.randint(0, 2**32)
+        
+        # Load images
+        start_idx, end_idx = self.boundaries[i]
+        frames = self.load_frames(start_idx, end_idx, seed)
+
+        # Load numpy depth ground truth frame 
+        frame = np.load(join(self.depth_folder, 'depth_{:010d}.npy'.format(i))).astype(np.float32)
+
+        # Clip to maximum distance
+        frame = np.clip(frame, 0.0, self.clip_distance)
+        # Normalize
+        frame = frame / np.amax(frame[~np.isnan(frame)])
+        #div = abs(np.min(np.log(frame+self.eps)))
+
+        # Inverse depth
+        if self.inverse:
+            frame = 1.0 / frame
+            frame = frame / np.amax(frame[~np.isnan(frame)])
+
+        #Convert to log depth
+        frame = 1.0 + np.log(frame) / reg_factor
+        # Clip between 0 and 1.0
+        frame = frame.clip(0, 1.0)
+
+        if len(frame.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
+            frame = np.expand_dims(frame, -1)
+
+        frame = np.moveaxis(frame, -1, 0)  # H x W x C -> C x H x W
+        frame = torch.from_numpy(frame) #numpy to tensor
+        
+        item = {'frame': frame, 'frames': frames}
+        return item
+
+        
+
+
+
+
+
+
+
+
 
 
 class EventsBetweenFramesDataset(Dataset):

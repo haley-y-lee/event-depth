@@ -38,6 +38,8 @@ if __name__ == "__main__":
     image_color = np.stack([image,image,image],-1)
     image_color[first_few_events['y'], first_few_events['x'], :] = 0
     image_color[first_few_events['y'], first_few_events['x'], first_few_events['p']] = 255
+    
+    breakpoint()
 
     plt.imshow(image_color)
     plt.show()

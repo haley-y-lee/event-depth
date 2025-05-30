@@ -120,6 +120,7 @@ class VoxelGridDataset(EventDataset):
         return self.num_bins
 
     def __getitem__(self, i, transform_seed=None):
+        # breakpoint()
         assert(i >= 0)
         assert(i < self.length)
 

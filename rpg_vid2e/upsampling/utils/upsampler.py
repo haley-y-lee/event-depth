@@ -58,14 +58,21 @@ class Upsampler:
 
             timestamps_list += timestamps
             for frame in total_frames:
+                # breakpoint()
+                frame = frame[:260, :346]   # crop back to original size
                 self._write_img(frame, idx, dest_imgs_dir)
                 idx += 1
 
+        # TODO CROP IMAGE BACK TO ORIGINAL DIMENSION
+        # breakpoint()
+
         timestamps_list.append(t1)
-        self._write_img(I1[0, ...], idx, dest_imgs_dir)
+        # self._write_img(I1[0, ...], idx, dest_imgs_dir)
+        self._write_img(I1[0, ...][:260, :346], idx, dest_imgs_dir)       # crop back to original size
         self._write_timestamps(timestamps_list, dest_timestamps_filepath)
 
     def _upsample_adaptive(self, I0, I1, t0, t1, num_bisections=-1):
+        # breakpoint()
         if num_bisections == 0:
             return [], []
 

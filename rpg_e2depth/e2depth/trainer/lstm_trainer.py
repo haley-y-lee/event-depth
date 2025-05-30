@@ -238,6 +238,7 @@ class LSTMTrainer(BaseTrainer):
         prev_frame, prev_predicted_frame = None, None
         for l in range(L):
             item = sequence[l]
+            breakpoint()
             new_events, new_frame, flow01, semantic = self._to_input_and_target(item)
             # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
             new_predicted_frame, states = self.model(new_events, prev_states)
@@ -376,7 +377,7 @@ class LSTMTrainer(BaseTrainer):
                 loss_dict['L_mse'] = mse
             if self.use_l1_loss:
                 loss_dict['L_l1'] = l1
-
+        # breakpoint()
         return loss_dict, \
             predicted_frames if record else None, \
             groundtruth_frames if record else None, \
@@ -405,6 +406,7 @@ class LSTMTrainer(BaseTrainer):
         for batch_idx, sequence in enumerate(self.data_loader):
 
             self.optimizer.zero_grad()
+            # breakpoint()
             losses, _, _, _ , _= self.forward_pass_sequence(sequence)
             loss = losses['loss']
             loss.backward()

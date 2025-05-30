@@ -42,6 +42,7 @@ def concatenate_subfolders(base_folder, dataset_type, event_folder, depth_folder
                                                  scale_factor=scale_factor,
                                                  inverse = inverse))
     concat_dataset = ConcatDataset(train_datasets)
+    # breakpoint()
 
     return concat_dataset
 
