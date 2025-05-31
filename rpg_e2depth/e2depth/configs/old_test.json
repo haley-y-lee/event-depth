@@ -1,10 +1,10 @@
 {
-    "name": "testing14",
+    "name": "testing54",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
         "train": {
-            "type": "UpsampledFramesDataset",
+            "type": "SequenceUpsampledFramesDataset",
             "base_folder": "small_upsampled",
             "depth_folder": "depths",
             "frame_folder": "frames",
@@ -29,7 +29,7 @@
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
-        "batch_size": 20,
+        "batch_size": 2,
         "num_workers": 0,
         "pin_memory": true,
         "normalize": true,

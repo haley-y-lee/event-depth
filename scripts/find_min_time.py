@@ -1,4 +1,6 @@
-with open("../../DENSE/train_upsampled_2/train_sequence_01_town02/timestamps.txt", "r") as f:
+filename = "../../DENSE/train_upsampled_2/train_sequence_01_town02/timestamps.txt"
+
+with open(filename, "r") as f:
     numbers = [float(line.strip()) for line in f if line.strip()]
 
 # Sort the numbers (if needed — remove if already sorted in file)

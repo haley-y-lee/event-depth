@@ -139,11 +139,14 @@ class VoxelGridDataset(EventDataset):
                     event_tensor[mask] = (event_tensor[mask] - mean) / stddev
 
         self.num_bins = event_tensor.shape[0]
+        # print(f"Number of bins: {self.num_bins}")
 
         events = torch.from_numpy(event_tensor)  # [C x H x W]
+        # print(f"Shape before transform: {events.shape}")
         if self.transform:
             random.seed(transform_seed)
             events = self.transform(events)
+        # print(f"Shape after transform: {events.shape}")
 
         return {'events': events}  # [num_bins x H x W] tensor
 

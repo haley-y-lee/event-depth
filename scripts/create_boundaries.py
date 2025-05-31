@@ -12,7 +12,7 @@ index = 0
 with open('/home/abc256/mono/DENSE/output.txt', 'w') as f:
     for i in range(1,1001):
         start = index
-        while (index < frame_stamps.shape[0] and frame_stamps[index] < i * dt):
+        while (index < frame_stamps.shape[0]-1 and frame_stamps[index] < i * dt):
             index += 1
         
         f.write(f"{start} {index}\n")

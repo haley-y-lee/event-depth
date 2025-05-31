@@ -1,5 +1,5 @@
 {
-    "name": "test3",
+    "name": "test35",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
@@ -7,7 +7,7 @@
             "type": "SequenceSynchronizedFramesEventsDataset",
             "base_folder": "train",
             "depth_folder": "depth/data",
-            "frame_folder": "rgb/frames",
+            "frame_folder": "",
             "flow_folder": "",
             "event_folder": "events/voxels",
             "proba_pause_when_running": 0.0,
@@ -20,7 +20,7 @@
             "type": "SequenceSynchronizedFramesEventsDataset",
             "base_folder": "valid",
             "depth_folder": "depth/data",
-            "frame_folder": "rgb/frames",
+            "frame_folder": "",
             "flow_folder": "",
             "event_folder": "events/voxels",
             "proba_pause_when_running": 0.0,
@@ -29,7 +29,7 @@
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
-        "batch_size": 20,
+        "batch_size": 2,
         "num_workers": 0,
         "pin_memory": true,
         "normalize": true,

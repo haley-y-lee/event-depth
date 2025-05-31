@@ -181,7 +181,7 @@ class SynchronizedFramesEventsDataset(Dataset):
         # Check that the latest frame in the dataset has a timestamp >= the latest event frame
         assert(
             self.stamps[-1] >= self.event_dataset.get_last_stamp())
-        breakpoint()
+        # breakpoint()
 
     def __len__(self):
         return self.length
@@ -373,6 +373,7 @@ class SequenceUpsampledFramesDataset(Dataset):
 
         # TODO handle scaling
         self.scale_factor = scale_factor
+        # breakpoint()
 
     def __len__(self):
         return self.length
@@ -388,53 +389,32 @@ class SequenceUpsampledFramesDataset(Dataset):
         # in the same way
         seed = random.randint(0, 2**32)
 
-        # data augmentation: add random, virtual "pauses",
-        # i.e. zero out random event tensors and repeat the last frame
         sequence = []
 
         # add the first element (i.e. do not start with a pause)
         k = 0
         j = i * self.step_size
         # breakpoint()
+        # TODO Combine this all in for loop
         item = self.dataset.__getitem__(j, seed)
         sequence.append(item)
 
-        paused = False
+        # construct sequence
         for n in range(self.L - 1):
-
-            # decide whether we should make a "pause" at this step
-            # the probability of "pause" is conditioned on the previous state (to encourage long sequences)
-            u = np.random.rand()
-            if paused:
-                probability_pause = self.proba_pause_when_paused
-            else:
-                probability_pause = self.proba_pause_when_running
-            paused = (u < probability_pause)
-
-            if paused:
-                # add a tensor filled with zeros, paired with the last frame
-                # do not increase the counter
-                item = self.dataset.__getitem__(j + k, seed)
-                item['events'].fill_(0.0)
-                if 'flow' in item:
-                    item['flow'].fill_(0.0)
-                sequence.append(item)
-            else:
-                # normal case: append the next item to the list
-                k += 1
-                item = self.dataset.__getitem__(j + k, seed)
-                sequence.append(item)
+            k += 1
+            item = self.dataset.__getitem__(j + k, seed)
+            sequence.append(item)
 
         # breakpoint()
         # down sample data
-        if self.scale_factor < 1.0:
-            for data_items in sequence:
-                for k, item in data_items.items():
-                    if k is not "times":
-                        item = item[None]
-                        item = f.interpolate(item, scale_factor=self.scale_factor, mode='bilinear', align_corners=True)
-                        item = item[0]
-                        data_items[k] = item
+        # if self.scale_factor < 1.0:
+        #     for data_items in sequence:
+        #         for k, item in data_items.items():
+        #             if k is not "times":
+        #                 item = item[None]
+        #                 item = f.interpolate(item, scale_factor=self.scale_factor, mode='bilinear', align_corners=True)
+        #                 item = item[0]
+        #                 data_items[k] = item
         return sequence
 
 
@@ -477,7 +457,7 @@ class UpsampledFramesDataset(Dataset):
             join(self.frame_folder, 'boundaries.txt'), dtype=int)
         
         self.length = self.depth_stamps.shape[0]
-        breakpoint()
+        # breakpoint()
         
         
     def __len__(self):
@@ -525,6 +505,9 @@ class UpsampledFramesDataset(Dataset):
         start_idx, end_idx = self.boundaries[i]
         frames = self.load_frames(start_idx, end_idx, seed)
 
+        timestamps = self.frame_stamps[start_idx:end_idx+1]
+        timestamps = torch.from_numpy(timestamps)
+
         # Load numpy depth ground truth frame 
         frame = np.load(join(self.depth_folder, 'depth_{:010d}.npy'.format(i))).astype(np.float32)
 
@@ -549,8 +532,15 @@ class UpsampledFramesDataset(Dataset):
 
         frame = np.moveaxis(frame, -1, 0)  # H x W x C -> C x H x W
         frame = torch.from_numpy(frame) #numpy to tensor
-        
-        item = {'frame': frame, 'frames': frames}
+
+        if self.transform:
+            random.seed(seed)
+            frame = self.transform(frame)
+
+        # frame is depth frame corresponding to voxel grid
+        # frames is sequence of upsampled images corresponding to voxel grid
+        # stamps is timestamps for each frame in frames (used in voxel grid computation)
+        item = {'frame': frame, 'frames': frames, 'stamps': timestamps}
         return item
 
         

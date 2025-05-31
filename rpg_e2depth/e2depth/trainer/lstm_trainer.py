@@ -210,6 +210,7 @@ class LSTMTrainer(BaseTrainer):
     def forward_pass_sequence(self, sequence, record=False):
         # 'sequence' is a list containing L successive events <-> frames pairs
         # each element in 'sequence' is a dictionary containing the keys 'events' and 'frame'
+        # breakpoint()
         L = len(sequence)
         assert(L > 0)
 
@@ -238,7 +239,7 @@ class LSTMTrainer(BaseTrainer):
         prev_frame, prev_predicted_frame = None, None
         for l in range(L):
             item = sequence[l]
-            breakpoint()
+            # breakpoint()
             new_events, new_frame, flow01, semantic = self._to_input_and_target(item)
             # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
             new_predicted_frame, states = self.model(new_events, prev_states)
@@ -383,6 +384,311 @@ class LSTMTrainer(BaseTrainer):
             groundtruth_frames if record else None, \
             event_previews if record else None, \
             grad_loss_frames if record else None
+    
+
+
+
+
+
+
+
+    def compute_event_frame(self, diff):
+        """
+        Implements equation (3) from "Differentiable Event Stream Simulator for Non-Rigid 3D Tracking.
+        The parameter values for eps and w are chosen by my best guess. C is chosen to be what was used
+        in the Vid2Events codebase for their event simulation method.
+        """
+
+        eps = 1e-4
+        C = 0.2
+        w = 100
+        return ((diff + eps) / (torch.abs(diff) + eps)) * (1 / (1 + torch.exp(-w*torch.abs(diff)+w*C)))
+    
+    def event_frames_to_voxel_grid(self, event_frames, timestamps, num_bins=5):
+        """
+        Computes the corresponding voxel grid for a list of event frames.
+
+        Parameters:
+            event_frames: N x height x width, where N is the number of event frames contributing to this voxel grid.
+            timestamps: N-length list of timestamps for each event frame.
+            num_bins: Number of bins for this voxel grid.
+        """
+        _, height, width = event_frames.shape
+
+        voxel_grid = (torch.zeros((num_bins, height, width), dtype=torch.float32)).to(self.gpu)
+
+        # normalize the event timestamps so that they lie between 0 and num_bins
+        last_stamp = timestamps[-1]
+        first_stamp = timestamps[0]
+        deltaT = last_stamp - first_stamp
+
+        if deltaT == 0:
+            deltaT = 1.0
+
+        ts = (num_bins - 1) * (timestamps - first_stamp) / deltaT   # normalized timestamps
+
+        # Each event frame falls between two bins of the voxel grid, and contributes to both of these bins.
+
+        # tis and tis_plus_1 represent the bins to the left and right of each event frame, respectively.
+        tis = torch.floor(ts).to(torch.int)     # rounded-down timestamps
+        tis_plus_1 = torch.clamp(tis + 1, max=num_bins - 1)
+
+        dts = ts - tis      # each will be between 0 and 1. Represents weight to be placed on accumulation to left vs right bin
+
+        vals_left = ((1 - dts)[:, None, None] * event_frames)
+        vals_right = (dts[:, None, None] * event_frames)
+
+        # Accumulate left side
+        voxel_grid.index_add_(0, tis, vals_left)
+
+        # Accumulate right side
+        voxel_grid.index_add_(0, tis_plus_1, vals_right)
+
+        return voxel_grid
+
+
+    def forward_pass_upsampled_sequence(self, sequence, record=False):
+        # TODO description
+        # 'sequence' is a list containing L successive events <-> frames pairs
+        # each element in 'sequence' is a dictionary containing the keys 'events' and 'frame'
+        # network_input = item['events'].to(self.gpu)
+        # breakpoint()
+        N = len(sequence)       # batch size
+        L = len(sequence[0])    # voxel grid sequence length
+        assert(N > 0)
+        assert(L > 0)
+
+        # voxel_grids = (torch.zeros((num_grids, num_bins, height, width), dtype=torch.float32)).to("cuda:0")
+        #TODO don't hardcode
+        voxel_grids = (torch.zeros((N, L, 5, 112, 112), dtype=torch.float32)).to(self.gpu)
+        frame = (torch.zeros((N, L, 1, 112, 112), dtype=torch.float32)).to(self.gpu)
+
+        # TODO put everything on gpu
+
+        # breakpoint()
+        for i in range(N):
+            for j in range(L):
+                # breakpoint()
+                sequence[i][j]['frames'] = sequence[i][j]['frames'].to(self.gpu)
+                sequence[i][j]['stamps'] = sequence[i][j]['stamps'].to(self.gpu)
+                sequence[i][j]['frame'] = sequence[i][j]['frame'].to(self.gpu)
+                # TODO add psf convolution, then add downsampling, compute height and width
+                epsilon = 1e-6
+                sequence[i][j]['frames'] = torch.log(sequence[i][j]['frames'] + epsilon)
+                num_images = (sequence[i][j]['frames']).shape[0]
+
+                diffs = sequence[i][j]['frames'][1:] - sequence[i][j]['frames'][:num_images-1]
+                event_frames = torch.stack([self.compute_event_frame(d) for d in diffs])
+                stamps = sequence[i][j]['stamps']
+                stamps = stamps[1:]
+                stamps = stamps.float()
+
+
+                voxel_grids[i,j] = self.event_frames_to_voxel_grid(torch.squeeze(event_frames), stamps)
+                # breakpoint()
+                # voxel_grids[i,j] = (voxel_grids[i,j] - voxel_grids[i,j].mean()) / voxel_grids[i,j].std()    # voxel grid normalization
+
+                frame[i][j] = sequence[i][j]['frame']
+                # TODO add voxel grid preprocessing
+        # breakpoint()
+        # TODO reshape voxel grids and depth frame
+        voxel_grids = voxel_grids.permute(1, 0, 2, 3, 4)
+        frame = frame.permute(1, 0, 2, 3, 4)
+        # breakpoint()
+
+
+
+
+
+
+
+
+
+
+
+        # list of per-iteration losses (summed after the loop)
+        iter_losses = [] # main defined loss
+        iter_grad_losses = []
+        iter_smooth_losses = []
+        iter_ordinal_losses = []
+        iter_temporal_losses = []
+        iter_mse_losses = []
+        iter_l1_losses = []
+
+        if record:
+            event_previews = []
+            predicted_frames = []  # list of intermediate predicted frames
+            groundtruth_frames = []
+            grad_loss_frames = [] # list of loss visualization frames
+
+        if self.use_temporal_consistency_loss:
+            assert(self.L0 >= 1)
+            assert(self.L0 < L)
+
+        # initialize the K last predicted frames with -1
+        # N, _, H, W = sequence[0]['frame'].shape
+        prev_states = None
+        prev_frame, prev_predicted_frame = None, None
+        for l in range(L):
+            # breakpoint()
+            new_events = voxel_grids[l]
+            new_frame = frame[l]
+            # item = sequence[l]
+            # breakpoint()
+            # new_events, new_frame, flow01, semantic = self._to_input_and_target(item)
+            # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
+            new_predicted_frame, states = self.model(new_events, prev_states)
+
+            # with torch.no_grad():
+            #     print('gt. std: {:.3f}'.format(new_frame.std()))
+            #     print('rec. std: {:.3f}'.format(new_predicted_frame.std()))
+
+            prev_states = states
+
+            if record:
+                with torch.no_grad():
+                    event_previews.append(torch.sum(new_events, dim=1).unsqueeze(0))
+                    predicted_frames.append(new_predicted_frame.clone())
+                    groundtruth_frames.append(new_frame.clone())
+
+            # Compute the nominal loss
+            if self.loss_params is not None:
+                iter_losses.append(
+                    self.loss(new_predicted_frame, new_frame, **self.loss_params))
+            else:
+                iter_losses.append(self.loss(new_predicted_frame, new_frame))
+
+            # Compute the temporal consistency loss
+            if self.use_temporal_consistency_loss:
+                if l >= self.L0:
+                    assert(prev_frame is not None)
+                    assert(prev_predicted_frame is not None)
+                    iter_temporal_losses.append(
+                        temporal_consistency_loss(prev_frame, new_frame,
+                                                  prev_predicted_frame, new_predicted_frame,
+                                                  flow01))
+
+            # Compute the multi scale gradient loss
+            if self.use_grad_loss:
+                if record:
+                    with torch.no_grad():
+                        grad_loss_frames.append( multi_scale_grad_loss(new_predicted_frame, new_frame, preview = record))
+                else:
+                    grad_loss = multi_scale_grad_loss(new_predicted_frame, new_frame)
+                    iter_grad_losses.append(grad_loss)
+
+            # Compute the smooth loss
+            if self.use_smooth_loss:
+                smooth_loss = depth_smoothness_loss(new_predicted_frame, new_events)
+                iter_smooth_losses.append(smooth_loss)
+            
+            # Compute the ordinal loss
+            if self.use_ordinal_loss:
+                ordinal_loss = ordinal_depth_loss(new_predicted_frame, new_frame, new_events,
+                                                    self.percent_ordinal_loss, self.method_ordinal_loss)
+                iter_ordinal_losses.append(ordinal_loss)
+
+            # Compute the mse loss
+            if self.use_mse_loss:
+                # compute the MSE loss at a lower resolution
+                downsampling_factor = self.mse_loss_downsampling_factor
+
+                if downsampling_factor != 1.0:
+                    new_frame_downsampled = f.interpolate(
+                        new_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    new_predicted_frame_downsampled = f.interpolate(
+                        new_predicted_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    mse = mse_loss(new_predicted_frame_downsampled, new_frame_downsampled)
+                else:
+                    mse = mse_loss(new_predicted_frame, new_frame)
+                iter_mse_losses.append(mse)
+            
+            # Compute the l1 loss
+            if self.use_l1_loss:
+                # compute the L1 loss at a lower resolution
+                downsampling_factor = self.l1_loss_downsampling_factor
+
+                if downsampling_factor != 1.0:
+                    new_frame_downsampled = f.interpolate(
+                        new_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    new_predicted_frame_downsampled = f.interpolate(
+                        new_predicted_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    l1 = l1_loss(new_predicted_frame_downsampled, new_frame_downsampled)
+                else:
+                    l1 = l1_loss(new_predicted_frame, new_frame)
+                iter_l1_losses.append(l1)
+ 
+            prev_frame = new_frame
+            prev_predicted_frame = new_predicted_frame
+
+        nominal_loss = sum(iter_losses) / float(L)
+
+        losses = []
+        losses.append(nominal_loss)
+
+        # Add temporal consistenvy loss to the losses
+        if self.use_temporal_consistency_loss:
+            temporal_loss = self.weight_temporal_consistency * sum(iter_temporal_losses) / float(L - self.L0)
+            losses.append(temporal_loss)
+
+        # Add multi scale gradient loss
+        if self.use_grad_loss:
+            grad_loss = self.weight_grad_loss * sum(iter_grad_losses)/float(L)
+            losses.append(grad_loss)
+
+        # Add multi scale smooth loss
+        if self.use_smooth_loss:
+            smooth_loss = self.weight_smooth_loss * sum(iter_smooth_losses)/float(L)
+            losses.append(smooth_loss)
+
+        # Add ordinal depth loss
+        if self.use_ordinal_loss:
+            ordinal_loss = self.weight_ordinal_loss * sum(iter_ordinal_losses)/float(L)
+            losses.append(ordinal_loss)
+
+        # Add mse loss to the losses
+        if self.use_mse_loss:
+            mse = self.weight_mse_loss * sum(iter_mse_losses) / float(L)
+            losses.append(mse)
+
+        # Add L1 loss to the losses
+        if self.use_l1_loss:
+            l1 = self.weight_l1_loss * sum(iter_l1_losses) / float(L)
+            losses.append(l1)
+
+        loss = sum(losses)
+
+        # add all losses in a dict for logging
+        with torch.no_grad():
+            loss_dict = {'loss': loss, 'L_si': nominal_loss}
+            if self.use_temporal_consistency_loss:
+                loss_dict['L_tc'] = temporal_loss
+            if self.use_grad_loss:
+                loss_dict['L_grad'] = grad_loss
+            if self.use_smooth_loss:
+                loss_dict['L_smooth'] = smooth_loss
+            if self.use_ordinal_loss:
+                loss_dict['L_ord'] = ordinal_loss
+            if self.use_mse_loss:
+                loss_dict['L_mse'] = mse
+            if self.use_l1_loss:
+                loss_dict['L_l1'] = l1
+        # breakpoint()
+        return loss_dict, \
+            predicted_frames if record else None, \
+            groundtruth_frames if record else None, \
+            event_previews if record else None, \
+            grad_loss_frames if record else None
+    
+
+
+
+
+
+
+
+
+
 
     def _train_epoch(self, epoch):
         """
@@ -403,11 +709,14 @@ class LSTMTrainer(BaseTrainer):
         self.model.train()
 
         all_losses_in_batch = {}
+        # breakpoint()
         for batch_idx, sequence in enumerate(self.data_loader):
-
+            print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
             # breakpoint()
-            losses, _, _, _ , _= self.forward_pass_sequence(sequence)
+            # losses, _, _, _ , _= self.forward_pass_sequence(sequence)
+            losses, _, _, _ , _= self.forward_pass_upsampled_sequence(sequence)
+            # breakpoint()       
             loss = losses['loss']
             loss.backward()
             if batch_idx % 25 == 0:
