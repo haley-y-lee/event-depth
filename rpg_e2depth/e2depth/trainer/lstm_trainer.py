@@ -5,6 +5,7 @@ from torchvision import utils
 from model.loss import temporal_consistency_loss, mse_loss, l1_loss, multi_scale_grad_loss, depth_smoothness_loss, ordinal_depth_loss
 from utils.training_utils import select_evenly_spaced_elements, plot_grad_flow, plot_grad_flow_bars
 import torch.nn.functional as f
+import torch.nn as nn
 
 
 def quick_norm(img):
@@ -36,6 +37,8 @@ class LSTMTrainer(BaseTrainer):
         self.movie = bool(config['trainer'].get('movie', True))
         self.still_previews = bool(config['trainer'].get('still_previews', False))
         self.grid_loss = bool(config['trainer'].get('grid_loss', False))
+
+        self.psf_model = self.DepthDependentPSF(2, 80, 25)  # TODO maybe reorganize
 
         # Parameters for temporal consistency loss
         if 'temporal_consistency_loss' in config:
@@ -445,6 +448,48 @@ class LSTMTrainer(BaseTrainer):
         voxel_grid.index_add_(0, tis_plus_1, vals_right)
 
         return voxel_grid
+    
+
+
+
+    class DepthDependentPSF(nn.Module):
+        def __init__(self, min_depth, max_depth, psf_size=5):
+            super().__init__()
+            self.min_depth = min_depth
+            self.max_depth = max_depth
+
+            self.num_depths = self.max_depth - self.min_depth + 1
+            self.psf_size = psf_size
+
+            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0)
+            center = psf_size // 2
+            psfs[:, 0, center, center] = 5.0
+
+            self.psfs = nn.Parameter(psfs).to("cuda:0")
+
+        def forward(self, image, depth):
+            """
+            image: [B, 1, H, W] - grayscale input
+            depth: [B, 1, H, W] - integer-valued depth map
+            """
+            # breakpoint()
+            output = torch.zeros_like(image)
+
+            for d in range(self.min_depth, self.max_depth+1):
+                mask = (depth == d).float() 
+
+                if mask.sum() == 0:
+                    continue  # no pixels at this depth, skip
+
+                raw_psf = self.psfs[d-self.min_depth:d-self.min_depth+1]               
+                nonneg_psf = f.softplus(raw_psf)                             # ensure nonnegative
+                psf = nonneg_psf / nonneg_psf.sum(dim=(-2, -1), keepdim=True)
+                
+                filtered = f.conv2d(image, psf, padding=self.psf_size // 2)    #TODO verify padding is correct
+
+                output += filtered * mask
+            # breakpoint()
+            return output
 
 
     def forward_pass_upsampled_sequence(self, sequence, record=False):
@@ -472,12 +517,21 @@ class LSTMTrainer(BaseTrainer):
                 sequence[i][j]['frames'] = sequence[i][j]['frames'].to(self.gpu)
                 sequence[i][j]['stamps'] = sequence[i][j]['stamps'].to(self.gpu)
                 sequence[i][j]['frame'] = sequence[i][j]['frame'].to(self.gpu)
+                sequence[i][j]['metric_depth'] = sequence[i][j]['metric_depth'].to(self.gpu)
+
+
                 # TODO add psf convolution, then add downsampling, compute height and width
+                # breakpoint()
+                depth = torch.clamp(sequence[i][j]['metric_depth'], min=2, max=80)     # TODO check if needed (probably not)
+                depth_bins = torch.round(depth)
+                convolved_frames = self.psf_model(sequence[i][j]['frames'], depth_bins)
+
+
                 epsilon = 1e-6
-                sequence[i][j]['frames'] = torch.log(sequence[i][j]['frames'] + epsilon)
+                log_frames = torch.log(convolved_frames + epsilon)
                 num_images = (sequence[i][j]['frames']).shape[0]
 
-                diffs = sequence[i][j]['frames'][1:] - sequence[i][j]['frames'][:num_images-1]
+                diffs = log_frames[1:] - log_frames[:num_images-1]
                 event_frames = torch.stack([self.compute_event_frame(d) for d in diffs])
                 stamps = sequence[i][j]['stamps']
                 stamps = stamps[1:]
@@ -711,6 +765,7 @@ class LSTMTrainer(BaseTrainer):
         all_losses_in_batch = {}
         # breakpoint()
         for batch_idx, sequence in enumerate(self.data_loader):
+            breakpoint()
             print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
             # breakpoint()

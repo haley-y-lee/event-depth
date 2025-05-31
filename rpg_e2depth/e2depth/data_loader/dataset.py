@@ -510,9 +510,15 @@ class UpsampledFramesDataset(Dataset):
 
         # Load numpy depth ground truth frame 
         frame = np.load(join(self.depth_folder, 'depth_{:010d}.npy'.format(i))).astype(np.float32)
+        metric_depth = frame.copy()
+
+
+
+
 
         # Clip to maximum distance
         frame = np.clip(frame, 0.0, self.clip_distance)
+
         # Normalize
         frame = frame / np.amax(frame[~np.isnan(frame)])
         #div = abs(np.min(np.log(frame+self.eps)))
@@ -537,10 +543,30 @@ class UpsampledFramesDataset(Dataset):
             random.seed(seed)
             frame = self.transform(frame)
 
+
+        # Clip to maximum distance
+        metric_depth = np.clip(metric_depth, 0.0, self.clip_distance)
+
+        if len(metric_depth.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
+            metric_depth = np.expand_dims(metric_depth, -1)
+
+        metric_depth = np.moveaxis(metric_depth, -1, 0)  # H x W x C -> C x H x W
+        metric_depth = torch.from_numpy(metric_depth) #numpy to tensor
+
+        if self.transform:
+            random.seed(seed)
+            metric_depth = self.transform(metric_depth)
+
+
+
+
+
+
+
         # frame is depth frame corresponding to voxel grid
         # frames is sequence of upsampled images corresponding to voxel grid
         # stamps is timestamps for each frame in frames (used in voxel grid computation)
-        item = {'frame': frame, 'frames': frames, 'stamps': timestamps}
+        item = {'frame': frame, 'metric_depth': metric_depth, 'frames': frames, 'stamps': timestamps}
         return item
 
         
