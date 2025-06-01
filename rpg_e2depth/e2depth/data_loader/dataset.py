@@ -346,7 +346,7 @@ class SynchronizedFramesEventsDataset(Dataset):
 
 
 class SequenceUpsampledFramesDataset(Dataset):
-    """TODO Description"""
+    """Load sequences of UpsampledFramesDataset items, each of which corresponds to a voxel grid."""
 
     def __init__(self, base_folder, event_folder, depth_folder='frames', frame_folder='rgb', flow_folder='flow', semantic_folder='semantic',
                  start_time=0.0, stop_time=0.0,
@@ -360,26 +360,20 @@ class SequenceUpsampledFramesDataset(Dataset):
         assert(step_size > 0)
         assert(clip_distance > 0)
         self.L = sequence_length
-        # breakpoint()
         self.dataset = UpsampledFramesDataset(base_folder, event_folder, depth_folder, frame_folder, flow_folder, semantic_folder,
                                                        start_time, stop_time, clip_distance,
                                                        transform, normalize=normalize, inverse=inverse)
-        # self.event_dataset = self.dataset.event_dataset
         self.step_size = step_size
         if self.L >= self.dataset.length:
             self.length = 0
         else:
             self.length = (self.dataset.length - self.L) // self.step_size + 1
 
-        # TODO handle scaling
-        self.scale_factor = scale_factor
-        # breakpoint()
-
     def __len__(self):
         return self.length
     
     def __getitem__(self, i):
-        """ TODO description
+        """ Returns a sequence of UpsampledFramesDataset items, each of which corresponds to a voxel grid.
         """
         assert(i >= 0)
         assert(i < self.length)
@@ -390,39 +384,32 @@ class SequenceUpsampledFramesDataset(Dataset):
         seed = random.randint(0, 2**32)
 
         sequence = []
-
-        # add the first element (i.e. do not start with a pause)
-        k = 0
         j = i * self.step_size
-        # breakpoint()
-        # TODO Combine this all in for loop
-        item = self.dataset.__getitem__(j, seed)
-        sequence.append(item)
 
         # construct sequence
-        for n in range(self.L - 1):
-            k += 1
+        for k in range(self.L):
             item = self.dataset.__getitem__(j + k, seed)
             sequence.append(item)
 
-        # breakpoint()
-        # down sample data
-        # if self.scale_factor < 1.0:
-        #     for data_items in sequence:
-        #         for k, item in data_items.items():
-        #             if k is not "times":
-        #                 item = item[None]
-        #                 item = f.interpolate(item, scale_factor=self.scale_factor, mode='bilinear', align_corners=True)
-        #                 item = item[0]
-        #                 data_items[k] = item
         return sequence
 
 
 
 
 class UpsampledFramesDataset(Dataset):
-    """
-    TODO add description
+    """Loads the upsampled frames and depth frame that correspond to a voxel grid.
+
+    Each element of the dataset is a dictionary of the form:
+
+        {'frame': frame, 'metric_depth': metric_depth, 'frames': frames, 'stamps': timestamps}
+
+    where:
+
+    * 'frame': 1 x height x width tensor containing the depth map corresponding to this voxel grid. 
+       Note that 'frame' has already been preprocessed, i.e. converted to normalized log depth.
+    * 'metric_depth': 1 x height x width tensor containing the raw unprocessed depth map (used for depth-dependent psf simulation).
+    * 'frames': num_frames x 1 x height x width tensor containing the grayscale frames that contribute to this voxel grid.
+    * 'stamps': num_frames-length tensor containing the timestamps of each frame (used in voxel grid computation).
     """
 
     def __init__(self, base_folder, event_folder, depth_folder='frames', frame_folder='rgb', flow_folder='flow', semantic_folder='semantic',
@@ -453,6 +440,7 @@ class UpsampledFramesDataset(Dataset):
         
         self.frame_stamps = self.frame_stamps - self.frame_stamps[0] 
         
+        # The i-th line of this file contains the starting and ending index of the sequence of frames corresponding to i-th voxel grid
         self.boundaries = np.loadtxt(
             join(self.frame_folder, 'boundaries.txt'), dtype=int)
         
@@ -480,28 +468,23 @@ class UpsampledFramesDataset(Dataset):
         frames = frames.astype(np.float32)
 
         if self.normalize:
-            frames /= 255.0 #normalize
-            frames = np.expand_dims(frames, axis=0) #expand to [1 x H x W]
+            frames /= 255.0 # normalize
+            frames = np.expand_dims(frames, axis=0) # expand to [1 x H x W]
 
         frames = torch.from_numpy(frames)
         if self.transform:
             random.seed(seed)
             num_frames = frames.shape[1]
-            frames = torch.stack([self.transform(frames[:,i]) for i in range(num_frames)])
-            # frames = frames.permute(1, 0, 2, 3) 
-
-        # SHAPE: num_frames x 1 x 260 x 346 TODO figure out whether this is correct
-
+            frames = torch.stack([self.transform(frames[:,i]) for i in range(num_frames)])  # frames is tensor of shape num_frames x 1 x 260 x 346
         return frames
 
-    
     def __getitem__(self, i, seed=None, reg_factor=3.70378):
         if seed is None:
             # if no specific random seed was passed, generate our own.
             # otherwise, use the seed that was passed to us
             seed = random.randint(0, 2**32)
         
-        # Load images
+        # Load frames corresponding to this voxel grid
         start_idx, end_idx = self.boundaries[i]
         frames = self.load_frames(start_idx, end_idx, seed)
 
@@ -511,10 +494,6 @@ class UpsampledFramesDataset(Dataset):
         # Load numpy depth ground truth frame 
         frame = np.load(join(self.depth_folder, 'depth_{:010d}.npy'.format(i))).astype(np.float32)
         metric_depth = frame.copy()
-
-
-
-
 
         # Clip to maximum distance
         frame = np.clip(frame, 0.0, self.clip_distance)
@@ -543,7 +522,6 @@ class UpsampledFramesDataset(Dataset):
             random.seed(seed)
             frame = self.transform(frame)
 
-
         # Clip to maximum distance
         metric_depth = np.clip(metric_depth, 0.0, self.clip_distance)
 
@@ -558,26 +536,8 @@ class UpsampledFramesDataset(Dataset):
             metric_depth = self.transform(metric_depth)
 
 
-
-
-
-
-
-        # frame is depth frame corresponding to voxel grid
-        # frames is sequence of upsampled images corresponding to voxel grid
-        # stamps is timestamps for each frame in frames (used in voxel grid computation)
         item = {'frame': frame, 'metric_depth': metric_depth, 'frames': frames, 'stamps': timestamps}
         return item
-
-        
-
-
-
-
-
-
-
-
 
 
 class EventsBetweenFramesDataset(Dataset):

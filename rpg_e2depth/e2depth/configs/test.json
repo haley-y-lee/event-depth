@@ -1,5 +1,5 @@
 {
-    "name": "test35",
+    "name": "test36",
     "cuda": true,
     "gpu": 0,
     "data_loader": {

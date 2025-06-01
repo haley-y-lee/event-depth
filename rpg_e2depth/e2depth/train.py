@@ -131,8 +131,11 @@ def main(config, resume, initial_checkpoint=None):
     data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
                             shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
 
+    # valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
+    #                                shuffle=config['data_loader']['shuffle'], **kwargs)
+
     valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-                                   shuffle=config['data_loader']['shuffle'], **kwargs)
+                            shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
 
     model = eval(config['arch'])(config['model'])
 

@@ -6,6 +6,8 @@ from model.loss import temporal_consistency_loss, mse_loss, l1_loss, multi_scale
 from utils.training_utils import select_evenly_spaced_elements, plot_grad_flow, plot_grad_flow_bars
 import torch.nn.functional as f
 import torch.nn as nn
+import torch.optim as optim
+from scipy.ndimage import gaussian_filter, rotate
 
 
 def quick_norm(img):
@@ -38,7 +40,10 @@ class LSTMTrainer(BaseTrainer):
         self.still_previews = bool(config['trainer'].get('still_previews', False))
         self.grid_loss = bool(config['trainer'].get('grid_loss', False))
 
-        self.psf_model = self.DepthDependentPSF(2, 80, 25)  # TODO maybe reorganize
+        self.psf_model = self.DepthDependentPSF(2, 80, 9)
+
+        self.optimizer.add_param_group({'params': self.psf_model.parameters()})
+        self.psf_model = self.psf_model.to(self.gpu)
 
         # Parameters for temporal consistency loss
         if 'temporal_consistency_loss' in config:
@@ -448,116 +453,160 @@ class LSTMTrainer(BaseTrainer):
         voxel_grid.index_add_(0, tis_plus_1, vals_right)
 
         return voxel_grid
-    
-
-
 
     class DepthDependentPSF(nn.Module):
-        def __init__(self, min_depth, max_depth, psf_size=5):
+        """Module containing a collection of learnable depth-dependent psfs"""
+        def __init__(self, min_depth, max_depth, psf_size=9):
             super().__init__()
             self.min_depth = min_depth
             self.max_depth = max_depth
-
             self.num_depths = self.max_depth - self.min_depth + 1
             self.psf_size = psf_size
 
-            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0)
-            center = psf_size // 2
-            psfs[:, 0, center, center] = 5.0
+            psfs = []
 
-            self.psfs = nn.Parameter(psfs).to("cuda:0")
+            angles = torch.linspace(0, 90, steps=self.num_depths)  
 
-        def forward(self, image, depth):
+            # initialize to rotating psf
+            for theta in angles:
+                # create a 2D Gaussian 
+                base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
+                center = psf_size // 2
+                base[center, center] = 1.0
+                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
+                rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
+
+                # normalize to sum to 1
+                rotated /= rotated.sum()
+
+                # In forward, we apply softplus function to make psf nonnegative. Here we apply an approximate inverse
+                # of the softplus function softplus^{-1}(x) ≈ log(exp(x) - 1) so that after application of softplus, 
+                # we (approximately) are applying rotated gaussian psfs at initialization.
+                eps = 1e-6
+                inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
+
+                psfs.append(torch.tensor(inv_softplus, dtype=torch.float32))
+
+            psfs = torch.stack(psfs, dim=0).unsqueeze(1).to("cuda:0")  # [num_depths, 1, psf_size, psf_size]
+
+            self.psfs = nn.Parameter(psfs)
+
+        # def __init__(self, min_depth, max_depth, psf_size=5):
+        #     super().__init__()
+        #     self.min_depth = min_depth
+        #     self.max_depth = max_depth
+
+        #     self.num_depths = self.max_depth - self.min_depth + 1
+        #     self.psf_size = psf_size
+
+        #     # psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0)
+        #     # center = psf_size // 2
+        #     # psfs[:, 0, center, center] = 5.0
+
+        #     psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device="cuda:0")
+        #     center = psf_size // 2
+        #     psfs[:, 0, center, center] = 5.0
+        #     self.psfs = nn.Parameter(psfs)
+
+        #     # self.psfs = nn.Parameter(psfs).to("cuda:0")
+        #     # self.psfs.retain_grad()
+
+        def forward(self, image, depth_bins):
             """
-            image: [B, 1, H, W] - grayscale input
-            depth: [B, 1, H, W] - integer-valued depth map
+            Applies depth-dependent psfs to sequence of frames.
+
+            Parameters:
+                image: sequence_length x 1 x height x width tensor containing sequence of frames
+                depth_bins: 1 x height x width tensor containing depth map rounded to nearest integer
             """
             # breakpoint()
             output = torch.zeros_like(image)
 
+            # iterate through depths
             for d in range(self.min_depth, self.max_depth+1):
-                mask = (depth == d).float() 
+                mask = (depth_bins == d).float() 
 
                 if mask.sum() == 0:
                     continue  # no pixels at this depth, skip
 
                 raw_psf = self.psfs[d-self.min_depth:d-self.min_depth+1]               
-                nonneg_psf = f.softplus(raw_psf)                             # ensure nonnegative
-                psf = nonneg_psf / nonneg_psf.sum(dim=(-2, -1), keepdim=True)
+                nonneg_psf = f.softplus(raw_psf)    # apply the softplus function to make psf nonnegative          
+                psf = nonneg_psf / nonneg_psf.sum(dim=(-2, -1), keepdim=True)   # normalize psf to sum to 1
+                psf = torch.flip(psf, dims=[-2, -1])    # flip to perform convolution instead of cross-correlation
                 
-                filtered = f.conv2d(image, psf, padding=self.psf_size // 2)    #TODO verify padding is correct
-
-                output += filtered * mask
+                filtered = f.conv2d(image, psf, padding=self.psf_size // 2)
+                output += filtered * mask   # only counting contributions from pixels at depth d
             # breakpoint()
             return output
 
 
     def forward_pass_upsampled_sequence(self, sequence, record=False):
-        # TODO description
-        # 'sequence' is a list containing L successive events <-> frames pairs
-        # each element in 'sequence' is a dictionary containing the keys 'events' and 'frame'
-        # network_input = item['events'].to(self.gpu)
-        # breakpoint()
+        """
+        'sequence' is a list representing a batch of data, with each entry corresponding to a sequence of voxel grids to be input to the model. 
+        Each entry of 'sequence' is itself a list, with each entry in the list corresponding a single voxel grid. 
+        Each entry sequence[i][j] is a dictionary corresponding a single to-be-computed voxel grid with the following key/value pairs:
+            - 'frames': num_frames x 1 x height x width tensor containing the grayscale frames that contribute to this voxel grid.
+            - 'stamps': num_frames-length tensor containing the timestamps of each frame.
+            - 'frame': 1 x height x width tensor containing the depth map corresponding to this voxel grid. 
+               Note that 'frame' has already been preprocessed, i.e. converted to normalized log depth.
+            - 'metric_depth': 1 x height x width tensor containing the raw unprocessed depth map (used for depth-dependent psf simulation).
+        """
+
         N = len(sequence)       # batch size
         L = len(sequence[0])    # voxel grid sequence length
         assert(N > 0)
         assert(L > 0)
 
-        # voxel_grids = (torch.zeros((num_grids, num_bins, height, width), dtype=torch.float32)).to("cuda:0")
-        #TODO don't hardcode
-        voxel_grids = (torch.zeros((N, L, 5, 112, 112), dtype=torch.float32)).to(self.gpu)
-        frame = (torch.zeros((N, L, 1, 112, 112), dtype=torch.float32)).to(self.gpu)
-
-        # TODO put everything on gpu
+        voxel_grid_list = []
+        frame_list = []
 
         # breakpoint()
         for i in range(N):
             for j in range(L):
-                # breakpoint()
+                # move everything to gpu
                 sequence[i][j]['frames'] = sequence[i][j]['frames'].to(self.gpu)
                 sequence[i][j]['stamps'] = sequence[i][j]['stamps'].to(self.gpu)
                 sequence[i][j]['frame'] = sequence[i][j]['frame'].to(self.gpu)
                 sequence[i][j]['metric_depth'] = sequence[i][j]['metric_depth'].to(self.gpu)
-
-
-                # TODO add psf convolution, then add downsampling, compute height and width
                 # breakpoint()
-                depth = torch.clamp(sequence[i][j]['metric_depth'], min=2, max=80)     # TODO check if needed (probably not)
+
+                # apply depth-dependent psfs
+                depth = torch.clamp(sequence[i][j]['metric_depth'], min=2, max=80)
                 depth_bins = torch.round(depth)
                 convolved_frames = self.psf_model(sequence[i][j]['frames'], depth_bins)
 
+                # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
+                scale_factor = 0.5
+                downsampled_frames = f.interpolate(convolved_frames, scale_factor=scale_factor, mode='bilinear', align_corners=True)
+                downsampled_frame = f.interpolate(sequence[i][j]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
 
+                # event simulation
                 epsilon = 1e-6
-                log_frames = torch.log(convolved_frames + epsilon)
+                log_frames = torch.log(downsampled_frames + epsilon)
                 num_images = (sequence[i][j]['frames']).shape[0]
 
                 diffs = log_frames[1:] - log_frames[:num_images-1]
                 event_frames = torch.stack([self.compute_event_frame(d) for d in diffs])
+                
+                # voxel grid computation
                 stamps = sequence[i][j]['stamps']
-                stamps = stamps[1:]
+                stamps = stamps[1:]     # Each event frame is computed using diff of some frame_0 and frame_1. We use timestamp of frame_1 in voxel grid computation.
                 stamps = stamps.float()
 
+                voxel_grid = self.event_frames_to_voxel_grid(torch.squeeze(event_frames), stamps)
+                voxel_grid = (voxel_grid - voxel_grid.mean()) / (voxel_grid.std() + epsilon)
 
-                voxel_grids[i,j] = self.event_frames_to_voxel_grid(torch.squeeze(event_frames), stamps)
-                # breakpoint()
-                # voxel_grids[i,j] = (voxel_grids[i,j] - voxel_grids[i,j].mean()) / voxel_grids[i,j].std()    # voxel grid normalization
+                voxel_grid_list.append(voxel_grid.unsqueeze(0))  # shape [1, C, H, W]
+                frame_list.append(downsampled_frame)
 
-                frame[i][j] = sequence[i][j]['frame']
-                # TODO add voxel grid preprocessing
-        # breakpoint()
-        # TODO reshape voxel grids and depth frame
+        _, num_bins, height, width = voxel_grid_list[0].shape
+
+        voxel_grids = torch.stack(voxel_grid_list).view(N, L, num_bins, height, width)
+        frame = torch.stack(frame_list).view(N, L, 1, height, width)
+        
+        # reshape to match expected shape for model
         voxel_grids = voxel_grids.permute(1, 0, 2, 3, 4)
         frame = frame.permute(1, 0, 2, 3, 4)
-        # breakpoint()
-
-
-
-
-
-
-
-
-
 
 
         # list of per-iteration losses (summed after the loop)
@@ -579,24 +628,14 @@ class LSTMTrainer(BaseTrainer):
             assert(self.L0 >= 1)
             assert(self.L0 < L)
 
-        # initialize the K last predicted frames with -1
-        # N, _, H, W = sequence[0]['frame'].shape
         prev_states = None
         prev_frame, prev_predicted_frame = None, None
         for l in range(L):
             # breakpoint()
             new_events = voxel_grids[l]
             new_frame = frame[l]
-            # item = sequence[l]
-            # breakpoint()
-            # new_events, new_frame, flow01, semantic = self._to_input_and_target(item)
             # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
             new_predicted_frame, states = self.model(new_events, prev_states)
-
-            # with torch.no_grad():
-            #     print('gt. std: {:.3f}'.format(new_frame.std()))
-            #     print('rec. std: {:.3f}'.format(new_predicted_frame.std()))
-
             prev_states = states
 
             if record:
@@ -626,7 +665,7 @@ class LSTMTrainer(BaseTrainer):
             if self.use_grad_loss:
                 if record:
                     with torch.no_grad():
-                        grad_loss_frames.append( multi_scale_grad_loss(new_predicted_frame, new_frame, preview = record))
+                        grad_loss_frames.append(multi_scale_grad_loss(new_predicted_frame, new_frame, preview = record))
                 else:
                     grad_loss = multi_scale_grad_loss(new_predicted_frame, new_frame)
                     iter_grad_losses.append(grad_loss)
@@ -727,6 +766,7 @@ class LSTMTrainer(BaseTrainer):
                 loss_dict['L_mse'] = mse
             if self.use_l1_loss:
                 loss_dict['L_l1'] = l1
+
         # breakpoint()
         return loss_dict, \
             predicted_frames if record else None, \
@@ -765,13 +805,14 @@ class LSTMTrainer(BaseTrainer):
         all_losses_in_batch = {}
         # breakpoint()
         for batch_idx, sequence in enumerate(self.data_loader):
-            breakpoint()
+            # breakpoint()
             print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
             # breakpoint()
             # losses, _, _, _ , _= self.forward_pass_sequence(sequence)
             losses, _, _, _ , _= self.forward_pass_upsampled_sequence(sequence)
-            # breakpoint()       
+            # breakpoint()
+            # torch.autograd.set_detect_anomaly(True)       
             loss = losses['loss']
             loss.backward()
             if batch_idx % 25 == 0:
@@ -872,7 +913,9 @@ class LSTMTrainer(BaseTrainer):
         all_losses_in_batch = {}
         with torch.no_grad():
             for batch_idx, sequence in enumerate(self.valid_data_loader):
-                losses, _, _, _, _ = self.forward_pass_sequence(sequence)
+                print(f"Batch {batch_idx}")
+                # losses, _, _, _, _ = self.forward_pass_sequence(sequence)
+                losses, _, _, _, _ = self.forward_pass_upsampled_sequence(sequence)
                 for loss_name, loss_value in losses.items():
                     if loss_name not in all_losses_in_batch:
                         all_losses_in_batch[loss_name] = []
@@ -884,6 +927,8 @@ class LSTMTrainer(BaseTrainer):
                         len(self.valid_data_loader) * self.valid_data_loader.batch_size,
                         100.0 * batch_idx / len(self.valid_data_loader)))
 
+
+            # TODO deal with this section
             # create a set of previews and log then
             val_previews = []
             total_metrics = np.zeros(len(self.metrics))
@@ -899,7 +944,10 @@ class LSTMTrainer(BaseTrainer):
                     for item in data_items.values():
                         item.unsqueeze_(dim=0)
 
-                _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
+                # _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
+                #     sequence, record=True)
+
+                _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
                     sequence, record=True)
 
                 total_metrics += self._eval_metrics(predicted_frames[0], groundtruth_frames[0])

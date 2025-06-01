@@ -1,5 +1,5 @@
 {
-    "name": "testing67",
+    "name": "testing110",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
@@ -17,12 +17,12 @@
             "scale_factor": 0.5
         },
         "validation": {
-            "type": "SequenceSynchronizedFramesEventsDataset",
-            "base_folder": "valid",
-            "depth_folder": "depth/data",
-            "frame_folder": "",
+            "type": "SequenceUpsampledFramesDataset",
+            "base_folder": "valid_upsampled_3",
+            "depth_folder": "depths",
+            "frame_folder": "frames",
             "flow_folder": "",
-            "event_folder": "events/voxels",
+            "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
             "step_size": 1,
@@ -30,7 +30,7 @@
             "scale_factor": 0.5
         },
         "batch_size": 2,
-        "num_workers": 0,
+        "num_workers": 1,
         "pin_memory": true,
         "normalize": true,
         "shuffle": true,
