@@ -1,5 +1,5 @@
 {
-    "name": "test36",
+    "name": "test37",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
@@ -29,8 +29,8 @@
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
-        "batch_size": 2,
-        "num_workers": 0,
+        "batch_size": 16,
+        "num_workers": 7,
         "pin_memory": true,
         "normalize": true,
         "shuffle": true,

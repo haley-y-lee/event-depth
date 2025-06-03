@@ -452,9 +452,10 @@ class UpsampledFramesDataset(Dataset):
         return self.length
     
 
-    def load_frames(self, start_idx, end_idx, seed):
+    def load_frames(self, indices, seed):
         frames = []
-        for i in range(start_idx, end_idx + 1):  # inclusive range
+        for i in indices:  # inclusive range
+
             filename = f"{i:08d}.png"
             filepath = join(self.frame_folder, filename)
 
@@ -486,9 +487,11 @@ class UpsampledFramesDataset(Dataset):
         
         # Load frames corresponding to this voxel grid
         start_idx, end_idx = self.boundaries[i]
-        frames = self.load_frames(start_idx, end_idx, seed)
+        subsample_rate = 4
+        indices = range(start_idx, end_idx+1, subsample_rate)
+        frames = self.load_frames(indices, seed)
 
-        timestamps = self.frame_stamps[start_idx:end_idx+1]
+        timestamps = self.frame_stamps[indices]
         timestamps = torch.from_numpy(timestamps)
 
         # Load numpy depth ground truth frame 

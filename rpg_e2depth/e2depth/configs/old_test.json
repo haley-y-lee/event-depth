@@ -1,18 +1,18 @@
 {
-    "name": "testing116",
+    "name": "testing148",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
         "train": {
             "type": "SequenceUpsampledFramesDataset",
-            "base_folder": "small_upsampled",
+            "base_folder": "train_upsampled_3",
             "depth_folder": "depths",
             "frame_folder": "frames",
             "flow_folder": "",
             "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 1,
+            "step_size": 15,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
@@ -25,12 +25,12 @@
             "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 1,
+            "step_size": 15,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
-        "batch_size": 2,
-        "num_workers": 1,
+        "batch_size": 16,
+        "num_workers": 7,
         "pin_memory": true,
         "normalize": true,
         "shuffle": true,

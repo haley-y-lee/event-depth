@@ -456,40 +456,40 @@ class LSTMTrainer(BaseTrainer):
 
     class DepthDependentPSF(nn.Module):
         """Module containing a collection of learnable depth-dependent psfs"""
-        def __init__(self, min_depth, max_depth, psf_size=9):
-            super().__init__()
-            self.min_depth = min_depth
-            self.max_depth = max_depth
-            self.num_depths = self.max_depth - self.min_depth + 1
-            self.psf_size = psf_size
+        # def __init__(self, min_depth, max_depth, psf_size=9):
+        #     super().__init__()
+        #     self.min_depth = min_depth
+        #     self.max_depth = max_depth
+        #     self.num_depths = self.max_depth - self.min_depth + 1
+        #     self.psf_size = psf_size
 
-            psfs = []
+        #     psfs = []
 
-            angles = torch.linspace(0, 90, steps=self.num_depths)  
+        #     angles = torch.linspace(0, 90, steps=self.num_depths)  
 
-            # initialize to rotating psf
-            for theta in angles:
-                # create a 2D Gaussian 
-                base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
-                center = psf_size // 2
-                base[center, center] = 1.0
-                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
-                rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
+        #     # initialize to rotating psf
+        #     for theta in angles:
+        #         # create a 2D Gaussian 
+        #         base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
+        #         center = psf_size // 2
+        #         base[center, center] = 1.0
+        #         gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
+        #         rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
 
-                # normalize to sum to 1
-                rotated /= rotated.sum()
+        #         # normalize to sum to 1
+        #         rotated /= rotated.sum()
 
-                # In forward, we apply softplus function to make psf nonnegative. Here we apply an approximate inverse
-                # of the softplus function softplus^{-1}(x) ≈ log(exp(x) - 1) so that after application of softplus, 
-                # we (approximately) are applying rotated gaussian psfs at initialization.
-                eps = 1e-6
-                inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
+        #         # In forward, we apply softplus function to make psf nonnegative. Here we apply an approximate inverse
+        #         # of the softplus function softplus^{-1}(x) ≈ log(exp(x) - 1) so that after application of softplus, 
+        #         # we (approximately) are applying rotated gaussian psfs at initialization.
+        #         eps = 1e-6
+        #         inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
 
-                psfs.append(torch.tensor(inv_softplus, dtype=torch.float32))
+        #         psfs.append(torch.tensor(inv_softplus, dtype=torch.float32))
 
-            psfs = torch.stack(psfs, dim=0).unsqueeze(1).to("cuda:0")  # [num_depths, 1, psf_size, psf_size]
+        #     psfs = torch.stack(psfs, dim=0).unsqueeze(1).to("cuda:0")  # [num_depths, 1, psf_size, psf_size]
 
-            self.psfs = nn.Parameter(psfs)
+        #     self.psfs = nn.Parameter(psfs)
 
         # def __init__(self, min_depth, max_depth, psf_size=5):
         #     super().__init__()
@@ -508,8 +508,20 @@ class LSTMTrainer(BaseTrainer):
         #     psfs[:, 0, center, center] = 5.0
         #     self.psfs = nn.Parameter(psfs)
 
-        #     # self.psfs = nn.Parameter(psfs).to("cuda:0")
-        #     # self.psfs.retain_grad()
+        def __init__(self, min_depth, max_depth, psf_size=5):
+            super().__init__()
+            self.min_depth = min_depth
+            self.max_depth = max_depth
+
+            self.num_depths = self.max_depth - self.min_depth + 1
+            self.psf_size = psf_size
+
+            # Randomly initialize psfs (e.g., from normal distribution)
+            psfs = torch.randn((self.num_depths, 1, psf_size, psf_size), device="cuda:0") * 1
+            self.psfs = nn.Parameter(psfs)
+
+            # self.psfs = nn.Parameter(psfs).to("cuda:0")
+            # self.psfs.retain_grad()
 
         def forward(self, image, depth_bins):
             """
@@ -533,6 +545,7 @@ class LSTMTrainer(BaseTrainer):
                 nonneg_psf = f.softplus(raw_psf)    # apply the softplus function to make psf nonnegative          
                 psf = nonneg_psf / nonneg_psf.sum(dim=(-2, -1), keepdim=True)   # normalize psf to sum to 1
                 psf = torch.flip(psf, dims=[-2, -1])    # flip to perform convolution instead of cross-correlation
+                # breakpoint()
                 
                 filtered = f.conv2d(image, psf, padding=self.psf_size // 2)
                 output += filtered * mask   # only counting contributions from pixels at depth d
@@ -556,6 +569,7 @@ class LSTMTrainer(BaseTrainer):
         L = len(sequence[0])    # voxel grid sequence length
         assert(N > 0)
         assert(L > 0)
+        # breakpoint()
 
         voxel_grid_list = []
         frame_list = []
@@ -575,14 +589,14 @@ class LSTMTrainer(BaseTrainer):
                 depth_bins = torch.round(depth)
                 convolved_frames = self.psf_model(sequence[i][j]['frames'], depth_bins)
 
-                # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
-                scale_factor = 0.5
-                downsampled_frames = f.interpolate(convolved_frames, scale_factor=scale_factor, mode='bilinear', align_corners=True)
-                downsampled_frame = f.interpolate(sequence[i][j]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+                # # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
+                # scale_factor = 0.5
+                # downsampled_frames = f.interpolate(convolved_frames, scale_factor=scale_factor, mode='bilinear', align_corners=True)
+                # downsampled_frame = f.interpolate(sequence[i][j]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
 
                 # event simulation
                 epsilon = 1e-6
-                log_frames = torch.log(downsampled_frames + epsilon)
+                log_frames = torch.log(convolved_frames + epsilon)
                 num_images = (sequence[i][j]['frames']).shape[0]
 
                 diffs = log_frames[1:] - log_frames[:num_images-1]
@@ -596,7 +610,12 @@ class LSTMTrainer(BaseTrainer):
                 voxel_grid = self.event_frames_to_voxel_grid(torch.squeeze(event_frames), stamps)
                 voxel_grid = (voxel_grid - voxel_grid.mean()) / (voxel_grid.std() + epsilon)
 
-                voxel_grid_list.append(voxel_grid.unsqueeze(0))  # shape [1, C, H, W]
+                # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
+                scale_factor = 0.5
+                downsampled_voxel_grid = f.interpolate(voxel_grid.unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+                downsampled_frame = f.interpolate(sequence[i][j]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+
+                voxel_grid_list.append(downsampled_voxel_grid)  # shape [1, C, H, W]
                 frame_list.append(downsampled_frame)
 
         _, num_bins, height, width = voxel_grid_list[0].shape
@@ -805,7 +824,8 @@ class LSTMTrainer(BaseTrainer):
         all_losses_in_batch = {}
         # breakpoint()
         for batch_idx, sequence in enumerate(self.data_loader):
-            # breakpoint()
+            # if (batch_idx % 5 == 0):
+            #     breakpoint()
             print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
             # breakpoint()
@@ -848,11 +868,14 @@ class LSTMTrainer(BaseTrainer):
                 # every element in sequence is a [C x H x W] tensor
                 # but the model requires [1 x C x H x W] tensor, so
                 # we preprocess the data here to adjust to this expected format
-                for data_items in sequence:
-                    for item in data_items.values():
-                        item.unsqueeze_(dim=0)
+                # for data_items in sequence:
+                #     for item in data_items.values():
+                #         item.unsqueeze_(dim=0)
+                sequence = [sequence]
 
-                _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
+                # _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
+                #     sequence, record=True)
+                _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
                     sequence, record=True)
                 hist_idx = len(predicted_frames) - 1  # choose an idx to plot
                 self.writer.add_histogram(f'{self.preview_count}_prediction',
@@ -870,11 +893,11 @@ class LSTMTrainer(BaseTrainer):
                 # for tag, value in self.model.named_parameters().cpu():
                 #     self.writer.add_histogram(tag + '/grad', value.grad.cpu(), global_step=epoch)
                 #     self.writer.add_histogram(tag + '/weights', value.data.cpu(), global_step=epoch)
-                if self.movie:
-                    video_tensor = self.make_movie(event_previews, predicted_frames, groundtruth_frames)
-                    self.writer.add_video(
-                        f'movie_{self.preview_count}__events__prediction__groundtruth',
-                        video_tensor, global_step=epoch, fps=5)
+                # if self.movie:
+                #     video_tensor = self.make_movie(event_previews, predicted_frames, groundtruth_frames)
+                #     self.writer.add_video(
+                #         f'movie_{self.preview_count}__events__prediction__groundtruth',
+                #         video_tensor, global_step=epoch, fps=5)
                 if self.still_previews:
                     step = self.record_every_N_sample
                     previews.append(self.make_preview(
@@ -940,9 +963,10 @@ class LSTMTrainer(BaseTrainer):
                 # every element in sequence is a [C x H x W] tensor
                 # but the model requires [1 x C x H x W] tensor, so
                 # we preprocess the data here to adjust to this expected format
-                for data_items in sequence:
-                    for item in data_items.values():
-                        item.unsqueeze_(dim=0)
+                # for data_items in sequence:
+                #     for item in data_items.values():
+                #         item.unsqueeze_(dim=0)
+                sequence = [sequence]
 
                 # _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
                 #     sequence, record=True)
@@ -952,12 +976,12 @@ class LSTMTrainer(BaseTrainer):
 
                 total_metrics += self._eval_metrics(predicted_frames[0], groundtruth_frames[0])
 
-                if self.movie:
-                    video_tensor = self.make_movie(event_previews, predicted_frames, groundtruth_frames)
-                    self.writer.add_video(
-                        f"val_movie_{self.preview_count}__events__prediction__groundtruth",
-                        video_tensor, global_step=epoch, fps=5)
-                    self.preview_count += 1
+                # if self.movie:
+                #     video_tensor = self.make_movie(event_previews, predicted_frames, groundtruth_frames)
+                #     self.writer.add_video(
+                #         f"val_movie_{self.preview_count}__events__prediction__groundtruth",
+                #         video_tensor, global_step=epoch, fps=5)
+                #     self.preview_count += 1
                 if self.still_previews:
                     step = self.record_every_N_sample
                     val_previews.append(self.make_preview(
