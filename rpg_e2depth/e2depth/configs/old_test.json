@@ -1,5 +1,5 @@
 {
-    "name": "testing148",
+    "name": "testing163",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
@@ -12,7 +12,7 @@
             "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 15,
+            "step_size": 1,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
@@ -25,7 +25,7 @@
             "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 15,
+            "step_size": 1,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },

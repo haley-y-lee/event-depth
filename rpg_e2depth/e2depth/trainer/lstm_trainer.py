@@ -40,10 +40,9 @@ class LSTMTrainer(BaseTrainer):
         self.still_previews = bool(config['trainer'].get('still_previews', False))
         self.grid_loss = bool(config['trainer'].get('grid_loss', False))
 
-        self.psf_model = self.DepthDependentPSF(2, 80, 9)
-
-        self.optimizer.add_param_group({'params': self.psf_model.parameters()})
-        self.psf_model = self.psf_model.to(self.gpu)
+        # self.psf_model = self.DepthDependentPSF(2, 80, 9)
+        # self.optimizer.add_param_group({'params': self.psf_model.parameters()})
+        # self.psf_model = self.psf_model.to(self.gpu)
 
         # Parameters for temporal consistency loss
         if 'temporal_consistency_loss' in config:
@@ -565,6 +564,204 @@ class LSTMTrainer(BaseTrainer):
             - 'metric_depth': 1 x height x width tensor containing the raw unprocessed depth map (used for depth-dependent psf simulation).
         """
 
+        sequence = list(map(list, zip(*sequence)))
+
+        L = len(sequence)       # voxel grid sequence length 
+        N = len(sequence[0])    # batch size
+        assert(L > 0)
+        assert(N > 0)
+
+        # list of per-iteration losses (summed after the loop)
+        iter_losses = [] # main defined loss
+        iter_grad_losses = []
+        iter_smooth_losses = []
+        iter_ordinal_losses = []
+        iter_temporal_losses = []
+        iter_mse_losses = []
+        iter_l1_losses = []
+
+        if record:
+            event_previews = []
+            predicted_frames = []  # list of intermediate predicted frames
+            groundtruth_frames = []
+            grad_loss_frames = [] # list of loss visualization frames
+
+        if self.use_temporal_consistency_loss:
+            assert(self.L0 >= 1)
+            assert(self.L0 < L)
+
+        prev_states = None
+        prev_frame, prev_predicted_frame = None, None
+        for l in range(L):
+            # breakpoint()
+            cur_seq = sequence[l]
+
+            # new_events = voxel_grids[l]
+            # new_frame = frame[l]
+            # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
+            # new_predicted_frame, states = self.model(new_events, prev_states)
+            new_events, new_frame, new_predicted_frame, states = self.model(cur_seq, prev_states)
+            prev_states = states
+
+            if record:
+                with torch.no_grad():
+                    event_previews.append(torch.sum(new_events, dim=1).unsqueeze(0))
+                    predicted_frames.append(new_predicted_frame.clone())
+                    groundtruth_frames.append(new_frame.clone())
+
+            # Compute the nominal loss
+            if self.loss_params is not None:
+                iter_losses.append(
+                    self.loss(new_predicted_frame, new_frame, **self.loss_params))
+            else:
+                iter_losses.append(self.loss(new_predicted_frame, new_frame))
+
+            # Compute the temporal consistency loss
+            if self.use_temporal_consistency_loss:
+                if l >= self.L0:
+                    assert(prev_frame is not None)
+                    assert(prev_predicted_frame is not None)
+                    iter_temporal_losses.append(
+                        temporal_consistency_loss(prev_frame, new_frame,
+                                                  prev_predicted_frame, new_predicted_frame,
+                                                  flow01))
+
+            # Compute the multi scale gradient loss
+            if self.use_grad_loss:
+                if record:
+                    with torch.no_grad():
+                        grad_loss_frames.append(multi_scale_grad_loss(new_predicted_frame, new_frame, preview = record))
+                else:
+                    grad_loss = multi_scale_grad_loss(new_predicted_frame, new_frame)
+                    iter_grad_losses.append(grad_loss)
+
+            # Compute the smooth loss
+            if self.use_smooth_loss:
+                smooth_loss = depth_smoothness_loss(new_predicted_frame, new_events)
+                iter_smooth_losses.append(smooth_loss)
+            
+            # Compute the ordinal loss
+            if self.use_ordinal_loss:
+                ordinal_loss = ordinal_depth_loss(new_predicted_frame, new_frame, new_events,
+                                                    self.percent_ordinal_loss, self.method_ordinal_loss)
+                iter_ordinal_losses.append(ordinal_loss)
+
+            # Compute the mse loss
+            if self.use_mse_loss:
+                # compute the MSE loss at a lower resolution
+                downsampling_factor = self.mse_loss_downsampling_factor
+
+                if downsampling_factor != 1.0:
+                    new_frame_downsampled = f.interpolate(
+                        new_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    new_predicted_frame_downsampled = f.interpolate(
+                        new_predicted_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    mse = mse_loss(new_predicted_frame_downsampled, new_frame_downsampled)
+                else:
+                    mse = mse_loss(new_predicted_frame, new_frame)
+                iter_mse_losses.append(mse)
+            
+            # Compute the l1 loss
+            if self.use_l1_loss:
+                # compute the L1 loss at a lower resolution
+                downsampling_factor = self.l1_loss_downsampling_factor
+
+                if downsampling_factor != 1.0:
+                    new_frame_downsampled = f.interpolate(
+                        new_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    new_predicted_frame_downsampled = f.interpolate(
+                        new_predicted_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
+                    l1 = l1_loss(new_predicted_frame_downsampled, new_frame_downsampled)
+                else:
+                    l1 = l1_loss(new_predicted_frame, new_frame)
+                iter_l1_losses.append(l1)
+ 
+            prev_frame = new_frame
+            prev_predicted_frame = new_predicted_frame
+
+        nominal_loss = sum(iter_losses) / float(L)
+
+        losses = []
+        losses.append(nominal_loss)
+
+        # Add temporal consistenvy loss to the losses
+        if self.use_temporal_consistency_loss:
+            temporal_loss = self.weight_temporal_consistency * sum(iter_temporal_losses) / float(L - self.L0)
+            losses.append(temporal_loss)
+
+        # Add multi scale gradient loss
+        if self.use_grad_loss:
+            grad_loss = self.weight_grad_loss * sum(iter_grad_losses)/float(L)
+            losses.append(grad_loss)
+
+        # Add multi scale smooth loss
+        if self.use_smooth_loss:
+            smooth_loss = self.weight_smooth_loss * sum(iter_smooth_losses)/float(L)
+            losses.append(smooth_loss)
+
+        # Add ordinal depth loss
+        if self.use_ordinal_loss:
+            ordinal_loss = self.weight_ordinal_loss * sum(iter_ordinal_losses)/float(L)
+            losses.append(ordinal_loss)
+
+        # Add mse loss to the losses
+        if self.use_mse_loss:
+            mse = self.weight_mse_loss * sum(iter_mse_losses) / float(L)
+            losses.append(mse)
+
+        # Add L1 loss to the losses
+        if self.use_l1_loss:
+            l1 = self.weight_l1_loss * sum(iter_l1_losses) / float(L)
+            losses.append(l1)
+
+        loss = sum(losses)
+
+        # add all losses in a dict for logging
+        with torch.no_grad():
+            loss_dict = {'loss': loss, 'L_si': nominal_loss}
+            if self.use_temporal_consistency_loss:
+                loss_dict['L_tc'] = temporal_loss
+            if self.use_grad_loss:
+                loss_dict['L_grad'] = grad_loss
+            if self.use_smooth_loss:
+                loss_dict['L_smooth'] = smooth_loss
+            if self.use_ordinal_loss:
+                loss_dict['L_ord'] = ordinal_loss
+            if self.use_mse_loss:
+                loss_dict['L_mse'] = mse
+            if self.use_l1_loss:
+                loss_dict['L_l1'] = l1
+
+        # breakpoint()
+        return loss_dict, \
+            predicted_frames if record else None, \
+            groundtruth_frames if record else None, \
+            event_previews if record else None, \
+            grad_loss_frames if record else None
+    
+
+
+
+
+
+
+
+
+
+
+
+    def forward_pass_upsampled_sequence_old(self, sequence, record=False):
+        """
+        'sequence' is a list representing a batch of data, with each entry corresponding to a sequence of voxel grids to be input to the model. 
+        Each entry of 'sequence' is itself a list, with each entry in the list corresponding a single voxel grid. 
+        Each entry sequence[i][j] is a dictionary corresponding a single to-be-computed voxel grid with the following key/value pairs:
+            - 'frames': num_frames x 1 x height x width tensor containing the grayscale frames that contribute to this voxel grid.
+            - 'stamps': num_frames-length tensor containing the timestamps of each frame.
+            - 'frame': 1 x height x width tensor containing the depth map corresponding to this voxel grid. 
+               Note that 'frame' has already been preprocessed, i.e. converted to normalized log depth.
+            - 'metric_depth': 1 x height x width tensor containing the raw unprocessed depth map (used for depth-dependent psf simulation).
+        """
+
         N = len(sequence)       # batch size
         L = len(sequence[0])    # voxel grid sequence length
         assert(N > 0)
@@ -573,6 +770,10 @@ class LSTMTrainer(BaseTrainer):
 
         voxel_grid_list = []
         frame_list = []
+
+        
+        sequence = list(map(list, zip(*sequence)))
+        sequence = list(map(list, zip(*sequence)))
 
         # breakpoint()
         for i in range(N):
@@ -588,11 +789,6 @@ class LSTMTrainer(BaseTrainer):
                 depth = torch.clamp(sequence[i][j]['metric_depth'], min=2, max=80)
                 depth_bins = torch.round(depth)
                 convolved_frames = self.psf_model(sequence[i][j]['frames'], depth_bins)
-
-                # # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
-                # scale_factor = 0.5
-                # downsampled_frames = f.interpolate(convolved_frames, scale_factor=scale_factor, mode='bilinear', align_corners=True)
-                # downsampled_frame = f.interpolate(sequence[i][j]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
 
                 # event simulation
                 epsilon = 1e-6
@@ -624,8 +820,8 @@ class LSTMTrainer(BaseTrainer):
         frame = torch.stack(frame_list).view(N, L, 1, height, width)
         
         # reshape to match expected shape for model
-        voxel_grids = voxel_grids.permute(1, 0, 2, 3, 4)
-        frame = frame.permute(1, 0, 2, 3, 4)
+        voxel_grids = voxel_grids.permute(1, 0, 2, 3, 4)    # L x N x num_bins x H x W
+        frame = frame.permute(1, 0, 2, 3, 4)    # L x N x 1 x H x W
 
 
         # list of per-iteration losses (summed after the loop)
@@ -651,8 +847,8 @@ class LSTMTrainer(BaseTrainer):
         prev_frame, prev_predicted_frame = None, None
         for l in range(L):
             # breakpoint()
-            new_events = voxel_grids[l]
-            new_frame = frame[l]
+            new_events = voxel_grids[l] # N x num_bins x H x W
+            new_frame = frame[l]     # N x 1 x H x W
             # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
             new_predicted_frame, states = self.model(new_events, prev_states)
             prev_states = states
