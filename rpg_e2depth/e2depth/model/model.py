@@ -1,7 +1,7 @@
 from base import BaseModel
 import torch.nn as nn
 import torch
-from .unet import UNet, UNetRecurrent, PSFUNetRecurrent
+from .unet import UNet, UNetRecurrent, UNetRecurrentPSF
 from os.path import join
 from .submodules import ConvLSTM, ResidualBlock, ConvLayer, UpsampleConvLayer, TransposedConvLayer
 
@@ -99,20 +99,25 @@ class E2VID(BaseE2VID):
 #         img_pred, states = self.unetrecurrent.forward(event_tensor, prev_states)
 #         return img_pred, states
 
-class E2VIDRecurrent(BaseE2VID):
+class E2VIDRecurrentPSF(BaseE2VID):
     """
     Recurrent, UNet-like architecture where each encoder is followed by a ConvLSTM or ConvGRU.
     """
 
     def __init__(self, config):
-        super(E2VIDRecurrent, self).__init__(config)
+        super(E2VIDRecurrentPSF, self).__init__(config)
 
         try:
             self.recurrent_block_type = str(config['recurrent_block_type'])
         except KeyError:
             self.recurrent_block_type = 'convlstm'  # or 'convgru'
 
-        self.psfunetrecurrent = PSFUNetRecurrent(num_input_channels=self.num_bins,
+        try:
+            self.psf_init = str(config['psf_init'])
+        except KeyError:
+            self.psf_init = 'random'
+
+        self.unetrecurrentpsf = UNetRecurrentPSF(num_input_channels=self.num_bins,
                                            num_output_channels=1,
                                            skip_type=self.skip_type,
                                            recurrent_block_type=self.recurrent_block_type,
@@ -121,7 +126,9 @@ class E2VIDRecurrent(BaseE2VID):
                                            base_num_channels=self.base_num_channels,
                                            num_residual_blocks=self.num_residual_blocks,
                                            norm=self.norm,
-                                           use_upsample_conv=self.use_upsample_conv)
+                                           use_upsample_conv=self.use_upsample_conv,
+                                           psf_init=self.psf_init
+                                           )
 
     def forward(self, cur_seq, prev_states):
         """
@@ -129,5 +136,5 @@ class E2VIDRecurrent(BaseE2VID):
         :param prev_states: previous ConvLSTM state for each encoder module
         :return: reconstructed image, taking values in [0,1].
         """
-        voxel_grids, frame, new_predicted_frame, states = self.psfunetrecurrent.forward(cur_seq, prev_states)
+        voxel_grids, frame, new_predicted_frame, states = self.unetrecurrentpsf.forward(cur_seq, prev_states)
         return voxel_grids, frame, new_predicted_frame, states

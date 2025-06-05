@@ -39,6 +39,7 @@ class LSTMTrainer(BaseTrainer):
         self.movie = bool(config['trainer'].get('movie', True))
         self.still_previews = bool(config['trainer'].get('still_previews', False))
         self.grid_loss = bool(config['trainer'].get('grid_loss', False))
+        # breakpoint()
 
         # self.psf_model = self.DepthDependentPSF(2, 80, 9)
         # self.optimizer.add_param_group({'params': self.psf_model.parameters()})

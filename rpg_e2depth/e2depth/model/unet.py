@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as f
 from torch.nn import init
 from .submodules import ConvLayer, UpsampleConvLayer, TransposedConvLayer, RecurrentConvLayer, ResidualBlock, ConvLSTM, ConvGRU
+from scipy.ndimage import gaussian_filter, rotate
+import numpy as np
 
 gpu = "cuda:0"
 
@@ -179,8 +181,7 @@ class UNetRecurrent(BaseUNet):
         return img, states
 
 
-
-
+# Code that I added for our model, could potentially be refactored into a separate file.
 
 def compute_event_frame(diff):
     """
@@ -238,72 +239,55 @@ def event_frames_to_voxel_grid(event_frames, timestamps, num_bins=5):
 
 class DepthDependentPSFLayer(nn.Module):
     """Module containing a collection of learnable depth-dependent psfs"""
-    # def __init__(self, min_depth, max_depth, psf_size=9):
-    #     super().__init__()
-    #     self.min_depth = min_depth
-    #     self.max_depth = max_depth
-    #     self.num_depths = self.max_depth - self.min_depth + 1
-    #     self.psf_size = psf_size
-
-    #     psfs = []
-
-    #     angles = torch.linspace(0, 90, steps=self.num_depths)  
-
-    #     # initialize to rotating psf
-    #     for theta in angles:
-    #         # create a 2D Gaussian 
-    #         base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
-    #         center = psf_size // 2
-    #         base[center, center] = 1.0
-    #         gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
-    #         rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
-
-    #         # normalize to sum to 1
-    #         rotated /= rotated.sum()
-
-    #         # In forward, we apply softplus function to make psf nonnegative. Here we apply an approximate inverse
-    #         # of the softplus function softplus^{-1}(x) ≈ log(exp(x) - 1) so that after application of softplus, 
-    #         # we (approximately) are applying rotated gaussian psfs at initialization.
-    #         eps = 1e-6
-    #         inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
-
-    #         psfs.append(torch.tensor(inv_softplus, dtype=torch.float32))
-
-    #     psfs = torch.stack(psfs, dim=0).unsqueeze(1).to("cuda:0")  # [num_depths, 1, psf_size, psf_size]
-
-    #     self.psfs = nn.Parameter(psfs)
-
-    # def __init__(self, min_depth, max_depth, psf_size=5):
-    #     super().__init__()
-    #     self.min_depth = min_depth
-    #     self.max_depth = max_depth
-
-    #     self.num_depths = self.max_depth - self.min_depth + 1
-    #     self.psf_size = psf_size
-
-    #     # psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0)
-    #     # center = psf_size // 2
-    #     # psfs[:, 0, center, center] = 5.0
-
-    #     psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device="cuda:0")
-    #     center = psf_size // 2
-    #     psfs[:, 0, center, center] = 5.0
-    #     self.psfs = nn.Parameter(psfs)
-
-    def __init__(self, min_depth, max_depth, psf_size=5):
+    def __init__(self, min_depth, max_depth, psf_init, psf_size=5):
         super().__init__()
         self.min_depth = min_depth
         self.max_depth = max_depth
 
         self.num_depths = self.max_depth - self.min_depth + 1
         self.psf_size = psf_size
+        self.psf_init = psf_init
 
-        # Randomly initialize psfs (e.g., from normal distribution)
-        psfs = torch.randn((self.num_depths, 1, psf_size, psf_size), device="cuda:0") * 1
-        self.psfs = nn.Parameter(psfs)
+        # in config file, set psf initialization by setting the psf_init variable to 'random', 'rotated', or 'delta'
 
-        # self.psfs = nn.Parameter(psfs).to("cuda:0")
-        # self.psfs.retain_grad()
+        if self.psf_init == 'random':
+            psfs = torch.randn((self.num_depths, 1, psf_size, psf_size), device=gpu) * 1
+            self.psfs = nn.Parameter(psfs)
+
+        elif self.psf_init == 'rotated':
+            angles = torch.linspace(0, 90, steps=self.num_depths)  
+
+            for theta in angles:
+                # create a 2D Gaussian 
+                base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
+                center = psf_size // 2
+                base[center, center] = 1.0
+                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
+                rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
+
+                # normalize to sum to 1
+                rotated /= rotated.sum()
+
+                # In forward, we apply softplus function to make psf nonnegative. Here we apply an approximate inverse
+                # of the softplus function softplus^{-1}(x) ≈ log(exp(x) - 1) so that after application of softplus, 
+                # we (approximately) are applying rotated gaussian psfs at initialization.
+                eps = 1e-6
+                inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
+
+                psfs.append(torch.tensor(inv_softplus, dtype=torch.float32))
+
+            psfs = torch.stack(psfs, dim=0).unsqueeze(1).to(gpu)  # [num_depths, 1, psf_size, psf_size]
+
+            self.psfs = nn.Parameter(psfs)
+
+        elif self.psf_init == 'delta':
+            # after applying the softplus function and normalization, these initial values of 5 at the center and -5
+            # elsewhere will result in a psf that is approximately the delta function (1 at center and 0 elsewhere)
+            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device=gpu)  
+            center = psf_size // 2
+            psfs[:, 0, center, center] = 5.0
+            self.psfs = nn.Parameter(psfs)
+
 
     def forward(self, image, depth_bins):
         """
@@ -335,9 +319,7 @@ class DepthDependentPSFLayer(nn.Module):
         return output
 
 
-
-
-class PSFUNetRecurrent(nn.Module):
+class UNetRecurrentPSF(nn.Module):
     """
     Recurrent UNet architecture where every encoder is followed by a recurrent convolutional block,
     such as a ConvLSTM or a ConvGRU.
@@ -346,7 +328,7 @@ class PSFUNetRecurrent(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='random'):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -362,7 +344,7 @@ class PSFUNetRecurrent(nn.Module):
             use_upsample_conv=use_upsample_conv
         )
 
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=80, psf_size=9)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=80, psf_init=psf_init, psf_size=9)
 
     def forward(self, sequence, prev_states):
         """

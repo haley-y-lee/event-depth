@@ -1,5 +1,5 @@
 {
-    "name": "testing163",
+    "name": "testing166",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
@@ -72,7 +72,7 @@
         "still_previews": true,
         "grid_loss": true
     },
-    "arch": "E2VIDRecurrent",
+    "arch": "E2VIDRecurrentPSF",
     "model": {
         "num_bins": 5,
         "skip_type": "sum",
@@ -81,6 +81,8 @@
         "base_num_channels": 32,
         "num_residual_blocks": 2,
         "use_upsample_conv": true,
-        "norm": "none"
-    }
+        "norm": "none",
+        "psf_init": "random"
+    },
+    "use_psf": true
 }
