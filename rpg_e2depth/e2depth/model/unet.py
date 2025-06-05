@@ -324,6 +324,7 @@ class UNetRecurrentPSF(nn.Module):
     Recurrent UNet architecture where every encoder is followed by a recurrent convolutional block,
     such as a ConvLSTM or a ConvGRU.
     Symmetric, skip connections on every encoding layer.
+    Additionally contains a DepthDependentPSF layer which is applied prior to the UNet.
     """
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
@@ -346,42 +347,42 @@ class UNetRecurrentPSF(nn.Module):
 
         self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=80, psf_init=psf_init, psf_size=9)
 
-    def forward(self, sequence, prev_states):
+    def forward(self, cur_input, prev_states):
         """
-        :param cur_seq: N-length list
+        :param cur_input: batch of input data (formatted by UpsampledFramesDataset class)
         :param prev_states: previous LSTM states for every encoder layer
         :return: N x num_output_channels x H x W
         """
 
-        N = len(sequence)
+        N = len(cur_input)
 
         voxel_grid_list = []
         frame_list = []
         # breakpoint()
 
-        for i in range(N):
+        for i in range(N):     
             # move everything to gpu
-            sequence[i]['frames'] = sequence[i]['frames'].to(gpu)
-            sequence[i]['stamps'] = sequence[i]['stamps'].to(gpu)
-            sequence[i]['frame'] = sequence[i]['frame'].to(gpu)
-            sequence[i]['metric_depth'] = sequence[i]['metric_depth'].to(gpu)
+            cur_input[i]['frames'] = cur_input[i]['frames'].to(gpu)
+            cur_input[i]['stamps'] = cur_input[i]['stamps'].to(gpu)
+            cur_input[i]['frame'] = cur_input[i]['frame'].to(gpu)
+            cur_input[i]['metric_depth'] = cur_input[i]['metric_depth'].to(gpu)
             # breakpoint()
 
             # apply depth-dependent psfs
-            depth = torch.clamp(sequence[i]['metric_depth'], min=2, max=80)
+            depth = torch.clamp(cur_input[i]['metric_depth'], min=2, max=80)
             depth_bins = torch.round(depth)
-            convolved_frames = self.psf_layer(sequence[i]['frames'], depth_bins)
+            convolved_frames = self.psf_layer(cur_input[i]['frames'], depth_bins)
 
             # event simulation
             epsilon = 1e-6
             log_frames = torch.log(convolved_frames + epsilon)
-            num_images = (sequence[i]['frames']).shape[0]
+            num_images = (cur_input[i]['frames']).shape[0]
 
             diffs = log_frames[1:] - log_frames[:num_images-1]
             event_frames = torch.stack([compute_event_frame(d) for d in diffs])
             
             # voxel grid computation
-            stamps = sequence[i]['stamps']
+            stamps = cur_input[i]['stamps']
             stamps = stamps[1:]     # Each event frame is computed using diff of some frame_0 and frame_1. We use timestamp of frame_1 in voxel grid computation.
             stamps = stamps.float()
 
@@ -391,7 +392,7 @@ class UNetRecurrentPSF(nn.Module):
             # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
             scale_factor = 0.5
             downsampled_voxel_grid = f.interpolate(voxel_grid.unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
-            downsampled_frame = f.interpolate(sequence[i]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+            downsampled_frame = f.interpolate(cur_input[i]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
 
             voxel_grid_list.append(downsampled_voxel_grid)  # shape [1, C, H, W]
             frame_list.append(downsampled_frame)

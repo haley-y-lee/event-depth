@@ -40,10 +40,7 @@ class LSTMTrainer(BaseTrainer):
         self.still_previews = bool(config['trainer'].get('still_previews', False))
         self.grid_loss = bool(config['trainer'].get('grid_loss', False))
         # breakpoint()
-
-        # self.psf_model = self.DepthDependentPSF(2, 80, 9)
-        # self.optimizer.add_param_group({'params': self.psf_model.parameters()})
-        # self.psf_model = self.psf_model.to(self.gpu)
+        self.use_psf = config['use_psf']
 
         # Parameters for temporal consistency loss
         if 'temporal_consistency_loss' in config:
@@ -397,162 +394,6 @@ class LSTMTrainer(BaseTrainer):
 
 
 
-
-
-
-    def compute_event_frame(self, diff):
-        """
-        Implements equation (3) from "Differentiable Event Stream Simulator for Non-Rigid 3D Tracking.
-        The parameter values for eps and w are chosen by my best guess. C is chosen to be what was used
-        in the Vid2Events codebase for their event simulation method.
-        """
-
-        eps = 1e-4
-        C = 0.2
-        w = 100
-        return ((diff + eps) / (torch.abs(diff) + eps)) * (1 / (1 + torch.exp(-w*torch.abs(diff)+w*C)))
-    
-    def event_frames_to_voxel_grid(self, event_frames, timestamps, num_bins=5):
-        """
-        Computes the corresponding voxel grid for a list of event frames.
-
-        Parameters:
-            event_frames: N x height x width, where N is the number of event frames contributing to this voxel grid.
-            timestamps: N-length list of timestamps for each event frame.
-            num_bins: Number of bins for this voxel grid.
-        """
-        _, height, width = event_frames.shape
-
-        voxel_grid = (torch.zeros((num_bins, height, width), dtype=torch.float32)).to(self.gpu)
-
-        # normalize the event timestamps so that they lie between 0 and num_bins
-        last_stamp = timestamps[-1]
-        first_stamp = timestamps[0]
-        deltaT = last_stamp - first_stamp
-
-        if deltaT == 0:
-            deltaT = 1.0
-
-        ts = (num_bins - 1) * (timestamps - first_stamp) / deltaT   # normalized timestamps
-
-        # Each event frame falls between two bins of the voxel grid, and contributes to both of these bins.
-
-        # tis and tis_plus_1 represent the bins to the left and right of each event frame, respectively.
-        tis = torch.floor(ts).to(torch.int)     # rounded-down timestamps
-        tis_plus_1 = torch.clamp(tis + 1, max=num_bins - 1)
-
-        dts = ts - tis      # each will be between 0 and 1. Represents weight to be placed on accumulation to left vs right bin
-
-        vals_left = ((1 - dts)[:, None, None] * event_frames)
-        vals_right = (dts[:, None, None] * event_frames)
-
-        # Accumulate left side
-        voxel_grid.index_add_(0, tis, vals_left)
-
-        # Accumulate right side
-        voxel_grid.index_add_(0, tis_plus_1, vals_right)
-
-        return voxel_grid
-
-    class DepthDependentPSF(nn.Module):
-        """Module containing a collection of learnable depth-dependent psfs"""
-        # def __init__(self, min_depth, max_depth, psf_size=9):
-        #     super().__init__()
-        #     self.min_depth = min_depth
-        #     self.max_depth = max_depth
-        #     self.num_depths = self.max_depth - self.min_depth + 1
-        #     self.psf_size = psf_size
-
-        #     psfs = []
-
-        #     angles = torch.linspace(0, 90, steps=self.num_depths)  
-
-        #     # initialize to rotating psf
-        #     for theta in angles:
-        #         # create a 2D Gaussian 
-        #         base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
-        #         center = psf_size // 2
-        #         base[center, center] = 1.0
-        #         gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
-        #         rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
-
-        #         # normalize to sum to 1
-        #         rotated /= rotated.sum()
-
-        #         # In forward, we apply softplus function to make psf nonnegative. Here we apply an approximate inverse
-        #         # of the softplus function softplus^{-1}(x) ≈ log(exp(x) - 1) so that after application of softplus, 
-        #         # we (approximately) are applying rotated gaussian psfs at initialization.
-        #         eps = 1e-6
-        #         inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
-
-        #         psfs.append(torch.tensor(inv_softplus, dtype=torch.float32))
-
-        #     psfs = torch.stack(psfs, dim=0).unsqueeze(1).to("cuda:0")  # [num_depths, 1, psf_size, psf_size]
-
-        #     self.psfs = nn.Parameter(psfs)
-
-        # def __init__(self, min_depth, max_depth, psf_size=5):
-        #     super().__init__()
-        #     self.min_depth = min_depth
-        #     self.max_depth = max_depth
-
-        #     self.num_depths = self.max_depth - self.min_depth + 1
-        #     self.psf_size = psf_size
-
-        #     # psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0)
-        #     # center = psf_size // 2
-        #     # psfs[:, 0, center, center] = 5.0
-
-        #     psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device="cuda:0")
-        #     center = psf_size // 2
-        #     psfs[:, 0, center, center] = 5.0
-        #     self.psfs = nn.Parameter(psfs)
-
-        def __init__(self, min_depth, max_depth, psf_size=5):
-            super().__init__()
-            self.min_depth = min_depth
-            self.max_depth = max_depth
-
-            self.num_depths = self.max_depth - self.min_depth + 1
-            self.psf_size = psf_size
-
-            # Randomly initialize psfs (e.g., from normal distribution)
-            psfs = torch.randn((self.num_depths, 1, psf_size, psf_size), device="cuda:0") * 1
-            self.psfs = nn.Parameter(psfs)
-
-            # self.psfs = nn.Parameter(psfs).to("cuda:0")
-            # self.psfs.retain_grad()
-
-        def forward(self, image, depth_bins):
-            """
-            Applies depth-dependent psfs to sequence of frames.
-
-            Parameters:
-                image: sequence_length x 1 x height x width tensor containing sequence of frames
-                depth_bins: 1 x height x width tensor containing depth map rounded to nearest integer
-            """
-            # breakpoint()
-            output = torch.zeros_like(image)
-
-            # iterate through depths
-            for d in range(self.min_depth, self.max_depth+1):
-                mask = (depth_bins == d).float() 
-
-                if mask.sum() == 0:
-                    continue  # no pixels at this depth, skip
-
-                raw_psf = self.psfs[d-self.min_depth:d-self.min_depth+1]               
-                nonneg_psf = f.softplus(raw_psf)    # apply the softplus function to make psf nonnegative          
-                psf = nonneg_psf / nonneg_psf.sum(dim=(-2, -1), keepdim=True)   # normalize psf to sum to 1
-                psf = torch.flip(psf, dims=[-2, -1])    # flip to perform convolution instead of cross-correlation
-                # breakpoint()
-                
-                filtered = f.conv2d(image, psf, padding=self.psf_size // 2)
-                output += filtered * mask   # only counting contributions from pixels at depth d
-            # breakpoint()
-            return output
-
-
     def forward_pass_upsampled_sequence(self, sequence, record=False):
         """
         'sequence' is a list representing a batch of data, with each entry corresponding to a sequence of voxel grids to be input to the model. 
@@ -595,263 +436,13 @@ class LSTMTrainer(BaseTrainer):
         prev_frame, prev_predicted_frame = None, None
         for l in range(L):
             # breakpoint()
-            cur_seq = sequence[l]
+            cur_input = sequence[l]
 
             # new_events = voxel_grids[l]
             # new_frame = frame[l]
             # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
             # new_predicted_frame, states = self.model(new_events, prev_states)
-            new_events, new_frame, new_predicted_frame, states = self.model(cur_seq, prev_states)
-            prev_states = states
-
-            if record:
-                with torch.no_grad():
-                    event_previews.append(torch.sum(new_events, dim=1).unsqueeze(0))
-                    predicted_frames.append(new_predicted_frame.clone())
-                    groundtruth_frames.append(new_frame.clone())
-
-            # Compute the nominal loss
-            if self.loss_params is not None:
-                iter_losses.append(
-                    self.loss(new_predicted_frame, new_frame, **self.loss_params))
-            else:
-                iter_losses.append(self.loss(new_predicted_frame, new_frame))
-
-            # Compute the temporal consistency loss
-            if self.use_temporal_consistency_loss:
-                if l >= self.L0:
-                    assert(prev_frame is not None)
-                    assert(prev_predicted_frame is not None)
-                    iter_temporal_losses.append(
-                        temporal_consistency_loss(prev_frame, new_frame,
-                                                  prev_predicted_frame, new_predicted_frame,
-                                                  flow01))
-
-            # Compute the multi scale gradient loss
-            if self.use_grad_loss:
-                if record:
-                    with torch.no_grad():
-                        grad_loss_frames.append(multi_scale_grad_loss(new_predicted_frame, new_frame, preview = record))
-                else:
-                    grad_loss = multi_scale_grad_loss(new_predicted_frame, new_frame)
-                    iter_grad_losses.append(grad_loss)
-
-            # Compute the smooth loss
-            if self.use_smooth_loss:
-                smooth_loss = depth_smoothness_loss(new_predicted_frame, new_events)
-                iter_smooth_losses.append(smooth_loss)
-            
-            # Compute the ordinal loss
-            if self.use_ordinal_loss:
-                ordinal_loss = ordinal_depth_loss(new_predicted_frame, new_frame, new_events,
-                                                    self.percent_ordinal_loss, self.method_ordinal_loss)
-                iter_ordinal_losses.append(ordinal_loss)
-
-            # Compute the mse loss
-            if self.use_mse_loss:
-                # compute the MSE loss at a lower resolution
-                downsampling_factor = self.mse_loss_downsampling_factor
-
-                if downsampling_factor != 1.0:
-                    new_frame_downsampled = f.interpolate(
-                        new_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
-                    new_predicted_frame_downsampled = f.interpolate(
-                        new_predicted_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
-                    mse = mse_loss(new_predicted_frame_downsampled, new_frame_downsampled)
-                else:
-                    mse = mse_loss(new_predicted_frame, new_frame)
-                iter_mse_losses.append(mse)
-            
-            # Compute the l1 loss
-            if self.use_l1_loss:
-                # compute the L1 loss at a lower resolution
-                downsampling_factor = self.l1_loss_downsampling_factor
-
-                if downsampling_factor != 1.0:
-                    new_frame_downsampled = f.interpolate(
-                        new_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
-                    new_predicted_frame_downsampled = f.interpolate(
-                        new_predicted_frame, scale_factor=downsampling_factor, mode='bilinear', align_corners=False)
-                    l1 = l1_loss(new_predicted_frame_downsampled, new_frame_downsampled)
-                else:
-                    l1 = l1_loss(new_predicted_frame, new_frame)
-                iter_l1_losses.append(l1)
- 
-            prev_frame = new_frame
-            prev_predicted_frame = new_predicted_frame
-
-        nominal_loss = sum(iter_losses) / float(L)
-
-        losses = []
-        losses.append(nominal_loss)
-
-        # Add temporal consistenvy loss to the losses
-        if self.use_temporal_consistency_loss:
-            temporal_loss = self.weight_temporal_consistency * sum(iter_temporal_losses) / float(L - self.L0)
-            losses.append(temporal_loss)
-
-        # Add multi scale gradient loss
-        if self.use_grad_loss:
-            grad_loss = self.weight_grad_loss * sum(iter_grad_losses)/float(L)
-            losses.append(grad_loss)
-
-        # Add multi scale smooth loss
-        if self.use_smooth_loss:
-            smooth_loss = self.weight_smooth_loss * sum(iter_smooth_losses)/float(L)
-            losses.append(smooth_loss)
-
-        # Add ordinal depth loss
-        if self.use_ordinal_loss:
-            ordinal_loss = self.weight_ordinal_loss * sum(iter_ordinal_losses)/float(L)
-            losses.append(ordinal_loss)
-
-        # Add mse loss to the losses
-        if self.use_mse_loss:
-            mse = self.weight_mse_loss * sum(iter_mse_losses) / float(L)
-            losses.append(mse)
-
-        # Add L1 loss to the losses
-        if self.use_l1_loss:
-            l1 = self.weight_l1_loss * sum(iter_l1_losses) / float(L)
-            losses.append(l1)
-
-        loss = sum(losses)
-
-        # add all losses in a dict for logging
-        with torch.no_grad():
-            loss_dict = {'loss': loss, 'L_si': nominal_loss}
-            if self.use_temporal_consistency_loss:
-                loss_dict['L_tc'] = temporal_loss
-            if self.use_grad_loss:
-                loss_dict['L_grad'] = grad_loss
-            if self.use_smooth_loss:
-                loss_dict['L_smooth'] = smooth_loss
-            if self.use_ordinal_loss:
-                loss_dict['L_ord'] = ordinal_loss
-            if self.use_mse_loss:
-                loss_dict['L_mse'] = mse
-            if self.use_l1_loss:
-                loss_dict['L_l1'] = l1
-
-        # breakpoint()
-        return loss_dict, \
-            predicted_frames if record else None, \
-            groundtruth_frames if record else None, \
-            event_previews if record else None, \
-            grad_loss_frames if record else None
-    
-
-
-
-
-
-
-
-
-
-
-
-    def forward_pass_upsampled_sequence_old(self, sequence, record=False):
-        """
-        'sequence' is a list representing a batch of data, with each entry corresponding to a sequence of voxel grids to be input to the model. 
-        Each entry of 'sequence' is itself a list, with each entry in the list corresponding a single voxel grid. 
-        Each entry sequence[i][j] is a dictionary corresponding a single to-be-computed voxel grid with the following key/value pairs:
-            - 'frames': num_frames x 1 x height x width tensor containing the grayscale frames that contribute to this voxel grid.
-            - 'stamps': num_frames-length tensor containing the timestamps of each frame.
-            - 'frame': 1 x height x width tensor containing the depth map corresponding to this voxel grid. 
-               Note that 'frame' has already been preprocessed, i.e. converted to normalized log depth.
-            - 'metric_depth': 1 x height x width tensor containing the raw unprocessed depth map (used for depth-dependent psf simulation).
-        """
-
-        N = len(sequence)       # batch size
-        L = len(sequence[0])    # voxel grid sequence length
-        assert(N > 0)
-        assert(L > 0)
-        # breakpoint()
-
-        voxel_grid_list = []
-        frame_list = []
-
-        
-        sequence = list(map(list, zip(*sequence)))
-        sequence = list(map(list, zip(*sequence)))
-
-        # breakpoint()
-        for i in range(N):
-            for j in range(L):
-                # move everything to gpu
-                sequence[i][j]['frames'] = sequence[i][j]['frames'].to(self.gpu)
-                sequence[i][j]['stamps'] = sequence[i][j]['stamps'].to(self.gpu)
-                sequence[i][j]['frame'] = sequence[i][j]['frame'].to(self.gpu)
-                sequence[i][j]['metric_depth'] = sequence[i][j]['metric_depth'].to(self.gpu)
-                # breakpoint()
-
-                # apply depth-dependent psfs
-                depth = torch.clamp(sequence[i][j]['metric_depth'], min=2, max=80)
-                depth_bins = torch.round(depth)
-                convolved_frames = self.psf_model(sequence[i][j]['frames'], depth_bins)
-
-                # event simulation
-                epsilon = 1e-6
-                log_frames = torch.log(convolved_frames + epsilon)
-                num_images = (sequence[i][j]['frames']).shape[0]
-
-                diffs = log_frames[1:] - log_frames[:num_images-1]
-                event_frames = torch.stack([self.compute_event_frame(d) for d in diffs])
-                
-                # voxel grid computation
-                stamps = sequence[i][j]['stamps']
-                stamps = stamps[1:]     # Each event frame is computed using diff of some frame_0 and frame_1. We use timestamp of frame_1 in voxel grid computation.
-                stamps = stamps.float()
-
-                voxel_grid = self.event_frames_to_voxel_grid(torch.squeeze(event_frames), stamps)
-                voxel_grid = (voxel_grid - voxel_grid.mean()) / (voxel_grid.std() + epsilon)
-
-                # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
-                scale_factor = 0.5
-                downsampled_voxel_grid = f.interpolate(voxel_grid.unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
-                downsampled_frame = f.interpolate(sequence[i][j]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
-
-                voxel_grid_list.append(downsampled_voxel_grid)  # shape [1, C, H, W]
-                frame_list.append(downsampled_frame)
-
-        _, num_bins, height, width = voxel_grid_list[0].shape
-
-        voxel_grids = torch.stack(voxel_grid_list).view(N, L, num_bins, height, width)
-        frame = torch.stack(frame_list).view(N, L, 1, height, width)
-        
-        # reshape to match expected shape for model
-        voxel_grids = voxel_grids.permute(1, 0, 2, 3, 4)    # L x N x num_bins x H x W
-        frame = frame.permute(1, 0, 2, 3, 4)    # L x N x 1 x H x W
-
-
-        # list of per-iteration losses (summed after the loop)
-        iter_losses = [] # main defined loss
-        iter_grad_losses = []
-        iter_smooth_losses = []
-        iter_ordinal_losses = []
-        iter_temporal_losses = []
-        iter_mse_losses = []
-        iter_l1_losses = []
-
-        if record:
-            event_previews = []
-            predicted_frames = []  # list of intermediate predicted frames
-            groundtruth_frames = []
-            grad_loss_frames = [] # list of loss visualization frames
-
-        if self.use_temporal_consistency_loss:
-            assert(self.L0 >= 1)
-            assert(self.L0 < L)
-
-        prev_states = None
-        prev_frame, prev_predicted_frame = None, None
-        for l in range(L):
-            # breakpoint()
-            new_events = voxel_grids[l] # N x num_bins x H x W
-            new_frame = frame[l]     # N x 1 x H x W
-            # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
-            new_predicted_frame, states = self.model(new_events, prev_states)
+            new_events, new_frame, new_predicted_frame, states = self.model(cur_input, prev_states)
             prev_states = states
 
             if record:
@@ -1026,8 +617,11 @@ class LSTMTrainer(BaseTrainer):
             print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
             # breakpoint()
-            # losses, _, _, _ , _= self.forward_pass_sequence(sequence)
-            losses, _, _, _ , _= self.forward_pass_upsampled_sequence(sequence)
+            if self.use_psf:
+                losses, _, _, _ , _= self.forward_pass_upsampled_sequence(sequence)
+            else:
+                losses, _, _, _ , _= self.forward_pass_sequence(sequence)
+
             # breakpoint()
             # torch.autograd.set_detect_anomaly(True)       
             loss = losses['loss']
@@ -1062,18 +656,20 @@ class LSTMTrainer(BaseTrainer):
                 # data is a sequence containing L successive events <-> frames pairs
                 sequence = self.data_loader.dataset[preview_idx]
 
-                # every element in sequence is a [C x H x W] tensor
-                # but the model requires [1 x C x H x W] tensor, so
-                # we preprocess the data here to adjust to this expected format
-                # for data_items in sequence:
-                #     for item in data_items.values():
-                #         item.unsqueeze_(dim=0)
-                sequence = [sequence]
-
-                # _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
-                #     sequence, record=True)
-                _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
-                    sequence, record=True)
+                if self.use_psf:
+                    sequence = [sequence]
+                    _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
+                        sequence, record=True)
+                else:
+                    # every element in sequence is a [C x H x W] tensor
+                    # but the model requires [1 x C x H x W] tensor, so
+                    # we preprocess the data here to adjust to this expected format
+                    for data_items in sequence:
+                        for item in data_items.values():
+                            item.unsqueeze_(dim=0)
+                    _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
+                        sequence, record=True)
+                    
                 hist_idx = len(predicted_frames) - 1  # choose an idx to plot
                 self.writer.add_histogram(f'{self.preview_count}_prediction',
                                           predicted_frames[hist_idx],
@@ -1134,8 +730,12 @@ class LSTMTrainer(BaseTrainer):
         with torch.no_grad():
             for batch_idx, sequence in enumerate(self.valid_data_loader):
                 print(f"Batch {batch_idx}")
-                # losses, _, _, _, _ = self.forward_pass_sequence(sequence)
-                losses, _, _, _, _ = self.forward_pass_upsampled_sequence(sequence)
+                
+                if self.use_psf:
+                    losses, _, _, _, _ = self.forward_pass_upsampled_sequence(sequence)
+                else:
+                    losses, _, _, _, _ = self.forward_pass_sequence(sequence)
+
                 for loss_name, loss_value in losses.items():
                     if loss_name not in all_losses_in_batch:
                         all_losses_in_batch[loss_name] = []
@@ -1157,19 +757,19 @@ class LSTMTrainer(BaseTrainer):
                 # data is a sequence containing L successive events <-> frames pairs
                 sequence = self.valid_data_loader.dataset[val_preview_idx]
 
-                # every element in sequence is a [C x H x W] tensor
-                # but the model requires [1 x C x H x W] tensor, so
-                # we preprocess the data here to adjust to this expected format
-                # for data_items in sequence:
-                #     for item in data_items.values():
-                #         item.unsqueeze_(dim=0)
-                sequence = [sequence]
-
-                # _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
-                #     sequence, record=True)
-
-                _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
-                    sequence, record=True)
+                if self.use_psf:
+                    sequence = [sequence]
+                    _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
+                        sequence, record=True)
+                else:
+                    # every element in sequence is a [C x H x W] tensor
+                    # but the model requires [1 x C x H x W] tensor, so
+                    # we preprocess the data here to adjust to this expected format
+                    for data_items in sequence:
+                        for item in data_items.values():
+                            item.unsqueeze_(dim=0)
+                    _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
+                        sequence, record=True)
 
                 total_metrics += self._eval_metrics(predicted_frames[0], groundtruth_frames[0])
 

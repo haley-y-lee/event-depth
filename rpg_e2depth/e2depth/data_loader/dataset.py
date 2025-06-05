@@ -340,11 +340,7 @@ class SynchronizedFramesEventsDataset(Dataset):
                         **events}
             return item
         
-
-
-
-
-
+        
 class SequenceUpsampledFramesDataset(Dataset):
     """Load sequences of UpsampledFramesDataset items, each of which corresponds to a voxel grid."""
 
@@ -392,9 +388,7 @@ class SequenceUpsampledFramesDataset(Dataset):
             sequence.append(item)
 
         return sequence
-
-
-
+    
 
 class UpsampledFramesDataset(Dataset):
     """Loads the upsampled frames and depth frame that correspond to a voxel grid.

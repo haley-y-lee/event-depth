@@ -84,6 +84,7 @@ def main(config, resume, initial_checkpoint=None):
             clip_distance[split] = 100.0
 
     normalize = config['data_loader'].get('normalize', True)
+    use_psf = config['use_psf']
 
     try:
         inverse = config['data_loader']['inverse']
@@ -124,18 +125,24 @@ def main(config, resume, initial_checkpoint=None):
     # Set up data loaders
     kwargs = {'num_workers': config['data_loader']['num_workers'],
               'pin_memory': config['data_loader']['pin_memory']} if config['cuda'] else {}
-    # data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
-    #                          shuffle=config['data_loader']['shuffle'], **kwargs)
-    def identity_collate_fn(batch):
-        return batch
-    data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
-                            shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
+    
+    if use_psf:
+        def identity_collate_fn(batch):
+            return batch
+        
+        data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
+                        shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
+        
+        valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
+                        shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
+    else:
+        data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
+                                shuffle=config['data_loader']['shuffle'], **kwargs)
 
-    # valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-    #                                shuffle=config['data_loader']['shuffle'], **kwargs)
+        valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
+                                    shuffle=config['data_loader']['shuffle'], **kwargs)
 
-    valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-                            shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
+
 
     model = eval(config['arch'])(config['model'])
 

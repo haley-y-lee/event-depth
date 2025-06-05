@@ -66,42 +66,42 @@ class E2VID(BaseE2VID):
         return self.unet.forward(event_tensor), None
 
 
-# class E2VIDRecurrent(BaseE2VID):
-#     """
-#     Recurrent, UNet-like architecture where each encoder is followed by a ConvLSTM or ConvGRU.
-#     """
+class E2VIDRecurrent(BaseE2VID):
+    """
+    Recurrent, UNet-like architecture where each encoder is followed by a ConvLSTM or ConvGRU.
+    """
 
-#     def __init__(self, config):
-#         super(E2VIDRecurrent, self).__init__(config)
+    def __init__(self, config):
+        super(E2VIDRecurrent, self).__init__(config)
 
-#         try:
-#             self.recurrent_block_type = str(config['recurrent_block_type'])
-#         except KeyError:
-#             self.recurrent_block_type = 'convlstm'  # or 'convgru'
+        try:
+            self.recurrent_block_type = str(config['recurrent_block_type'])
+        except KeyError:
+            self.recurrent_block_type = 'convlstm'  # or 'convgru'
 
-#         self.unetrecurrent = UNetRecurrent(num_input_channels=self.num_bins,
-#                                            num_output_channels=1,
-#                                            skip_type=self.skip_type,
-#                                            recurrent_block_type=self.recurrent_block_type,
-#                                            activation='sigmoid',
-#                                            num_encoders=self.num_encoders,
-#                                            base_num_channels=self.base_num_channels,
-#                                            num_residual_blocks=self.num_residual_blocks,
-#                                            norm=self.norm,
-#                                            use_upsample_conv=self.use_upsample_conv)
+        self.unetrecurrent = UNetRecurrent(num_input_channels=self.num_bins,
+                                           num_output_channels=1,
+                                           skip_type=self.skip_type,
+                                           recurrent_block_type=self.recurrent_block_type,
+                                           activation='sigmoid',
+                                           num_encoders=self.num_encoders,
+                                           base_num_channels=self.base_num_channels,
+                                           num_residual_blocks=self.num_residual_blocks,
+                                           norm=self.norm,
+                                           use_upsample_conv=self.use_upsample_conv)
 
-#     def forward(self, event_tensor, prev_states):
-#         """
-#         :param event_tensor: N x num_bins x H x W
-#         :param prev_states: previous ConvLSTM state for each encoder module
-#         :return: reconstructed image, taking values in [0,1].
-#         """
-#         img_pred, states = self.unetrecurrent.forward(event_tensor, prev_states)
-#         return img_pred, states
+    def forward(self, event_tensor, prev_states):
+        """
+        :param event_tensor: N x num_bins x H x W
+        :param prev_states: previous ConvLSTM state for each encoder module
+        :return: reconstructed image, taking values in [0,1].
+        """
+        img_pred, states = self.unetrecurrent.forward(event_tensor, prev_states)
+        return img_pred, states
 
 class E2VIDRecurrentPSF(BaseE2VID):
     """
-    Recurrent, UNet-like architecture where each encoder is followed by a ConvLSTM or ConvGRU.
+    Same as E2VIDRecurrent, but additionally has a depth-dependent psf layer before the UNet
     """
 
     def __init__(self, config):
@@ -130,11 +130,11 @@ class E2VIDRecurrentPSF(BaseE2VID):
                                            psf_init=self.psf_init
                                            )
 
-    def forward(self, cur_seq, prev_states):
+    def forward(self, cur_input, prev_states):
         """
-        :param event_tensor: N x num_bins x H x W
+        :param cur_input: contains the input grayscale frames, timestamps, and ground-truth depth frame (as loaded in by UpsampledFramesDataset class)
         :param prev_states: previous ConvLSTM state for each encoder module
-        :return: reconstructed image, taking values in [0,1].
+        :return: the computed voxel grids, the ground-truth depth frame, the predicted depth frame, and the hidden states
         """
-        voxel_grids, frame, new_predicted_frame, states = self.unetrecurrentpsf.forward(cur_seq, prev_states)
+        voxel_grids, frame, new_predicted_frame, states = self.unetrecurrentpsf.forward(cur_input, prev_states)
         return voxel_grids, frame, new_predicted_frame, states

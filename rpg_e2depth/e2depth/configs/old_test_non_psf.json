@@ -1,15 +1,15 @@
 {
-    "name": "testing175",
+    "name": "testing174",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
         "train": {
-            "type": "SequenceUpsampledFramesDataset",
-            "base_folder": "small_upsampled",
-            "depth_folder": "depths",
-            "frame_folder": "frames",
+            "type": "SequenceSynchronizedFramesEventsDataset",
+            "base_folder": "small_train",
+            "depth_folder": "depth/data",
+            "frame_folder": "",
             "flow_folder": "",
-            "event_folder": "",
+            "event_folder": "events/voxels",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
             "step_size": 18,
@@ -17,15 +17,15 @@
             "scale_factor": 0.5
         },
         "validation": {
-            "type": "SequenceUpsampledFramesDataset",
-            "base_folder": "small_upsampled",
-            "depth_folder": "depths",
-            "frame_folder": "frames",
+            "type": "SequenceSynchronizedFramesEventsDataset",
+            "base_folder": "small_train",
+            "depth_folder": "depth/data",
+            "frame_folder": "",
             "flow_folder": "",
-            "event_folder": "",
+            "event_folder": "events/voxels",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 19,
+            "step_size": 18,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
@@ -72,7 +72,7 @@
         "still_previews": true,
         "grid_loss": true
     },
-    "arch": "E2VIDRecurrentPSF",
+    "arch": "E2VIDRecurrent",
     "model": {
         "num_bins": 5,
         "skip_type": "sum",
@@ -81,8 +81,7 @@
         "base_num_channels": 32,
         "num_residual_blocks": 2,
         "use_upsample_conv": true,
-        "norm": "none",
-        "psf_init": "random"
+        "norm": "none"
     },
-    "use_psf": true
+    "use_psf": false
 }
