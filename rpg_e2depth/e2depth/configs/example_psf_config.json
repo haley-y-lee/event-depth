@@ -5,7 +5,7 @@
     "data_loader": {
         "train": {
             "type": "SequenceUpsampledFramesDataset",
-            "base_folder": "small_upsampled",
+            "base_folder": "train_upsampled",
             "depth_folder": "depths",
             "frame_folder": "frames",
             "flow_folder": "",
@@ -18,7 +18,7 @@
         },
         "validation": {
             "type": "SequenceUpsampledFramesDataset",
-            "base_folder": "small_upsampled",
+            "base_folder": "valid_upsampled",
             "depth_folder": "depths",
             "frame_folder": "frames",
             "flow_folder": "",

@@ -5,7 +5,7 @@
     "data_loader": {
         "train": {
             "type": "SequenceSynchronizedFramesEventsDataset",
-            "base_folder": "small_train",
+            "base_folder": "train",
             "depth_folder": "depth/data",
             "frame_folder": "",
             "flow_folder": "",
@@ -18,7 +18,7 @@
         },
         "validation": {
             "type": "SequenceSynchronizedFramesEventsDataset",
-            "base_folder": "small_train",
+            "base_folder": "valid",
             "depth_folder": "depth/data",
             "frame_folder": "",
             "flow_folder": "",
