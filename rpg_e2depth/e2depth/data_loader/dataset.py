@@ -483,7 +483,7 @@ class UpsampledFramesDataset(Dataset):
         
         # Load frames corresponding to this voxel grid
         start_idx, end_idx = self.boundaries[i]
-        subsample_rate = 4
+        subsample_rate = 4  # currently hardcoded, probably should add to config
         indices = range(start_idx, end_idx+1, subsample_rate)
         frames = self.load_frames(indices, seed)
 
