@@ -5,3 +5,5 @@ models/
 **/saved/
 
 **/pretrained/
+
+**/inference_results/

@@ -130,11 +130,11 @@ class E2VIDRecurrentPSF(BaseE2VID):
                                            psf_init=self.psf_init
                                            )
 
-    def forward(self, cur_input, prev_states):
+    def forward(self, cur_input, prev_states, downsample=True):
         """
         :param cur_input: contains the input grayscale frames, timestamps, and ground-truth depth frame (as loaded in by UpsampledFramesDataset class)
         :param prev_states: previous ConvLSTM state for each encoder module
         :return: the computed voxel grids, the ground-truth depth frame, the predicted depth frame, and the hidden states
         """
-        voxel_grids, frame, new_predicted_frame, states = self.unetrecurrentpsf.forward(cur_input, prev_states)
+        voxel_grids, frame, new_predicted_frame, states = self.unetrecurrentpsf.forward(cur_input, prev_states, downsample)
         return voxel_grids, frame, new_predicted_frame, states

@@ -18,8 +18,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description='Evaluating a trained network')
     parser.add_argument('-c', '--path_to_model', type=str,
-                        help='path to the model weights',
-                        default=os.path.join(os.environ['PRETRAINED_MODELS'], 'E2VID_lightweight.pth.tar'))
+                        help='path to the model weights')
     parser.add_argument('-i', '--input_folder', default=None, type=str,
                         help="name of the folder containing the voxel grids")
     parser.add_argument('-f', '--frame_folder', default=None, type=str,

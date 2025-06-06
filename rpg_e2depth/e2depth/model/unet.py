@@ -329,7 +329,7 @@ class UNetRecurrentPSF(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='random'):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='random', scale_factor=1):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -346,8 +346,9 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=80, psf_init=psf_init, psf_size=9)
+        self.scale_factor = scale_factor
 
-    def forward(self, cur_input, prev_states):
+    def forward(self, cur_input, prev_states, downsample=True):
         """
         :param cur_input: batch of input data (formatted by UpsampledFramesDataset class)
         :param prev_states: previous LSTM states for every encoder layer
@@ -362,6 +363,7 @@ class UNetRecurrentPSF(nn.Module):
 
         for i in range(N):     
             # move everything to gpu
+            # breakpoint()
             cur_input[i]['frames'] = cur_input[i]['frames'].to(gpu)
             cur_input[i]['stamps'] = cur_input[i]['stamps'].to(gpu)
             cur_input[i]['frame'] = cur_input[i]['frame'].to(gpu)
@@ -388,11 +390,16 @@ class UNetRecurrentPSF(nn.Module):
 
             voxel_grid = event_frames_to_voxel_grid(torch.squeeze(event_frames), stamps)
             voxel_grid = (voxel_grid - voxel_grid.mean()) / (voxel_grid.std() + epsilon)
+            
 
-            # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
-            scale_factor = 0.5
-            downsampled_voxel_grid = f.interpolate(voxel_grid.unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
-            downsampled_frame = f.interpolate(cur_input[i]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+            if downsample:
+                # downsampling (done to input events + depths by original model immediately after loading, we do it here since we need to apply psfs first)
+                scale_factor = 0.5      # in the future, maybe try not to hard-code the scale factor
+                downsampled_voxel_grid = f.interpolate(voxel_grid.unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+                downsampled_frame = f.interpolate(cur_input[i]['frame'].unsqueeze(0), scale_factor=scale_factor, mode='bilinear', align_corners=True)
+            else:
+                downsampled_voxel_grid = voxel_grid.unsqueeze(0) 
+                downsampled_frame = cur_input[i]['frame'].unsqueeze(0)
 
             voxel_grid_list.append(downsampled_voxel_grid)  # shape [1, C, H, W]
             frame_list.append(downsampled_frame)
@@ -402,6 +409,7 @@ class UNetRecurrentPSF(nn.Module):
         voxel_grids = torch.stack(voxel_grid_list).view(N, num_bins, height, width)
         frame = torch.stack(frame_list).view(N, 1, height, width)
 
+        # breakpoint()
         new_predicted_frame, states = self.unet_recurrent(voxel_grids, prev_states)
 
         return voxel_grids, frame, new_predicted_frame, states

@@ -7,7 +7,7 @@ import numpy as np
 # of the starting and ending frame for each voxel grid and save this data in a .txt file.
 
 dt = 0.0333
-frame_folder = "/home/abc256/mono/DENSE/valid_upsampled_3/valid_sequence_01_town07/frames"
+frame_folder = "/home/abc256/mono/DENSE/test_upsampled_3/test_sequence_00_town10/frames"
 
 frame_stamps = np.loadtxt(
     os.path.join(frame_folder, 'timestamps.txt'))

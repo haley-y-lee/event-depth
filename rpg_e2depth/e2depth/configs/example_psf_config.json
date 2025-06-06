@@ -1,31 +1,31 @@
 {
-    "name": "testing174",
+    "name": "example_psf",
     "cuda": true,
     "gpu": 0,
     "data_loader": {
         "train": {
-            "type": "SequenceSynchronizedFramesEventsDataset",
-            "base_folder": "small_train",
-            "depth_folder": "depth/data",
-            "frame_folder": "",
+            "type": "SequenceUpsampledFramesDataset",
+            "base_folder": "small_upsampled",
+            "depth_folder": "depths",
+            "frame_folder": "frames",
             "flow_folder": "",
-            "event_folder": "events/voxels",
+            "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 18,
+            "step_size": 1,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
         "validation": {
-            "type": "SequenceSynchronizedFramesEventsDataset",
-            "base_folder": "small_train",
-            "depth_folder": "depth/data",
-            "frame_folder": "",
+            "type": "SequenceUpsampledFramesDataset",
+            "base_folder": "small_upsampled",
+            "depth_folder": "depths",
+            "frame_folder": "frames",
             "flow_folder": "",
-            "event_folder": "events/voxels",
+            "event_folder": "",
             "proba_pause_when_running": 0.0,
             "proba_pause_when_paused": 0.0,
-            "step_size": 18,
+            "step_size": 1,
             "clip_distance":80.0,
             "scale_factor": 0.5
         },
@@ -72,7 +72,7 @@
         "still_previews": true,
         "grid_loss": true
     },
-    "arch": "E2VIDRecurrent",
+    "arch": "E2VIDRecurrentPSF",
     "model": {
         "num_bins": 5,
         "skip_type": "sum",
@@ -81,7 +81,8 @@
         "base_num_channels": 32,
         "num_residual_blocks": 2,
         "use_upsample_conv": true,
-        "norm": "none"
+        "norm": "none",
+        "psf_init": "random"
     },
-    "use_psf": false
+    "use_psf": true
 }

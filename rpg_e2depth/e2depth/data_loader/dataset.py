@@ -414,7 +414,7 @@ class UpsampledFramesDataset(Dataset):
                  clip_distance=100.0,
                  normalize=True,
                  scale_factor = 1.0, inverse=False):
-
+        # breakpoint()
         self.base_folder = base_folder
         self.depth_folder = join(self.base_folder, depth_folder if depth_folder is not None else 'frames')
         self.frame_folder = join(self.base_folder, frame_folder if frame_folder is not None else 'rgb')
@@ -423,6 +423,8 @@ class UpsampledFramesDataset(Dataset):
         self.clip_distance = clip_distance
         self.inverse = inverse
         self.normalize = normalize
+
+        # breakpoint()
 
         self.depth_stamps = np.loadtxt(
             join(self.depth_folder, 'timestamps.txt'))[:, 1]

@@ -42,6 +42,8 @@ class ImageReconstructor:
                 print('!!Warning: disabling auto HDR for color reconstruction!!')
             options.auto_hdr = False  # disable auto_hdr for color reconstruction (otherwise, each channel will be normalized independently)
 
+        # breakpoint()
+
         self.crop = CropParameters(self.width, self.height, self.model.num_encoders)
 
         self.last_states_for_each_channel = {'grayscale': None}
@@ -60,6 +62,7 @@ class ImageReconstructor:
         self.image_display = ImageDisplay(options)
 
     def update_reconstruction(self, event_tensor, event_tensor_id, stamp=None):
+        # breakpoint()
 
         # max duration without events before we reinitialize
         self.max_duration_before_reinit_s = 5.0
@@ -71,6 +74,7 @@ class ImageReconstructor:
                 self.initialize(self.height, self.width, self.options)
 
         self.last_stamp = stamp
+        # breakpoint()
 
         with torch.no_grad():
 

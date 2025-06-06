@@ -10,8 +10,9 @@ from utils.timers import cuda_timers
 import time
 import shutil
 import os
-from image_reconstructor import ImageReconstructor
-from options.inference_options import set_inference_options
+from psf_depth_reconstructor import PSFDepthReconstructor
+from options.inference_options import set_depth_inference_options
+from data_loader.dataset import UpsampledFramesDataset
 
 if __name__ == "__main__":
 
@@ -19,12 +20,12 @@ if __name__ == "__main__":
         description='Evaluating a trained network')
     parser.add_argument('-c', '--path_to_model', type=str,
                         help='path to the model weights')
-    parser.add_argument('-i', '--input_folder', default=None, type=str,
-                        help="name of the folder containing the voxel grids")
+    parser.add_argument('-i', '--base_folder', default=None, type=str,
+                        help="name of the folder containing the frames and depths directories")
     parser.add_argument('--start_time', default=0.0, type=float)
     parser.add_argument('--stop_time', default=0.0, type=float)
 
-    set_inference_options(parser)
+    set_depth_inference_options(parser)
 
     args = parser.parse_args()
 
@@ -36,37 +37,36 @@ if __name__ == "__main__":
     model = model.to(device)
     model.eval()
 
-    base_folder = os.path.dirname(args.input_folder)
-    event_folder = os.path.basename(args.input_folder)
+    base_folder = args.base_folder
+    event_folder = ""
+    depth_folder = 'depths'
+    frame_folder = 'frames'
 
     # hack to get the image size: create a dummy dataset,
     # grab the first data item and read the required info
-    dummy_dataset = VoxelGridDataset(base_folder,
-                                     event_folder,
-                                     args.start_time,
-                                     args.stop_time,
-                                     transform=None)
+    dummy_dataset = UpsampledFramesDataset(base_folder, event_folder, depth_folder, frame_folder, transform=False)
+    # breakpoint()
+
     data = dummy_dataset[0]
-    _, height, width = data['events'].shape
+    _, _, height, width = data['frames'].shape
 
-    image_reconstructor = ImageReconstructor(model, height, width, model.num_bins, args)
+    depth_reconstructor = PSFDepthReconstructor(model, height, width, model.num_bins, args)
 
-    dataset = VoxelGridDataset(base_folder,
-                               event_folder,
-                               args.start_time,
-                               args.stop_time,
-                               transform=None)
+    dataset = UpsampledFramesDataset(base_folder, event_folder, depth_folder, frame_folder, transform=False)
 
     output_dir = args.output_folder
     dataset_name = args.dataset_name
     print('Processing {}'.format(dataset_name))
     N = len(dataset)
+    # breakpoint()
 
+    # are either of these needed?
     if output_dir is not None:
-        shutil.copyfile(join(args.input_folder, 'timestamps.txt'),
+        shutil.copyfile(join(join(base_folder, depth_folder), 'timestamps.txt'),
                         join(output_dir, dataset_name, 'timestamps.txt'))
-        shutil.copyfile(join(args.input_folder, 'boundary_timestamps.txt'),
-                        join(output_dir, dataset_name, 'boundary_timestamps.txt'))
+        # check if this is needed or not (seems like not)
+        # shutil.copyfile(join(args.input_folder, 'boundary_timestamps.txt'),
+        #                 join(output_dir, dataset_name, 'boundary_timestamps.txt'))
 
     idx = 0
     while idx < N:
@@ -74,7 +74,6 @@ if __name__ == "__main__":
             print('{} / {}'.format(idx, N))
 
         data = dataset[idx]
-        event_tensor = data['events']
 
-        image_reconstructor.update_reconstruction(event_tensor, idx)
+        depth_reconstructor.update_reconstruction(data, idx)
         idx += 1
