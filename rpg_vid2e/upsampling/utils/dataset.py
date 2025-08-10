@@ -80,6 +80,18 @@ class ImageSequence(Sequence):
         if isinstance(file_names, list):
             return [os.path.join(self.imgs_dirpath, f) for f in file_names]
         return os.path.join(self.imgs_dirpath, file_names)
+    
+    def get_all_pairs(self):
+        image_pairs = []
+        time_pairs = []
+        for i in range(len(self.file_names) - 1):
+            file_paths = self._get_path_from_name([self.file_names[i], self.file_names[i + 1]])
+            imgs = [self._pil_loader(f) for f in file_paths]
+            t0 = i / self.fps
+            t1 = (i + 1) / self.fps
+            image_pairs.append((imgs[0], imgs[1]))
+            time_pairs.append((t0, t1))
+        return image_pairs, time_pairs
 
 
 class VideoSequence(Sequence):
@@ -121,3 +133,22 @@ class VideoSequence(Sequence):
 
     def __len__(self):
         return self.len
+    def get_all_pairs(self):
+        image_pairs = []
+        time_pairs = []
+        buffer = []
+
+        for idx, frame in enumerate(skvideo.io.vreader(self.videogen.inputfile)):
+            frame = frame.astype("float32") / 255
+            if len(buffer) == 0:
+                buffer.append(frame)
+                continue
+            I0 = buffer.pop()
+            I1 = frame
+            image_pairs.append((I0, I1))
+            t0 = (idx - 1) / self.fps
+            t1 = idx / self.fps
+            time_pairs.append((t0, t1))
+            buffer.append(I1)
+
+        return image_pairs, time_pairs

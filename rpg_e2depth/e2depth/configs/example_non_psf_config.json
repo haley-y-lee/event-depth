@@ -14,7 +14,7 @@
             "proba_pause_when_paused": 0.0,
             "step_size": 1,
             "clip_distance":80.0,
-            "scale_factor": 0.5
+            "scale_factor": 1
         },
         "validation": {
             "type": "SequenceSynchronizedFramesEventsDataset",
@@ -27,9 +27,9 @@
             "proba_pause_when_paused": 0.0,
             "step_size": 1,
             "clip_distance":80.0,
-            "scale_factor": 0.5
+            "scale_factor":1
         },
-        "batch_size": 16,
+        "batch_size": 4,
         "num_workers": 7,
         "pin_memory": true,
         "normalize": true,
@@ -60,7 +60,7 @@
         "median_error"
     ],
     "trainer": {
-        "epochs": 1,
+        "epochs": 100,
         "sequence_length": 20,
         "save_dir": "saved/",
         "save_freq": 4,

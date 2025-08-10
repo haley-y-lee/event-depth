@@ -58,6 +58,7 @@ if __name__ == "__main__":
     dataset_name = args.dataset_name
     print('Processing {}'.format(dataset_name))
     N = len(dataset)
+    #print(f"[DEBUG] len(dataset): {N}") Passed
     # breakpoint()
 
     # are either of these needed?
@@ -74,6 +75,8 @@ if __name__ == "__main__":
             print('{} / {}'.format(idx, N))
 
         data = dataset[idx]
+        print(f"[DEBUG] data: {data}")
+        #print(f"[DEBUG] size of data: {data.size()}")
 
         depth_reconstructor.update_reconstruction(data, idx)
         idx += 1

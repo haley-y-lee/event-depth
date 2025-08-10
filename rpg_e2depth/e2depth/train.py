@@ -1,3 +1,7 @@
+import torch.multiprocessing as mp
+if mp.get_start_method(allow_none=True) != "spawn":
+    mp.set_start_method("spawn", force=True)
+
 import os
 import json
 import logging
@@ -7,12 +11,114 @@ from model.model import *
 from model.loss import *
 from model.metric import *
 from torch.utils.data import DataLoader, ConcatDataset
+from torch.utils.data._utils.collate import default_collate
 from data_loader.dataset import *
 from trainer.lstm_trainer import LSTMTrainer
 from utils.data_augmentation import Compose, RandomRotationFlip, RandomCrop, CenterCrop
 from os.path import join
+import shutil
+from torch.utils.data import Subset
+from functools import partial
 
 logging.basicConfig(level=logging.INFO, format='')
+def pad_seq(list_tensor, pad_val=0.0):
+    """
+    list[Ti, ...]  →  (N, T_max, ...)  +  mask(N, T_max)
+    뒤쪽 차원(...) 수가 0(1‑D), 3(4‑D) 모두 OK
+    """
+    T_max = max(t.shape[0] for t in list_tensor)
+    trailing_shape = list_tensor[0].shape[1:]      # 가변 길이 제외 나머지 차원
+    N = len(list_tensor)
+
+    out_shape = (N, T_max, *trailing_shape)        # e.g. (N, T, C, H, W) 또는 (N, T)
+    out  = list_tensor[0].new_full(out_shape, pad_val)
+    mask = torch.zeros(N, T_max, dtype=torch.bool)
+
+    for n, t in enumerate(list_tensor):
+        L = t.shape[0]
+        out[n, :L]  = t
+        mask[n, :L] = 1
+
+    return out, mask
+
+# def stack_to_cuda(batch, device="cuda:1"):
+#     first = batch[0]
+
+#     # ── Case ①: SequenceUpsampledFramesDataset (list → dict) ──
+#     if isinstance(first, list) and isinstance(first[0], dict):
+#         L     = len(first)        # 고정 시퀀스 길이
+#         keys  = first[0].keys()
+#         N     = len(batch)
+
+#         collated = {}          # 최종 dict‑of‑Tensor
+#         for k in keys:
+#             # gather N×L 개 항목
+#             seq_items = [sample[l][k] for sample in batch for l in range(L)]
+
+#             if k in ("frames", "stamps"):            # **가변 T** → 패딩
+#                 stacked, mask = pad_seq(seq_items)          # stacked: (N*L, T_max, …)
+#                 trailing = stacked.shape[2:]                # (C,H,W)  or  () for 1‑D
+#                 collated[k]        = stacked.view(N, L, *stacked.shape[1:])          # CPU tensor
+#                 collated[f"{k}_mask"] = mask.view(N, L, -1)    
+#             else:                                    # 고정 shape
+#                 stacked = torch.stack(seq_items)
+#                 collated[k] = stacked.view(N, L, *stacked.shape[1:]).to(device, non_blocking=True)
+
+#         return collated
+
+#     # ── Case ②: 단일 dict 샘플 ──
+#     if isinstance(first, dict):
+#         keys = first.keys()
+#         out  = {k: torch.stack([b[k] for b in batch]).to(device, non_blocking=True) for k in keys}
+#         return out
+
+#     # ── Fallback ──
+
+def _to_device(x, device):
+    if isinstance(x, torch.Tensor):
+        return x.to(device, non_blocking=True)
+    if isinstance(x, dict):
+        return {k: _to_device(v, device) for k, v in x.items()}
+    if isinstance(x, (list, tuple)):
+        return type(x)(_to_device(v, device) for v in x)
+    return x
+
+def collate_keep_sequence(batch, device):
+    # batch: [N] where each item is a sequence [L] of dicts
+    # 절대 default_collate 호출하지 말 것!
+    return _to_device(batch, device)
+
+def stack_to_cuda(batch, device="cuda:0"):
+    first = batch[0]
+
+    # Case ①: SequenceUpsampledFramesDataset → list-of-dict
+    if isinstance(first, list) and isinstance(first[0], dict):
+        L     = len(first)        # 시퀀스 길이
+        keys  = first[0].keys()
+        N     = len(batch)
+
+        collated = {}
+        for k in keys:
+            seq_items = [sample[l][k] for sample in batch for l in range(L)]
+
+            if k in ("frames", "stamps"):  # 가변 길이
+                stacked, mask = pad_seq(seq_items)
+                collated[k]        = stacked.view(N, L, *stacked.shape[1:]).to(device, non_blocking=True)
+                collated[f"{k}_mask"] = mask.view(N, L, -1).to(device, non_blocking=True)
+            else:
+                stacked = torch.stack(seq_items)
+                collated[k] = stacked.view(N, L, *stacked.shape[1:]).to(device, non_blocking=True)
+
+        return collated
+
+    # Case ②: 단일 dict
+    if isinstance(first, dict):
+        return {k: torch.stack([b[k] for b in batch]).to(device, non_blocking=True)
+                for k in first.keys()}
+
+    # fallback
+    return default_collate(batch)
+
 
 
 def concatenate_subfolders(base_folder, dataset_type, event_folder, depth_folder, frame_folder, sequence_length, transform=None,
@@ -22,7 +128,9 @@ def concatenate_subfolders(base_folder, dataset_type, event_folder, depth_folder
     Create an instance of ConcatDataset by aggregating all the datasets in a given folder
     """
 
-    subfolders = os.listdir(base_folder)
+    #subfolders = os.listdir(base_folder)
+    subfolders = [d for d in os.listdir(base_folder) if not d.startswith('.')]
+
     print('Found {} samples in {}'.format(len(subfolders), base_folder))
 
     train_datasets = []
@@ -41,10 +149,15 @@ def concatenate_subfolders(base_folder, dataset_type, event_folder, depth_folder
                                                  normalize=normalize,
                                                  scale_factor=scale_factor,
                                                  inverse = inverse))
+        
+    
     concat_dataset = ConcatDataset(train_datasets)
     # breakpoint()
 
+
+
     return concat_dataset
+
 
 
 def main(config, resume, initial_checkpoint=None):
@@ -97,8 +210,8 @@ def main(config, resume, initial_checkpoint=None):
                                            depth_folder['train'],
                                            frame_folder['train'],
                                            sequence_length=L,
-                                           transform=Compose([RandomRotationFlip(0.0, 0.5, 0.0),
-                                                              RandomCrop(112)]),
+                                        #    transform=Compose([RandomRotationFlip(0.0, 0.5, 0.0),
+                                        #                       RandomCrop(112)]),
                                            proba_pause_when_running=proba_pause_when_running['train'],
                                            proba_pause_when_paused=proba_pause_when_paused['train'],
                                            step_size=step_size['train'],
@@ -106,6 +219,14 @@ def main(config, resume, initial_checkpoint=None):
                                            normalize=normalize,
                                            scale_factor=scale_factor['train'],
                                            inverse = inverse)
+    
+
+    ###### DEBUG : REDUCE DATASET ########
+    total = len(train_dataset)          # 예: 3 964
+    k = 1                  # 50 %
+    torch.manual_seed(0)               # 재현용(옵션)
+    indices = torch.randperm(total)[:k] # 섞어서 앞 k개 선택
+    train_dataset = Subset(train_dataset, indices)
 
     validation_dataset = concatenate_subfolders(base_folder['validation'],
                                                 dataset_type['validation'],
@@ -121,27 +242,57 @@ def main(config, resume, initial_checkpoint=None):
                                                 normalize=normalize,
                                                 scale_factor=scale_factor['validation'],
                                                 inverse = inverse)
+    
+    validation_dataset = train_dataset
 
     # Set up data loaders
     kwargs = {'num_workers': config['data_loader']['num_workers'],
               'pin_memory': config['data_loader']['pin_memory']} if config['cuda'] else {}
     
+    # if use_psf:
+    #     def identity_collate_fn(batch):
+    #         return batch
+        
+    #     data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
+    #                     shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
+        
+    #     valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
+    #                     shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
+    # else:
+    #     data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
+    #                             shuffle=config['data_loader']['shuffle'], **kwargs)
+
+    #     valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
+    #                                 shuffle=config['data_loader']['shuffle'], **kwargs)
+
     if use_psf:
-        def identity_collate_fn(batch):
-            return batch
-        
-        data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
-                        shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
-        
-        valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-                        shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
-    else:
-        data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
-                                shuffle=config['data_loader']['shuffle'], **kwargs)
+        # list‑of‑dict → dict‑of‑Tensor 스택 + GPU copy (non‑blocking) 한 번에
+        # data_loader = DataLoader(train_dataset,
+        #                             batch_size=config['data_loader']['batch_size'],
+        #                             shuffle=config['data_loader']['shuffle'],
+        #                             collate_fn=stack_to_cuda, **kwargs)
 
-        valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-                                    shuffle=config['data_loader']['shuffle'], **kwargs)
+        # valid_data_loader = DataLoader(validation_dataset,
+        #                                 batch_size=config['data_loader']['batch_size'],
+        #                                 shuffle=False,
+                                        # collate_fn=stack_to_cuda, **kwargs)
 
+        device = torch.device(f"cuda:{config['gpu']}")
+        collate = partial(collate_keep_sequence, device=device)
+
+        data_loader = DataLoader(train_dataset,
+                                batch_size=config['data_loader']['batch_size'],
+                                shuffle=config['data_loader']['shuffle'],
+                                collate_fn=collate,
+                                num_workers=config['data_loader']['num_workers'],
+                                pin_memory=config['data_loader']['pin_memory'])
+
+        valid_data_loader = DataLoader(validation_dataset,
+                                    batch_size=config['data_loader']['batch_size'],
+                                    shuffle=False,
+                                    collate_fn=collate,
+                                    num_workers=config['data_loader']['num_workers'],
+                                    pin_memory=config['data_loader']['pin_memory'])
 
 
     model = eval(config['arch'])(config['model'])
@@ -150,6 +301,13 @@ def main(config, resume, initial_checkpoint=None):
         print('Loading initial model weights from: {}'.format(initial_checkpoint))
         checkpoint = torch.load(initial_checkpoint)
         model.load_state_dict(checkpoint['state_dict'])
+
+    # if config.get('use_psf', False) and hasattr(model, 'unetrecurrentpsf'):
+    #     factor = config.get('psf_grad_boost', 200000000000.0)   # config 파일에 넣어두면 편리
+    #     model.unetrecurrentpsf.psf_layer.psfs.register_hook(
+    #         lambda g, f=factor: g * f)
+    #     print(f"[INFO] amplify PSF gradient ×{factor}")
+
 
     model.summary()
 
@@ -194,8 +352,13 @@ if __name__ == '__main__':
         config = json.load(open(args.config))
         path = os.path.join(config['trainer']['save_dir'], config['name'])
         # breakpoint()
-        if args.resume is None:
-            assert not os.path.exists(path), "Path {} already exists!".format(path)
+        # if args.resume is None:
+        #     assert not os.path.exists(path), "Path {} already exists!".format(path)
+        if os.path.exists(path):
+            print(f"[INFO] Removing existing experiment directory: {path}")
+            shutil.rmtree(path) 
+
+
     assert config is not None
 
     main(config, args.resume, args.initial_checkpoint)

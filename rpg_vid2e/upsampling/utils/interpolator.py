@@ -25,6 +25,7 @@ Usage:
 from typing import Optional
 import numpy as np
 import tensorflow as tf
+import os
 
 
 def _pad_to_align(x, align):
@@ -80,6 +81,7 @@ class Interpolator:
         inference.'
     """
     self._model = tf.compat.v2.saved_model.load(model_path)
+    #self._model = None
     self._align = align
 
   def interpolate(self, x0: np.ndarray, x1: np.ndarray,

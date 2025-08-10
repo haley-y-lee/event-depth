@@ -13,8 +13,10 @@ from utils.util import first_element_greater_than, last_element_less_than
 import random
 import glob
 import torch
+import logging
 import torch.nn.functional as f
 from math import fabs
+import matplotlib.pyplot as plt
 
 
 class SequenceSynchronizedFramesEventsDataset(Dataset):
@@ -261,8 +263,16 @@ class SynchronizedFramesEventsDataset(Dataset):
             frame = frame / np.amax(frame[~np.isnan(frame)])
 
         #Convert to log depth
-        frame = 1.0 + np.log(frame) / reg_factor
+        # frame = 1.0 + np.log(frame) / reg_factor
         # Clip between 0 and 1.0
+
+        ####### Code added 0808 #######
+        eps = 1e-6
+        den = reg_factor if isinstance(reg_factor, (float, int)) else float(reg_factor)
+        den = max(den, eps)
+        frame = 1.0 + np.log(np.clip(frame, eps, None)) / den
+        ####### #######
+
         frame = frame.clip(0, 1.0)
 
         if len(frame.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
@@ -425,9 +435,16 @@ class UpsampledFramesDataset(Dataset):
         self.normalize = normalize
 
         # breakpoint()
+        ##### CHANGED 0709 ######
+        # self.depth_stamps = np.loadtxt(
+        #     join(self.depth_folder, 'timestamps.txt'))[:, 1]
+        
+        stamps = np.loadtxt(join(self.depth_folder, 'timestamps.txt'))
+        self.depth_stamps = stamps if stamps.ndim == 1 else stamps[:, 1]
 
-        self.depth_stamps = np.loadtxt(
-            join(self.depth_folder, 'timestamps.txt'))[:, 1]
+
+
+        ##########################
         
         self.depth_stamps = self.depth_stamps - self.depth_stamps[0]    # shift so that stamps start at zero
 
@@ -440,7 +457,8 @@ class UpsampledFramesDataset(Dataset):
         self.boundaries = np.loadtxt(
             join(self.frame_folder, 'boundaries.txt'), dtype=int)
         
-        self.length = self.depth_stamps.shape[0]
+        #self.length = self.depth_stamps.shape[0]
+        self.length = self.boundaries.shape[0]
         # breakpoint()
         
         
@@ -453,27 +471,80 @@ class UpsampledFramesDataset(Dataset):
         for i in indices:  # inclusive range
 
             filename = f"{i:08d}.png"
+            
             filepath = join(self.frame_folder, filename)
 
             if os.path.exists(filepath):
                 img = io.imread(filepath)
                 frames.append(img)
+                # img_np = np.array(img)
+                # plt.plot(img_np)
+                # plt.show()
+                # try:
+                #     print(filepath)
+                # except:
+                #     pass
+            
             else:
                 print(f"Warning: {filepath} not found.")
-
+        #print(f"file path: {filepath}")        
+        if not frames:
+            raise RuntimeError(f"No frames found for indices: {indices} in folder: {self.frame_folder}")
+        
         frames = np.array(frames)
+        #print(f"frames shape,{frames.shape}")
         frames = frames.astype(np.float32)
 
         if self.normalize:
             frames /= 255.0 # normalize
-            frames = np.expand_dims(frames, axis=0) # expand to [1 x H x W]
+            frames = np.expand_dims(frames, axis=1) # expand to [1 x H x W]
 
         frames = torch.from_numpy(frames)
         if self.transform:
             random.seed(seed)
-            num_frames = frames.shape[1]
-            frames = torch.stack([self.transform(frames[:,i]) for i in range(num_frames)])  # frames is tensor of shape num_frames x 1 x 260 x 346
+            num_frames = frames.shape[0]
+            frames = torch.stack([self.transform(frames[i]) for i in range(num_frames)])  # frames is tensor of shape num_frames x 1 x 260 x 346
+            if frames.dim() == 3:                   # [T, H, W]
+                frames = frames.unsqueeze(1)
+        
         return frames
+    
+
+    ### ADDED LOAD DEPTH ###
+
+    def load_depths(self, indices, seed):
+        depths = []
+        for i in indices:
+            filename = f"depth_{i:08d}.png"
+            filepath = join(self.depth_folder, filename)
+
+            if os.path.exists(filepath):
+                depth = np.load(filepath).astype(np.float32)
+            else:
+                raise RuntimeError(f"Depth file not found: {filepath}")
+            
+            depth = np.clip(depth, 0.0, self.clip_distance)
+
+            if len(depth.shape) == 2:
+                depth = np.expand_dims(depth, -1)
+            depth = np.moveaxis(depth, -1, 0)
+            depth = torch.from_numpy(depth)
+
+            # if self.transform:
+            #     random.seed(seed)
+            #     depth = self.transform(depth)
+
+            if self.transform:
+                random.seed(seed)
+                num_depth = depth.shape[0]
+                depth = torch.stack([self.transform(depth[i]) for i in range(num_depth)])  # frames is tensor of shape num_frames x 1 x 260 x 346
+                if depth.dim() == 3:                   # [T, H, W]
+                    depth = depth.unsqueeze(1)
+
+            depths.append(depth)
+
+        return torch.stack(depths)  # shape: [num_frames, 1, H, W]
+
 
     def __getitem__(self, i, seed=None, reg_factor=3.70378):
         if seed is None:
@@ -490,25 +561,55 @@ class UpsampledFramesDataset(Dataset):
         timestamps = self.frame_stamps[indices]
         timestamps = torch.from_numpy(timestamps)
 
+        #### CHANGED 0709 ####
         # Load numpy depth ground truth frame 
-        frame = np.load(join(self.depth_folder, 'depth_{:010d}.npy'.format(i))).astype(np.float32)
-        metric_depth = frame.copy()
+#         depth_filename = 'depth_{:010d}.npy'.format(i)
+#         #print("Trying to load:", os.path.join(self.depth_folder, depth_filename))
+#         frame = np.load(os.path.join(self.depth_folder, depth_filename)).astype(np.float32)
+# #         frame = np.load(join(self.depth_folder, 'depth_{:010d}.npy'.format(i))).astype(np.float32)
+        
+        # metric_depth = depth.copy()
+
+        #######################
+
+        #### ADDED 0709 #######
+
+        # 1. boundary에서 frame 시퀀스 범위 얻기
+# 1. boundary에서 frame 시퀀스 범위 얻기
+        start_idx, end_idx = self.boundaries[i]
+
+        # 2. 중간 인덱스로 depth 선택
+        depth_idx = (start_idx + end_idx) // 2
+        depth_filename = f"{depth_idx:08d}.png"
+
+        # 3. depth 이미지 로드 (.png이므로 io.imread)
+        depth = io.imread(join(self.depth_folder, depth_filename)).astype(np.float32)
+
+        # 4. metric_depth는 raw 그대로 보존 (log 변환 전)
+        metric_depth = depth.copy()
+        metric_depth = torch.from_numpy(metric_depth)
+
+
+
+        frame = depth.copy()
+        # changed to apply upsampled depth
+        #######################
 
         # Clip to maximum distance
         frame = np.clip(frame, 0.0, self.clip_distance)
 
         # Normalize
         frame = frame / np.amax(frame[~np.isnan(frame)])
-        #div = abs(np.min(np.log(frame+self.eps)))
+        div = abs(np.min(np.log(frame+self.eps)))
 
         # Inverse depth
         if self.inverse:
             frame = 1.0 / frame
             frame = frame / np.amax(frame[~np.isnan(frame)])
 
-        #Convert to log depth
+        # #Convert to log depth
         frame = 1.0 + np.log(frame) / reg_factor
-        # Clip between 0 and 1.0
+        # # Clip between 0 and 1.0
         frame = frame.clip(0, 1.0)
 
         if len(frame.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
@@ -522,7 +623,7 @@ class UpsampledFramesDataset(Dataset):
             frame = self.transform(frame)
 
         # Clip to maximum distance
-        metric_depth = np.clip(metric_depth, 0.0, self.clip_distance)
+        # metric_depth = np.clip(metric_depth, 0.0, self.clip_distance)
 
         if len(metric_depth.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
             metric_depth = np.expand_dims(metric_depth, -1)
@@ -535,7 +636,7 @@ class UpsampledFramesDataset(Dataset):
             metric_depth = self.transform(metric_depth)
 
 
-        item = {'frame': frame, 'metric_depth': metric_depth, 'frames': frames, 'stamps': timestamps}
+        item = {'metric_depth': metric_depth, 'frames': frames, 'frame':frame, 'stamps': timestamps}
         return item
 
 
@@ -629,7 +730,7 @@ class EventsBetweenFramesDataset(Dataset):
             print('frame0_timestamp = {}, et0 = {}'.format(
                 frame0_timestamp, et0))
 
-        frame0 = io.imread(join(self.depth_folder, 'frame_{:010d}.png'.format(frame0_idx)),
+        frame0 = io.imread(join(self.depth_folder, 'frame_{:08d}.png'.format(frame0_idx)),
                            as_gray=False).astype(np.float32) / 255.
 
         if len(frame0.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]

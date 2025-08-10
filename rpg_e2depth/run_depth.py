@@ -21,6 +21,8 @@ if __name__ == "__main__":
                         help="name of the folder containing the voxel grids")
     parser.add_argument('--start_time', default=0.0, type=float)
     parser.add_argument('--stop_time', default=0.0, type=float)
+    parser.add_argument('--save_numpy', action='store_true', help='Save output as NumPy arrays')
+
 
     set_depth_inference_options(parser)
 

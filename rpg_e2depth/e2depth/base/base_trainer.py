@@ -7,6 +7,7 @@ import torch.optim as optim
 from utils.path_utils import ensure_dir
 from torch.utils.tensorboard import SummaryWriter
 import atexit
+import shutil
 
 
 class BaseTrainer:
@@ -33,8 +34,34 @@ class BaseTrainer:
             self.model = self.model.to(self.gpu)
 
         self.train_logger = train_logger
-        self.optimizer = getattr(optim, config['optimizer_type'])(model.parameters(),
-                                                                  **config['optimizer'])
+
+        #self.optimizer = getattr(optim, config['optimizer_type'])(model.parameters(),
+                                                        #          **config['optimizer'])
+        
+        base_lr  = config['optimizer']['lr']                 # ex) 1e‑4
+        psf_mult = config.get('psf_lr_multiplier', 500)   # config 에 새 항목
+
+        if config.get('use_psf', False) and hasattr(self.model, 'unetrecurrentpsf'):
+            psf_param = self.model.unetrecurrentpsf.psf_layer.psfs   # 단일 Parameter
+            psf_ids   = {id(psf_param)}
+            psf_params = [psf_param]
+        else:
+            psf_params = []
+            psf_ids    = set()
+
+        other_params = [p for p in self.model.parameters() if id(p) not in psf_ids]
+
+        # 옵티마이저 생성 (Adam, SGD 등 config['optimizer_type'] 그대로 사용)
+        # lr 은 파라미터 그룹에서 지정하므로 config['optimizer'] 의 'lr' 키는 제거
+        optim_kwargs = {k: v for k, v in config['optimizer'].items() if k != 'lr'}
+
+        self.optimizer = getattr(optim, config['optimizer_type'])([
+                {'params': other_params, 'lr': base_lr},
+                {'params': psf_params,   'lr': base_lr * psf_mult}
+            ],
+            **optim_kwargs
+        )
+        
         self.lr_scheduler = getattr(
             optim.lr_scheduler,
             config['lr_scheduler_type'], None)
@@ -47,12 +74,14 @@ class BaseTrainer:
         self.monitor_best = math.inf if self.monitor_mode == 'min' else -math.inf
         self.start_epoch = 1
         self.checkpoint_dir = os.path.join(config['trainer']['save_dir'], self.name)
-        ensure_dir(self.checkpoint_dir)
+        os.makedirs(self.checkpoint_dir, exist_ok=True)
         json.dump(config, open(os.path.join(self.checkpoint_dir, 'config.json'), 'w'),
                   indent=4, sort_keys=False)
 
         self.tensorboard_logdir = os.path.join(self.checkpoint_dir, 'tensorboard')
-        ensure_dir(self.tensorboard_logdir)
+        if os.path.exists(self.tensorboard_logdir):
+            shutil.rmtree(self.tensorboard_logdir)
+        os.makedirs(self.tensorboard_logdir)
         self.writer = SummaryWriter(log_dir=self.tensorboard_logdir)
         atexit.register(self.cleanup)
 

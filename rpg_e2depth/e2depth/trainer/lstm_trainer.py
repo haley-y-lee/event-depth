@@ -1,4 +1,5 @@
 import numpy as np
+import os
 import torch
 from base import BaseTrainer
 from torchvision import utils
@@ -7,7 +8,13 @@ from utils.training_utils import select_evenly_spaced_elements, plot_grad_flow, 
 import torch.nn.functional as f
 import torch.nn as nn
 import torch.optim as optim
+import time
+from model.unet import compute_event_frame
+
 from scipy.ndimage import gaussian_filter, rotate
+
+def _detach_states(states):
+    return [None if s is None else (s[0].detach(), s[1].detach()) for s in states]
 
 
 def quick_norm(img):
@@ -41,6 +48,20 @@ class LSTMTrainer(BaseTrainer):
         self.grid_loss = bool(config['trainer'].get('grid_loss', False))
         # breakpoint()
         self.use_psf = config['use_psf']
+        self.preview_count = 0
+        self.batch_step = 0
+        # if self.use_psf:
+        #     #new_events, new_frame, new_predicted_frame, states, timing = self.model(cur_input, prev_states, measure_time=True)
+        #     self.writer.add_scalar("time/psf", timing['psf_time'], global_step=self.preview_count)
+        #     self.writer.add_scalar("time/sim", timing['sim_time'], global_step=self.preview_count)
+        #     self.writer.add_scalar("time/voxel", timing['voxel_time'], global_step=self.preview_count)
+        #     self.writer.add_scalar("time/pred", timing['pred_time'], global_step=self.preview_count)
+        #     print(f"[Timing] PSF: {timing['psf_time']:.3f}s | Sim: {timing['sim_time']:.3f}s | Voxel: {timing['voxel_time']:.3f}s | Pred: {timing['pred_time']:.3f}s")
+        # #else:
+        #     #new_events, new_frame, new_predicted_frame, states = self.model(cur_input, prev_states)
+
+
+
 
         # Parameters for temporal consistency loss
         if 'temporal_consistency_loss' in config:
@@ -253,7 +274,8 @@ class LSTMTrainer(BaseTrainer):
             #     print('gt. std: {:.3f}'.format(new_frame.std()))
             #     print('rec. std: {:.3f}'.format(new_predicted_frame.std()))
 
-            prev_states = states
+            prev_states = [None if s is None else (s[0].detach(), s[1].detach())
+               for s in states]
 
             if record:
                 with torch.no_grad():
@@ -392,9 +414,7 @@ class LSTMTrainer(BaseTrainer):
     
 
 
-
-
-    def forward_pass_upsampled_sequence(self, sequence, record=False):
+    def forward_pass_upsampled_sequence(self, sequence, record=True):
         """
         'sequence' is a list representing a batch of data, with each entry corresponding to a sequence of voxel grids to be input to the model. 
         Each entry of 'sequence' is itself a list, with each entry in the list corresponding a single voxel grid. 
@@ -405,8 +425,22 @@ class LSTMTrainer(BaseTrainer):
                Note that 'frame' has already been preprocessed, i.e. converted to normalized log depth.
             - 'metric_depth': 1 x height x width tensor containing the raw unprocessed depth map (used for depth-dependent psf simulation).
         """
+    
 
-        sequence = list(map(list, zip(*sequence)))
+        # time_log = {}
+        # overall_start = time.time()
+
+        # ---- 새 collate_fn 대응 ----
+        if isinstance(sequence, dict):            # dict‑of‑Tensor 형태로 들어온 경우
+            L = sequence["frame"].shape[1]        # 시퀀스 길이
+            sequence = [
+                {k: (v[:, l] if v.dim() > 2 else v[:, l])   # [N, …]
+                for k, v in sequence.items()}
+                for l in range(L)
+            ]
+        else:
+            # 옛날 코드(리스트‑안‑리스트)와 호환
+            sequence = list(map(list, zip(*sequence)))
 
         L = len(sequence)       # voxel grid sequence length 
         N = len(sequence[0])    # batch size
@@ -435,18 +469,70 @@ class LSTMTrainer(BaseTrainer):
         prev_states = None
         prev_frame, prev_predicted_frame = None, None
         for l in range(L):
+
+            # step_start = time.time()
             # breakpoint()
+            # print ("seq: ", len(sequence))\\
+
+
             cur_input = sequence[l]
+
+            ####### CODE ADDED 0808 #######
+            # items = sequence[l]
+            # if isinstance(items, list):                 # [ dict_k, ... ] (배치 차원)
+            #     keys = items[0].keys()
+            #     cur_input = {
+            #         k: torch.stack([d[k] for d in items], dim=0)   # -> [N, ...] 텐서
+            #         for k in keys
+            #     }
+            # else:
+            #     cur_input = items
+
+
+            # psf_sim_start = time.time()
 
             # new_events = voxel_grids[l]
             # new_frame = frame[l]
             # the output of the network is a [N x 1 x H x W] tensor containing the image prediction
             # new_predicted_frame, states = self.model(new_events, prev_states)
-            new_events, new_frame, new_predicted_frame, states = self.model(cur_input, prev_states)
-            prev_states = states
+            if self.use_psf:
+                new_events, new_frame, new_predicted_frame, states, timing = self.model.unetrecurrentpsf(cur_input, prev_states, measure_time=True)
+                #new_events, new_frame, new_predicted_frame, states, timing = self.model(cur_input, prev_states, measure_time=True)
+                self.writer.add_scalar("time/psf", timing['psf_time'], global_step=self.preview_count)
+                self.writer.add_scalar("time/sim", timing['sim_time'], global_step=self.preview_count)
+                self.writer.add_scalar("time/voxel", timing['voxel_time'], global_step=self.preview_count)
+                self.writer.add_scalar("time/pred", timing['pred_time'], global_step=self.preview_count)
+                #print(f"[Timing] PSF: {timing['psf_time']:.3f}s | Sim: {timing['sim_time']:.3f}s | Voxel: {timing['voxel_time']:.3f}s | Pred: {timing['pred_time']:.3f}s")
+            else:
+                new_events, new_frame, new_predicted_frame, states = self.model(cur_input, prev_states)
+            prev_states = [None if s is None else (s[0].detach(), s[1].detach())
+               for s in states]
 
             if record:
                 with torch.no_grad():
+                    psfs = f.softplus(self.model.unetrecurrentpsf.psf_layer.psfs)
+                    psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
+                    psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                    self.writer.add_image('psf_preview', psf_grid, global_step=self.preview_count)
+                    #self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=self.current_epoch)
+
+                    # Voxel Grid 시각화
+                    # voxel_img = utils.make_grid(new_events[:4], nrow=2, normalize=True, scale_each=True)
+                    # self.writer.add_image('voxel_grid_sample', voxel_img, global_step=self.preview_count)
+
+                    # 이벤트 시뮬레이션: event_frames → 시각화
+                    try:
+                        frames = cur_input['frames'][0]     
+                        diffs = torch.log(frames[1:] + 1e-6) - torch.log(frames[:-1] + 1e-6)
+                        # event_frames = torch.stack([compute_event_frame(d) for d in diffs])
+                        event_frames = compute_event_frame(diffs)
+                        event_sim_img = utils.make_grid(event_frames[:8], nrow=4, normalize=True, scale_each=True)
+                        self.writer.add_image('event_simulation', event_sim_img, global_step=self.preview_count)
+                    except Exception as e:
+                        self.logger.warning(f"Event simulation visualization failed: {e}")
+
+
+
                     event_previews.append(torch.sum(new_events, dim=1).unsqueeze(0))
                     predicted_frames.append(new_predicted_frame.clone())
                     groundtruth_frames.append(new_frame.clone())
@@ -589,7 +675,7 @@ class LSTMTrainer(BaseTrainer):
 
 
 
-
+    
 
     def _train_epoch(self, epoch):
         """
@@ -611,14 +697,40 @@ class LSTMTrainer(BaseTrainer):
 
         all_losses_in_batch = {}
         # breakpoint()
+
+        ###### ADDED 0709 #######
+        interval_batch_count = 50  # 몇 배치마다 시간 측정할지
+        cumulative_time = 0.0
+        #########################
+
         for batch_idx, sequence in enumerate(self.data_loader):
+            self.batch_step += 1
+
+            batch_start = time.time()
             # if (batch_idx % 5 == 0):
-            #     breakpoint()
+            #     breakpoint()self.model.unetrecurrentpsf
             print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
+
+            # loss = self.model.unetrecurrentpsf.psf_layer.psfs.sum()
+            # loss.backward()
+            # print(self.model.unetrecurrentpsf.psf_layer.psfs.grad)
+
             # breakpoint()
             if self.use_psf:
                 losses, _, _, _ , _= self.forward_pass_upsampled_sequence(sequence)
+
+                if batch_idx % 10 == 0:  # 2개마다 한 번
+                    with torch.no_grad():
+                        # _ = self.forward_pass_upsampled_sequence([self.data_loader.dataset[0]], record=True)
+                        sample = self.data_loader.collate_fn([self.data_loader.dataset[0]])   # dict-of-Tensor
+                        _      = self.forward_pass_upsampled_sequence(sample, record=True)
+                        self.preview_count += 1
+                # if batch_idx % 50 == 0:
+                    # self.model.unetrecurrentpsf.psf_layer에서 바로 호출
+                
+
+
             else:
                 losses, _, _, _ , _= self.forward_pass_sequence(sequence)
 
@@ -626,20 +738,53 @@ class LSTMTrainer(BaseTrainer):
             # torch.autograd.set_detect_anomaly(True)       
             loss = losses['loss']
             loss.backward()
-            if batch_idx % 25 == 0:
-                plot_grad_flow(self.model.named_parameters())
+
+            # for name, param in self.model.named_parameters():
+            #     if 'psf' in name:
+            #         print(f'Param name: {name}, grad: {param.grad}')
+
+            # for name, param in self.model.named_parameters():
+            #     if param.grad is not None:
+            #         print(f"{name}: grad mean={param.grad.abs().mean():.2e} max={param.grad.abs().max():.2e}")
+
+
+
+            # if batch_idx % 25 == 0:
+            #     plot_grad_flow(self.model.named_parameters())
+
+
             self.optimizer.step()
+
+
+            ###### ADDED 0709 #######
+    
+            
+            batch_time = time.time() - batch_start
+            cumulative_time += batch_time
+
+            # 일정 주기마다 프린트
+            if (batch_idx + 1) % interval_batch_count == 0:
+                avg_time = cumulative_time / interval_batch_count
+                print(f"[Timing] Batches {batch_idx - interval_batch_count + 1}-{batch_idx}: "
+                    f"Total Time = {cumulative_time:.2f}s | Avg Time = {avg_time:.2f}s")
+                cumulative_time = 0.0  # 누적 시간 초기화
+            #########################
+
 
             with torch.no_grad():
                 for loss_name, loss_value in losses.items():
                     if loss_name not in all_losses_in_batch:
                         all_losses_in_batch[loss_name] = []
-                    all_losses_in_batch[loss_name].append(loss_value.item())
+                    #all_losses_in_batch[loss_name].append(loss_value.item())
+                    all_losses_in_batch[loss_name].append(loss_value if isinstance(loss_value, float) else loss_value.item())
+
 
                 if self.verbosity >= 2 and batch_idx % self.log_step == 0:
                     loss_str = ''
                     for loss_name, loss_value in losses.items():
-                        loss_str += '{}: {:.4f} '.format(loss_name, loss_value.item())
+                        #loss_str += '{}: {:.4f} '.format(loss_name, loss_value.item())
+                        loss_str += '{}: {:.4f} '.format(loss_name, loss_value.item() if isinstance(loss_value, torch.Tensor) else loss_value)
+
                     self.logger.info('Train Epoch: {} [{}/{} ({:.0f}%)] {}'.format(
                         epoch,
                         batch_idx * self.data_loader.batch_size,
@@ -657,9 +802,35 @@ class LSTMTrainer(BaseTrainer):
                 sequence = self.data_loader.dataset[preview_idx]
 
                 if self.use_psf:
-                    sequence = [sequence]
+                    # sequence = [sequence]
+                    sequence = self.data_loader.collate_fn([sequence]) 
                     _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
                         sequence, record=True)
+                    
+                    if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
+                        try:
+                            psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach()
+                            psfs = f.softplus(psfs)
+                            psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
+                            psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                            self.writer.add_image("epochwise_psf_kernels", psf_grid, global_step=epoch)
+                        except Exception as e:
+                            print(f"[WARNING] PSF TensorBoard logging failed: {e}")
+
+
+                    # === Log PSF Kernels after forward pass ===
+                    with torch.no_grad():
+                        try:
+                            psfs = self.model.unetrecurrentpsf.psf_layer.psfs  # [N,1,H,W]
+                            psfs = f.softplus(psfs)  # ensure positivity
+                            psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)  # normalize
+                            psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                            self.writer.add_image("psf_kernels", psf_grid, global_step=epoch)
+                            #self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=self.current_epoch)
+                        except Exception as e:
+                            print(f"[WARNING] Failed to log psf_kernels at epoch {epoch}: {e}")
+
+
                 else:
                     # every element in sequence is a [C x H x W] tensor
                     # but the model requires [1 x C x H x W] tensor, so
@@ -714,7 +885,30 @@ class LSTMTrainer(BaseTrainer):
             val_log = self._valid_epoch(epoch=epoch)
             log = {**log, **val_log}
 
+
+        if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
+            with torch.no_grad():
+                psfs = f.softplus(self.model.unetrecurrentpsf.psf_layer.psfs)
+                psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
+                psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=epoch)
+
+            raw_psfs = self.model.unetrecurrentpsf.psf_layer.psfs
+            if raw_psfs.grad is not None:
+                self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
+    
+        if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
+            os.makedirs("saved_psfs", exist_ok=True)
+
+            with torch.no_grad():
+                psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach().cpu()
+                torch.save(psfs, f"saved_psfs/epoch_{epoch:03d}.pt")
+        if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
+            self.model.unetrecurrentpsf.psf_layer.save_psf_stack(epoch)
+
         return log
+
+
 
     def _valid_epoch(self, epoch=0):
         """
@@ -739,7 +933,9 @@ class LSTMTrainer(BaseTrainer):
                 for loss_name, loss_value in losses.items():
                     if loss_name not in all_losses_in_batch:
                         all_losses_in_batch[loss_name] = []
-                    all_losses_in_batch[loss_name].append(loss_value.item())
+                    #all_losses_in_batch[loss_name].append(loss_value.item())
+                    all_losses_in_batch[loss_name].append(loss_value.item() if isinstance(loss_value, torch.Tensor) else loss_value)
+
 
                 if self.verbosity >= 2 and batch_idx % self.log_step == 0:
                     self.logger.info('Validation: [{}/{} ({:.0f}%)]'.format(

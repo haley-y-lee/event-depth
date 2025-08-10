@@ -60,7 +60,7 @@
         "median_error"
     ],
     "trainer": {
-        "epochs": 1,
+        "epochs": 100,
         "sequence_length": 20,
         "save_dir": "saved/",
         "save_freq": 4,

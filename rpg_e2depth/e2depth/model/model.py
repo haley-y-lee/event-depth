@@ -129,6 +129,7 @@ class E2VIDRecurrentPSF(BaseE2VID):
                                            use_upsample_conv=self.use_upsample_conv,
                                            psf_init=self.psf_init
                                            )
+        self.psf_layer = self.unetrecurrentpsf.psf_layer
 
     def forward(self, cur_input, prev_states, downsample=True):
         """
