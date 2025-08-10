@@ -1,4 +1,4 @@
-__pycache__/
+ㅑ__pycache__/
 *.py[cod]
 *.so
 .env
@@ -7,4 +7,4 @@ venv/
 ENV/
 .idea/
 *.log
-checkpoints/
+checkpoints
