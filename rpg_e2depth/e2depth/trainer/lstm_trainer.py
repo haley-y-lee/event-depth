@@ -431,15 +431,18 @@ class LSTMTrainer(BaseTrainer):
         # overall_start = time.time()
 
         # ---- 새 collate_fn 대응 ----
-        if isinstance(sequence, dict):            # dict‑of‑Tensor 형태로 들어온 경우
-            L = sequence["frame"].shape[1]        # 시퀀스 길이
-            sequence = [
-                {k: (v[:, l] if v.dim() > 2 else v[:, l])   # [N, …]
-                for k, v in sequence.items()}
-                for l in range(L)
-            ]
+        if isinstance(sequence, dict):  # dict-of-Tensor -> list[L] of list[N] of dict 로 전개
+            L = sequence["frame"].shape[1]  # [N, L, ...]
+            seq_L = []
+            for l in range(L):
+                step = {k: (v[:, l] if v.dim() >= 2 else v[:, l])  # [N, ...]
+                        for k, v in sequence.items()}
+                N = step["frame"].shape[0]
+                # list-of-dict (배치 차원까지 풀기)
+                seq_L.append([{kk: step[kk][n] for kk in step.keys()} for n in range(N)])
+            sequence = seq_L
         else:
-            # 옛날 코드(리스트‑안‑리스트)와 호환
+            # (구) 리스트-in-리스트 포맷
             sequence = list(map(list, zip(*sequence)))
 
         L = len(sequence)       # voxel grid sequence length 
@@ -529,7 +532,8 @@ class LSTMTrainer(BaseTrainer):
                         event_sim_img = utils.make_grid(event_frames[:8], nrow=4, normalize=True, scale_each=True)
                         self.writer.add_image('event_simulation', event_sim_img, global_step=self.preview_count)
                     except Exception as e:
-                        self.logger.warning(f"Event simulation visualization failed: {e}")
+                        pass
+                        #self.logger.warning(f"Event simulation visualization failed: {e}")
 
 
 
@@ -898,11 +902,13 @@ class LSTMTrainer(BaseTrainer):
                 self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
     
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-            os.makedirs("saved_psfs", exist_ok=True)
+            os.makedirs("0811_psf_on_saved", exist_ok=True)
 
             with torch.no_grad():
                 psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach().cpu()
-                torch.save(psfs, f"saved_psfs/epoch_{epoch:03d}.pt")
+                ###### PSF CHECKPOINTING 0811 #######
+                #torch.save(psfs, f"0811_psf_off_saved/epoch_{epoch:03d}.pt")
+                torch.save(psfs, f"0811_psf_on_saved/epoch_{epoch:03d}.pt")
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
             self.model.unetrecurrentpsf.psf_layer.save_psf_stack(epoch)
 

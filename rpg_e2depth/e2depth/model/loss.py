@@ -193,6 +193,7 @@ class MultiScaleGradient(torch.nn.Module):
         #else:
         diff = prediction - target
         diff[target!=target] = 0 # clean values where are nans
+        #target = target.squeeze(0)
         _,_,H,W = target.shape
         upsample = torch.nn.Upsample(size=(2*H,2*W), mode='bicubic', align_corners=True)
         record = []

@@ -608,7 +608,8 @@ class UpsampledFramesDataset(Dataset):
             frame = frame / np.amax(frame[~np.isnan(frame)])
 
         # #Convert to log depth
-        frame = 1.0 + np.log(frame) / reg_factor
+        eps   = 1e-6
+        frame = 1.0 + np.log(frame + eps) / reg_factor
         # # Clip between 0 and 1.0
         frame = frame.clip(0, 1.0)
 

@@ -463,7 +463,10 @@ class DepthDependentPSFLayer(nn.Module):
                 psf_list.append(inv_softplus)
 
             psfs = torch.stack(psf_list, dim=0).unsqueeze(1).to(gpu)
+
+            ##### PSF REQUIRE GRAD FALSE 08112025 ######
             self.psfs = nn.Parameter(psfs)
+            #self.psfs = nn.Parameter(psfs, requires_grad=False)
 
 
 
@@ -874,11 +877,18 @@ class UNetRecurrentPSF(nn.Module):
         frame_list.append(downsampled_frame)
 
         #print(f"[DEBUG test] voxel_grid_list size: {voxel_grid_list[0].shape}")
-        num_bins, height, width = voxel_grid_list[0].shape
-    
-        voxel_grids = torch.stack(voxel_grid_list).view(N, num_bins, height, width)
-        frame = torch.stack(frame_list).view(N, 1, height, width)
 
+        #### CODE Commented 0807 #####
+        # num_bins, height, width = voxel_grid_list[0].shape
+    
+        # voxel_grids = torch.stack(voxel_grid_list).view(N, num_bins, height, width)
+        # frame = torch.stack(frame_list).view(N, 1, height, width)
+
+        # 수정
+        voxel_grids = torch.stack(voxel_grid_list, dim=0)  # [N, C, H, W]
+        frame = torch.stack(frame_list, dim=0)             # [N, 1, H, W]
+        # print(f"[DEBUG] frame shape: {frame.shape}")  # [N, C, H, W]
+        frame = frame.squeeze(1)  # [N, H, W] - remove channel dimension
         # breakpoint()
         if measure_time: t0 = time.time()
         new_predicted_frame, states = self.unet_recurrent(voxel_grids, prev_states)

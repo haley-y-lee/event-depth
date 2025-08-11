@@ -60,7 +60,7 @@
         "median_error"
     ],
     "trainer": {
-        "epochs": 100,
+        "epochs": 200,
         "sequence_length": 10,
         "save_dir": "saved/test_delta_depth_upsampled",
         "save_freq": 4,
