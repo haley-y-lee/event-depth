@@ -29,7 +29,7 @@
             "clip_distance":80.0,
             "scale_factor":1
         },
-        "batch_size": 4,
+        "batch_size": 32,
         "num_workers": 7,
         "pin_memory": false,
         "normalize": true,
@@ -37,7 +37,7 @@
         "inverse": false
     },
     "lr_scheduler_type": "ExponentialLR",
-    "lr_scheduler_freq": 1000,
+    "lr_scheduler_freq": 500,
     "lr_scheduler": {
         "gamma": 1.0
     },
@@ -60,9 +60,9 @@
         "median_error"
     ],
     "trainer": {
-        "epochs": 200,
-        "sequence_length": 10,
-        "save_dir": "saved/test_psf_off",
+        "epochs": 300,
+        "sequence_length": 20,
+        "save_dir": "saved/0816_off_E300_P20_D15_delta",
         "save_freq": 4,
         "verbosity": 2,
         "monitor": "val_loss",

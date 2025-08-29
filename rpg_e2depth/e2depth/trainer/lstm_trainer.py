@@ -50,16 +50,7 @@ class LSTMTrainer(BaseTrainer):
         self.use_psf = config['use_psf']
         self.preview_count = 0
         self.batch_step = 0
-        # if self.use_psf:
-        #     #new_events, new_frame, new_predicted_frame, states, timing = self.model(cur_input, prev_states, measure_time=True)
-        #     self.writer.add_scalar("time/psf", timing['psf_time'], global_step=self.preview_count)
-        #     self.writer.add_scalar("time/sim", timing['sim_time'], global_step=self.preview_count)
-        #     self.writer.add_scalar("time/voxel", timing['voxel_time'], global_step=self.preview_count)
-        #     self.writer.add_scalar("time/pred", timing['pred_time'], global_step=self.preview_count)
-        #     print(f"[Timing] PSF: {timing['psf_time']:.3f}s | Sim: {timing['sim_time']:.3f}s | Voxel: {timing['voxel_time']:.3f}s | Pred: {timing['pred_time']:.3f}s")
-        # #else:
-        #     #new_events, new_frame, new_predicted_frame, states = self.model(cur_input, prev_states)
-
+      
 
 
 
@@ -431,6 +422,18 @@ class LSTMTrainer(BaseTrainer):
         # overall_start = time.time()
 
         # ---- 새 collate_fn 대응 ----
+
+        #### TANMAEY
+        # print(len(sequence)) ###4 
+        # try:
+        #     print(len(sequence[0])) ## 10 
+        #     print(sequence[0][0]["frames"].shape) ### torch.Size([8, 1, 260, 346])
+
+        # except:
+        #     pass
+        # raise
+
+
         if isinstance(sequence, dict):  # dict-of-Tensor -> list[L] of list[N] of dict 로 전개
             L = sequence["frame"].shape[1]  # [N, L, ...]
             seq_L = []
@@ -445,8 +448,9 @@ class LSTMTrainer(BaseTrainer):
             # (구) 리스트-in-리스트 포맷
             sequence = list(map(list, zip(*sequence)))
 
-        L = len(sequence)       # voxel grid sequence length 
-        N = len(sequence[0])    # batch size
+        L = len(sequence)       # batch size
+        
+        N = len(sequence[0])    # voxel grid sequence length 
         assert(L > 0)
         assert(N > 0)
 
@@ -471,7 +475,12 @@ class LSTMTrainer(BaseTrainer):
 
         prev_states = None
         prev_frame, prev_predicted_frame = None, None
-        for l in range(L):
+        for l in range(L): 
+            
+            
+            ### NOT GOOD TANMAEY
+            ## Loop over the samples in a batch
+            ## NOT looping over the batch
 
             # step_start = time.time()
             # breakpoint()
@@ -673,12 +682,6 @@ class LSTMTrainer(BaseTrainer):
     
 
 
-
-
-
-
-
-
     
 
     def _train_epoch(self, epoch):
@@ -703,7 +706,7 @@ class LSTMTrainer(BaseTrainer):
         # breakpoint()
 
         ###### ADDED 0709 #######
-        interval_batch_count = 50  # 몇 배치마다 시간 측정할지
+        interval_batch_count = 10  # 몇 배치마다 시간 측정할지
         cumulative_time = 0.0
         #########################
 
@@ -711,14 +714,10 @@ class LSTMTrainer(BaseTrainer):
             self.batch_step += 1
 
             batch_start = time.time()
-            # if (batch_idx % 5 == 0):
-            #     breakpoint()self.model.unetrecurrentpsf
+   
             print(f"Batch {batch_idx}")
             self.optimizer.zero_grad()
 
-            # loss = self.model.unetrecurrentpsf.psf_layer.psfs.sum()
-            # loss.backward()
-            # print(self.model.unetrecurrentpsf.psf_layer.psfs.grad)
 
             # breakpoint()
             if self.use_psf:
@@ -730,8 +729,7 @@ class LSTMTrainer(BaseTrainer):
                         sample = self.data_loader.collate_fn([self.data_loader.dataset[0]])   # dict-of-Tensor
                         _      = self.forward_pass_upsampled_sequence(sample, record=True)
                         self.preview_count += 1
-                # if batch_idx % 50 == 0:
-                    # self.model.unetrecurrentpsf.psf_layer에서 바로 호출
+ 
                 
 
 
@@ -902,13 +900,15 @@ class LSTMTrainer(BaseTrainer):
                 self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
     
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-            os.makedirs("0811_psf_on_saved", exist_ok=True)
+            os.makedirs("0816_on_E300_P20_D15_delta", exist_ok=True)
+            #os.makedirs("0811_psf_on_saved", exist_ok=True)
 
             with torch.no_grad():
                 psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach().cpu()
                 ###### PSF CHECKPOINTING 0811 #######
-                #torch.save(psfs, f"0811_psf_off_saved/epoch_{epoch:03d}.pt")
-                torch.save(psfs, f"0811_psf_on_saved/epoch_{epoch:03d}.pt")
+                torch.save(psfs, f"0816_on_E300_P20_D15_delta/epoch_{epoch:03d}.pt")
+                #torch.save(psfs, f"0811_psf_on_saved/epoch_{epoch:03d}.pt")
+                #torch.save(psfs, f"0811_testing/epoch_{epoch:03d}.pt")
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
             self.model.unetrecurrentpsf.psf_layer.save_psf_stack(epoch)
 
@@ -975,12 +975,7 @@ class LSTMTrainer(BaseTrainer):
 
                 total_metrics += self._eval_metrics(predicted_frames[0], groundtruth_frames[0])
 
-                # if self.movie:
-                #     video_tensor = self.make_movie(event_previews, predicted_frames, groundtruth_frames)
-                #     self.writer.add_video(
-                #         f"val_movie_{self.preview_count}__events__prediction__groundtruth",
-                #         video_tensor, global_step=epoch, fps=5)
-                #     self.preview_count += 1
+
                 if self.still_previews:
                     step = self.record_every_N_sample
                     val_previews.append(self.make_preview(

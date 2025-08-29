@@ -41,38 +41,6 @@ def pad_seq(list_tensor, pad_val=0.0):
 
     return out, mask
 
-# def stack_to_cuda(batch, device="cuda:1"):
-#     first = batch[0]
-
-#     # ── Case ①: SequenceUpsampledFramesDataset (list → dict) ──
-#     if isinstance(first, list) and isinstance(first[0], dict):
-#         L     = len(first)        # 고정 시퀀스 길이
-#         keys  = first[0].keys()
-#         N     = len(batch)
-
-#         collated = {}          # 최종 dict‑of‑Tensor
-#         for k in keys:
-#             # gather N×L 개 항목
-#             seq_items = [sample[l][k] for sample in batch for l in range(L)]
-
-#             if k in ("frames", "stamps"):            # **가변 T** → 패딩
-#                 stacked, mask = pad_seq(seq_items)          # stacked: (N*L, T_max, …)
-#                 trailing = stacked.shape[2:]                # (C,H,W)  or  () for 1‑D
-#                 collated[k]        = stacked.view(N, L, *stacked.shape[1:])          # CPU tensor
-#                 collated[f"{k}_mask"] = mask.view(N, L, -1)    
-#             else:                                    # 고정 shape
-#                 stacked = torch.stack(seq_items)
-#                 collated[k] = stacked.view(N, L, *stacked.shape[1:]).to(device, non_blocking=True)
-
-#         return collated
-
-#     # ── Case ②: 단일 dict 샘플 ──
-#     if isinstance(first, dict):
-#         keys = first.keys()
-#         out  = {k: torch.stack([b[k] for b in batch]).to(device, non_blocking=True) for k in keys}
-#         return out
-
-#     # ── Fallback ──
 
 def _to_device(x, device):
     if isinstance(x, torch.Tensor):
@@ -249,34 +217,7 @@ def main(config, resume, initial_checkpoint=None):
     kwargs = {'num_workers': config['data_loader']['num_workers'],
               'pin_memory': config['data_loader']['pin_memory']} if config['cuda'] else {}
     
-    # if use_psf:
-    #     def identity_collate_fn(batch):
-    #         return batch
-        
-    #     data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
-    #                     shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
-        
-    #     valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-    #                     shuffle=config['data_loader']['shuffle'], collate_fn=identity_collate_fn, **kwargs)
-    # else:
-    #     data_loader = DataLoader(train_dataset, batch_size=config['data_loader']['batch_size'],
-    #                             shuffle=config['data_loader']['shuffle'], **kwargs)
-
-    #     valid_data_loader = DataLoader(validation_dataset, batch_size=config['data_loader']['batch_size'],
-    #                                 shuffle=config['data_loader']['shuffle'], **kwargs)
-
     if use_psf:
-        # list‑of‑dict → dict‑of‑Tensor 스택 + GPU copy (non‑blocking) 한 번에
-        # data_loader = DataLoader(train_dataset,
-        #                             batch_size=config['data_loader']['batch_size'],
-        #                             shuffle=config['data_loader']['shuffle'],
-        #                             collate_fn=stack_to_cuda, **kwargs)
-
-        # valid_data_loader = DataLoader(validation_dataset,
-        #                                 batch_size=config['data_loader']['batch_size'],
-        #                                 shuffle=False,
-                                        # collate_fn=stack_to_cuda, **kwargs)
-
         device = torch.device(f"cuda:{config['gpu']}")
         collate = partial(collate_keep_sequence, device=device)
 
@@ -297,16 +238,19 @@ def main(config, resume, initial_checkpoint=None):
 
     model = eval(config['arch'])(config['model'])
 
+    ### TANMAEY ###
+    # param_size = sum(p.numel() * p.element_size() for p in model.parameters())
+    # print(param_size)
+    # for name,p in model.named_parameters():
+    #     print(p.dtype)
+    #     raise
+    
+
+
     if initial_checkpoint is not None:
         print('Loading initial model weights from: {}'.format(initial_checkpoint))
         checkpoint = torch.load(initial_checkpoint)
         model.load_state_dict(checkpoint['state_dict'])
-
-    # if config.get('use_psf', False) and hasattr(model, 'unetrecurrentpsf'):
-    #     factor = config.get('psf_grad_boost', 200000000000.0)   # config 파일에 넣어두면 편리
-    #     model.unetrecurrentpsf.psf_layer.psfs.register_hook(
-    #         lambda g, f=factor: g * f)
-    #     print(f"[INFO] amplify PSF gradient ×{factor}")
 
 
     model.summary()
