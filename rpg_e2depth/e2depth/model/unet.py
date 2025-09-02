@@ -10,9 +10,10 @@ import matplotlib.pyplot as plt
 from PIL import Image
 import os
 import math
+import torch.nn.functional as F
 # matplotlib.use('Qt5Agg')
 
-# gpu = "cuda:0"
+#gpu = "cuda:0"#
 gpu = 'cpu'
 
 def skip_concat(x1, x2):
@@ -395,23 +396,24 @@ class DepthDependentPSFLayer(nn.Module):
             center = psf_size // 2
             psfs[:, 0, center, center] = 5.0
             
-            self.psfs = nn.Parameter(psfs)
-            #self.psfs = nn.Parameter(psfs, requires_grad=False)
+            #self.psfs = nn.Parameter(psfs)
+            self.psfs = nn.Parameter(psfs, requires_grad=False)
 
-        if lower is None or higher is None:
-            # 균일한 1단위 구간: 2,3,…,10  (예시)
-            lower = torch.arange(min_depth, max_depth + 1, device=gpu, dtype=torch.float32)
-            higher = lower + 1.
-        else:
-            lower = torch.as_tensor(lower, dtype=torch.float32, device=gpu)
-            higher = torch.as_tensor(higher, dtype=torch.float32, device=gpu)
+        ##### Commented on 0829 #####
+        # if lower is None or higher is None:
+        #     # 균일한 1단위 구간: 2,3,…,10  (예시)
+        #     lower = torch.arange(min_depth, max_depth + 1, device=gpu, dtype=torch.float32)
+        #     higher = lower + 1.
+        # else:
+        #     lower = torch.as_tensor(lower, dtype=torch.float32, device=gpu)
+        #     higher = torch.as_tensor(higher, dtype=torch.float32, device=gpu)
 
-        assert len(lower) == self.num_depths and len(higher) == self.num_depths, \
-            "lower/higher 길이는 num_depths 와 같아야 합니다."
+        # assert len(lower) == self.num_depths and len(higher) == self.num_depths, \
+        #     "lower/higher 길이는 num_depths 와 같아야 합니다."
 
-        # 학습 대상은 아니므로 buffer 로 등록
-        self.register_buffer("lower", lower)
-        self.register_buffer("higher", higher)
+        # # 학습 대상은 아니므로 buffer 로 등록
+        # self.register_buffer("lower", lower)
+        # self.register_buffer("higher", higher)
 
 
     def save_psf_stack(self, step):
@@ -425,7 +427,7 @@ class DepthDependentPSFLayer(nn.Module):
                 torch.save(psf_stack.cpu(), f"/home/yl3836/saved_psfs_test/epoch_{step:05d}.pt")
 
 
-    def forward(self, image, depth_bins):
+    def forward(self, image):
         """
         Applies depth-dependent psfs to sequence of frames.
 
@@ -445,28 +447,30 @@ class DepthDependentPSFLayer(nn.Module):
         psfs  = scaled / scaled.sum(dim=(-2, -1), keepdim=True) * (self.psf_size ** 2)
         psfs = torch.flip(psfs, (-2,-1))
 
-        filtered = f.conv2d(image, psfs, padding=self.psf_size // 2)
 
-        #### Setting up depth indexing
-        boundaries = self.higher[:-1]  
-        depth_idx = torch.bucketize(depth_bins.squeeze(0), boundaries)  # [H,W], 0..D-1
-        depth_idx_plus = torch.clamp(depth_idx + 1, max=D-1) 
+        ###### CODE COMMENTED 0829 ########
+        # filtered = f.conv2d(image, psfs, padding=self.psf_size // 2)
+
+        # #### Setting up depth indexing
+        # boundaries = self.higher[:-1]  
+        # depth_idx = torch.bucketize(depth_bins.squeeze(0), boundaries)  # [H,W], 0..D-1
+        # depth_idx_plus = torch.clamp(depth_idx + 1, max=D-1) 
 
       
-        w = (depth_bins.squeeze(0) - self.lower[depth_idx]) / \
-            (self.higher[depth_idx] - self.lower[depth_idx]+ 1e-8) 
-        w = w.expand(T, 1, H, W)
+        # w = (depth_bins.squeeze(0) - self.lower[depth_idx]) / \
+        #     (self.higher[depth_idx] - self.lower[depth_idx]+ 1e-8) 
+        # w = w.expand(T, 1, H, W)
   
-        idx_e      = depth_idx     .expand(T, H, W).unsqueeze(1)               # [T,1,H,W]
-        idx_e_plus = depth_idx_plus.expand(T, H, W).unsqueeze(1)               # [T,1,H,W]
-        out_d        = torch.gather(filtered, 1, idx_e)                  # PSF_d
-        out_d_plus   = torch.gather(filtered, 1, idx_e_plus)              # PSF_{d+1}
+        # idx_e      = depth_idx     .expand(T, H, W).unsqueeze(1)               # [T,1,H,W]
+        # idx_e_plus = depth_idx_plus.expand(T, H, W).unsqueeze(1)               # [T,1,H,W]
+        # out_d        = torch.gather(filtered, 1, idx_e)                  # PSF_d
+        # out_d_plus   = torch.gather(filtered, 1, idx_e_plus)              # PSF_{d+1}
 
                                
-        output = (1 - w) * out_d + w * out_d_plus
+        # output = (1 - w) * out_d + w * out_d_plus
 
 
-        return output
+        return psfs
 
 class UNetRecurrentPSF(nn.Module):
     """
@@ -478,7 +482,7 @@ class UNetRecurrentPSF(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='gaussian', scale_factor=1, max_depth = 16):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='delta', scale_factor=1, max_depth = 16):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -497,6 +501,7 @@ class UNetRecurrentPSF(nn.Module):
         ##################################################################################################
         self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=16, psf_init='delta', psf_size=20)
         ###### Change the depth bin Depth as well!! ########
+
         #################################################################################################
         self.scale_factor = scale_factor
         self.max_depth = max_depth
@@ -509,6 +514,9 @@ class UNetRecurrentPSF(nn.Module):
         :param prev_states: previous LSTM states for every encoder layer
         :return: N x num_output_channels x H x W
         """
+
+        min_depth = 2.0
+        max_depth = 16.0
 
         N = len(cur_input)
 
@@ -531,26 +539,44 @@ class UNetRecurrentPSF(nn.Module):
 
         if measure_time: t0 = time.time()
 
+
+
         try:
             depth = cur_input[i]['metric_depth']
             depth = depth / 255.0
-            depth = depth * (16 - 2) + 2
+            depth = depth * (max_depth - min_depth) + 2
             #depth = depth * (max_depth - 2) + 2
         except Exception as e:
             print(f"[ERROR in depth calculation] cur_input[{i}]['metric_depth']: {cur_input[i].get('metric_depth', 'N/A')}")
             raise e
 
+        ##### CODE ADDED 0829 #####
         depth_bins = depth
+        lower = torch.arange(min_depth, max_depth+1, device = gpu)
+        higher = lower + 1
+        lower = lower.unsqueeze(-1).unsqueeze(-1) # Shape [1,1,15] for broadcast
+        higher = higher.unsqueeze(-1).unsqueeze(-1) # Shape [1,1,15] for broadcast
 
-        convolved_frames = self.psf_layer(cur_input[i]['frames'], depth_bins)
+        mask = ((depth_bins >= lower) & (depth_bins < higher)).float()  
+        mask = mask.to(gpu)
+
+        masked_frames = mask.unsqueeze(0) * cur_input[i]['frames']
+
+        #convolved_frames = self.psf_layer(masked_frames)
+
+        initialized_psfs = self.psf_layer(masked_frames)
+        C = masked_frames.shape[1]
+        convolved_frames = F.conv2d(masked_frames, initialized_psfs, padding="same", groups=C)
+        convolved_frames = convolved_frames.sum(dim=1)
 
         if measure_time: psf_time += time.time() - t0
 
         ##### print frames #######
-        img_test = cur_input[i]['frames']
+        #img_test = cur_input[i]['frames']
 
-        conv_np_test = (convolved_frames.detach().cpu().numpy()*255).astype(np.uint8)
+        #conv_np_test = (convolved_frames.detach().cpu().numpy()*255).astype(np.uint8)
 
+        # print(f"shape of convolved_frames : {convolved_frames.shape}")
         if measure_time: t0 = time.time()
         epsilon = 1e-6
         log_frames = torch.log(convolved_frames + epsilon)
@@ -558,9 +584,11 @@ class UNetRecurrentPSF(nn.Module):
         diffs = log_frames[1:] - log_frames[:-1] 
 
         event_frames = compute_event_frame(diffs)  # [T-1, H, W]
-        num_images = cur_input[i]['frames'].shape[0]
+        # print(f"shape of event_frames : {event_frames.shape}")
+
+        #num_images = cur_input[i]['frames'].shape[0]
         
-        event_np_test = (event_frames.detach().cpu().numpy()*255).astype(np.uint8)
+        #event_np_test = (event_frames.detach().cpu().numpy()*255).astype(np.uint8)
     
 
         if measure_time: t0 = time.time()

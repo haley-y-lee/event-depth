@@ -37,7 +37,7 @@
         "inverse": false
     },
     "lr_scheduler_type": "ExponentialLR",
-    "lr_scheduler_freq": 500,
+    "lr_scheduler_freq": 200,
     "lr_scheduler": {
         "gamma": 1.0
     },
@@ -62,7 +62,7 @@
     "trainer": {
         "epochs": 300,
         "sequence_length": 20,
-        "save_dir": "saved/0816_off_E300_P20_D15_delta",
+        "save_dir": "saved/0829_off_E300_P20_D15_delta",
         "save_freq": 4,
         "verbosity": 2,
         "monitor": "val_loss",
@@ -82,7 +82,7 @@
         "num_residual_blocks": 2,
         "use_upsample_conv": true,
         "norm": "none",
-        "psf_init": "random"
+        "psf_init": "delta"
     },
     "use_psf": true
 }
