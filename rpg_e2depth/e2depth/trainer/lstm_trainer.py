@@ -900,7 +900,7 @@ class LSTMTrainer(BaseTrainer):
                 self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
     
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-            os.makedirs("0903_off_E300_P20_D_15_delta_point01a", exist_ok=True)
+            os.makedirs("0903_off_E300_P20_D_15_delta_point01", exist_ok=True)
             #os.makedirs("0811_psf_on_saved", exist_ok=True)
 
             with torch.no_grad():

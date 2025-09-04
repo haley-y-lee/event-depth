@@ -552,9 +552,11 @@ class UNetRecurrentPSF(nn.Module):
 
         try:
             depth = cur_input[i]['metric_depth']
-            depth = depth / 255.0
-            depth = depth * (max_depth - min_depth) + 2
+            # depth = depth / 255.0
+            # depth = depth * (max_depth - min_depth) + 2
             #depth = depth * (max_depth - 2) + 2
+            depth = depth * (max_depth - min_depth) + min_depth
+
         except Exception as e:
             print(f"[ERROR in depth calculation] cur_input[{i}]['metric_depth']: {cur_input[i].get('metric_depth', 'N/A')}")
             raise e

@@ -651,8 +651,9 @@ class UpsampledFramesDataset(Dataset):
 
         
         if self.transform:
-            random.seed(seed)
-            frame = self.transform(frame)
+            # random.seed(seed)
+            # frame = self.transform(frame)
+            pass
 
         # Clip to maximum distance
         # metric_depth = np.clip(metric_depth, 0.0, self.clip_distance)
@@ -664,8 +665,9 @@ class UpsampledFramesDataset(Dataset):
         # metric_depth = torch.from_numpy(metric_depth) #numpy to tensor
 
         if self.transform:
-            random.seed(seed)
-            metric_depth = self.transform(metric_depth)
+            # random.seed(seed)
+            # metric_depth = self.transform(metric_depth)
+            pass
 
 
         item = {'metric_depth': metric_depth, 'frames': frames, 'frame':frame, 'stamps': timestamps}
