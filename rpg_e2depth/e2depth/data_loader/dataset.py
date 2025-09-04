@@ -477,13 +477,7 @@ class UpsampledFramesDataset(Dataset):
             if os.path.exists(filepath):
                 img = io.imread(filepath)
                 frames.append(img)
-                # img_np = np.array(img)
-                # plt.plot(img_np)
-                # plt.show()
-                # try:
-                #     print(filepath)
-                # except:
-                #     pass
+
             
             else:
                 print(f"Warning: {filepath} not found.")
@@ -590,12 +584,17 @@ class UpsampledFramesDataset(Dataset):
         metric_depth = torch.from_numpy(metric_depth)
 
 
-
+        
         frame = depth.copy()
         # changed to apply upsampled depth
         #######################
 
         # Clip to maximum distance
+
+
+        ##################################################
+        ########## 0903 Frame log scale delete ###########
+        
         frame = np.clip(frame, 0.0, self.clip_distance)
 
         # Normalize
@@ -618,7 +617,10 @@ class UpsampledFramesDataset(Dataset):
 
         frame = np.moveaxis(frame, -1, 0)  # H x W x C -> C x H x W
         frame = torch.from_numpy(frame) #numpy to tensor
+        ##################################################
+        ##################################################
 
+        
         if self.transform:
             random.seed(seed)
             frame = self.transform(frame)

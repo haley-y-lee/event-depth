@@ -13,8 +13,8 @@ import math
 import torch.nn.functional as F
 # matplotlib.use('Qt5Agg')
 
-#gpu = "cuda:0"#
-gpu = 'cpu'
+gpu = "cuda:0"
+#gpu = 'cpu'
 
 def skip_concat(x1, x2):
     return torch.cat([x1, x2], dim=1)
@@ -215,7 +215,7 @@ def compute_event_frame(diff):
     """
 
     eps = 1e-4
-    C = 0.25
+    C = 0.01
     w = 100
     return ((diff + eps) / (torch.abs(diff) + eps)) * (1 / (1 + torch.exp(-w*torch.abs(diff)+w*C)))
 
@@ -335,25 +335,23 @@ class DepthDependentPSFLayer(nn.Module):
             angles = torch.linspace(0, 90, steps=self.num_depths)  
             psf_list = [] 
 
-            for theta in angles:
-                # create a 2D Gaussian 
+            for theta in angles: 
                 base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
                 center = psf_size // 2
-                base[center, center] = 1.0
-                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 2.0]) 
+                base[center, center] = 10
+
+                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 4.0]) 
                 rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
-
-                # normalize to sum to 1
                 rotated /= rotated.sum()
+                psf_list.append(torch.tensor(rotated *100, dtype=torch.float32))
+                # eps = 1e-6
+                # inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
 
-                eps = 1e-6
-                inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
 
-                psf_list.append(torch.tensor(inv_softplus, dtype=torch.float32))
 
             psfs = torch.stack(psf_list, dim=0).unsqueeze(1).to(gpu)  # [num_depths, 1, psf_size, psf_size]
 
-            self.psfs = nn.Parameter(psfs)
+            self.psfs = nn.Parameter(psfs, requires_grad=False)
 
         if self.psf_init == 'gaussian':                 
 
@@ -392,9 +390,17 @@ class DepthDependentPSFLayer(nn.Module):
 
         if self.psf_init == 'delta':
 
-            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device=gpu)  
+            # psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device=gpu)  
+            # center = psf_size // 2
+            # psfs[:, 0, center, center] = 5.0
+            
+            # #self.psfs = nn.Parameter(psfs)
+            # self.psfs = nn.Parameter(psfs, requires_grad=False)
+
+
+            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), 0.0, device=gpu)  
             center = psf_size // 2
-            psfs[:, 0, center, center] = 5.0
+            psfs[:, 0, center, center] = 1.0
             
             #self.psfs = nn.Parameter(psfs)
             self.psfs = nn.Parameter(psfs, requires_grad=False)
@@ -419,10 +425,10 @@ class DepthDependentPSFLayer(nn.Module):
     def save_psf_stack(self, step):
         with torch.no_grad():
             # if self.batch_step % 50 == 0:
-                psf_stack = f.softplus(self.psfs)
-                #psf_stack = self.psfs
-                psf_stack = psf_stack / psf_stack.sum(dim=(-2, -1), keepdim=True)
-                psf_stack = torch.flip(psf_stack, dims=[-2, -1])
+                # psf_stack = f.softplus(self.psfs)
+                # psf_stack = psf_stack / psf_stack.sum(dim=(-2, -1), keepdim=True)
+                # psf_stack = torch.flip(psf_stack, dims=[-2, -1])
+                psf_stack = self.psfs
                 os.makedirs("/home/yl3836/saved_psfs_test", exist_ok=True)
                 torch.save(psf_stack.cpu(), f"/home/yl3836/saved_psfs_test/epoch_{step:05d}.pt")
 
@@ -441,11 +447,14 @@ class DepthDependentPSFLayer(nn.Module):
         D = self.num_depths
         k = self.psf_size
 
-        psfs = f.softplus(self.psfs)
+        ######################## 09032025 : Softplus removed for delta function ###############################
+        # psfs = f.softplus(self.psfs)
         
-        scaled = psfs
-        psfs  = scaled / scaled.sum(dim=(-2, -1), keepdim=True) * (self.psf_size ** 2)
-        psfs = torch.flip(psfs, (-2,-1))
+        # scaled = psfs
+        # psfs  = scaled / scaled.sum(dim=(-2, -1), keepdim=True) * (self.psf_size ** 2)
+        # psfs = torch.flip(psfs, (-2,-1))
+        psfs = self.psfs
+        #######################################################
 
 
         ###### CODE COMMENTED 0829 ########

@@ -60,9 +60,9 @@
         "median_error"
     ],
     "trainer": {
-        "epochs": 100,
+        "epochs": 300,
         "sequence_length": 20,
-        "save_dir": "saved/",
+        "save_dir": "saved/0902_off_E300_P20_D_15_rotated_point01",
         "save_freq": 4,
         "verbosity": 2,
         "monitor": "val_loss",
