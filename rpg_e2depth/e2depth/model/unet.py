@@ -332,15 +332,15 @@ class DepthDependentPSFLayer(nn.Module):
             self.psfs = nn.Parameter(psfs)
 
         if self.psf_init == 'rotated':
-            angles = torch.linspace(0, 90, steps=self.num_depths)  
+            angles = torch.linspace(0, 180, steps=self.num_depths)  
             psf_list = [] 
 
             for theta in angles: 
                 base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
                 center = psf_size // 2
-                base[center, center] = 10
+                base[center, center] = 5
 
-                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 4.0]) 
+                gauss = gaussian_filter(base.numpy(), sigma=[2.0, 7.0]) 
                 rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
                 rotated /= rotated.sum()
                 psf_list.append(torch.tensor(rotated *100, dtype=torch.float32))
@@ -569,8 +569,11 @@ class UNetRecurrentPSF(nn.Module):
         mask = ((depth_bins >= lower) & (depth_bins < higher)).float()  
         mask = mask.to(gpu)
 
-        masked_frames = mask.unsqueeze(0) * cur_input[i]['frames']
+        # print(f"[DEBUG] shape of mask : {mask.shape}")
+        # print(f"[DEBUG] shape of cur_input[i]['frames'] : {cur_input[i]['frames'].shape}")
 
+        masked_frames = mask * cur_input[i]['frames']
+        # print(f"shape of masked_frames : {masked_frames.shape}")
         #convolved_frames = self.psf_layer(masked_frames)
 
         initialized_psfs = self.psf_layer(masked_frames)
@@ -620,11 +623,15 @@ class UNetRecurrentPSF(nn.Module):
         voxel_grids = torch.stack(voxel_grid_list, dim=0)  # [N, C, H, W]
         frame = torch.stack(frame_list, dim=0)             # [N, 1, H, W]
         frame = frame.squeeze(1)  # [N, H, W] - remove channel dimension
+        frame = frame.squeeze(0)
+        
         # breakpoint()
         if measure_time: t0 = time.time()
         new_predicted_frame, states = self.unet_recurrent(voxel_grids, prev_states)
         if measure_time: pred_time = time.time() - t0
 
+        # print(f"[DEBUG] shape of frame : {frame.shape}")
+        # print(f"[DEBUG] shape of new_predicted_frame : {new_predicted_frame.shape}")
         if measure_time:
             return voxel_grids, frame, new_predicted_frame, states, {
                 'psf_time': psf_time,

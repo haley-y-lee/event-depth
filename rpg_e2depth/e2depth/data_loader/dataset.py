@@ -477,8 +477,6 @@ class UpsampledFramesDataset(Dataset):
             if os.path.exists(filepath):
                 img = io.imread(filepath)
                 frames.append(img)
-
-            
             else:
                 print(f"Warning: {filepath} not found.")
         #print(f"file path: {filepath}")        
@@ -505,39 +503,65 @@ class UpsampledFramesDataset(Dataset):
     
 
     ### ADDED LOAD DEPTH ###
-
     def load_depths(self, indices, seed):
         depths = []
         for i in indices:
-            filename = f"depth_{i:08d}.png"
+            filename = f"{i:08d}.png"
             filepath = join(self.depth_folder, filename)
 
             if os.path.exists(filepath):
-                depth = np.load(filepath).astype(np.float32)
+                img = io.imread(filepath)
+                depths.append(img) 
+                #depth = np.load(filepath).astype(np.float32)
             else:
-                raise RuntimeError(f"Depth file not found: {filepath}")
+             
+                print(f"Warning: {filepath} not found.")
+
+        if not depths:
+            raise RuntimeError(f"No depths found for indices: {indices} in folder: {self.depth_folder}")
             
-            depth = np.clip(depth, 0.0, self.clip_distance)
+        depths = np.array(depths)
+        #print(f"frames shape,{frames.shape}")
+        depths = depths.astype(np.float32)
 
-            if len(depth.shape) == 2:
-                depth = np.expand_dims(depth, -1)
-            depth = np.moveaxis(depth, -1, 0)
-            depth = torch.from_numpy(depth)
+        if self.normalize:
+            depths /= 255.0 # normalize
+            depths = np.expand_dims(depths, axis=1) # expand to [1 x H x W]
 
-            # if self.transform:
-            #     random.seed(seed)
-            #     depth = self.transform(depth)
+        depths = torch.from_numpy(depths)
 
-            if self.transform:
-                random.seed(seed)
-                num_depth = depth.shape[0]
-                depth = torch.stack([self.transform(depth[i]) for i in range(num_depth)])  # frames is tensor of shape num_frames x 1 x 260 x 346
-                if depth.dim() == 3:                   # [T, H, W]
-                    depth = depth.unsqueeze(1)
+        if self.transform:
+            random.seed(seed)
+            num_frames = depths.shape[0]
+            depths = torch.stack([self.transform(depths[i]) for i in range(num_frames)])  # frames is tensor of shape num_frames x 1 x 260 x 346
+            if depths.dim() == 3:                   # [T, H, W]
+                depths = depths.unsqueeze(1)
+        
+        return depths
 
-            depths.append(depth)
 
-        return torch.stack(depths)  # shape: [num_frames, 1, H, W]
+
+        #     depth = np.clip(depth, 0.0, self.clip_distance)
+
+        #     if len(depth.shape) == 2:
+        #         depth = np.expand_dims(depth, -1)
+        #     depth = np.moveaxis(depth, -1, 0)
+        #     depth = torch.from_numpy(depth)
+
+        #     # if self.transform:
+        #     #     random.seed(seed)
+        #     #     depth = self.transform(depth)
+
+        #     if self.transform:
+        #         random.seed(seed)
+        #         num_depth = depth.shape[0]
+        #         depth = torch.stack([self.transform(depth[i]) for i in range(num_depth)])  # frames is tensor of shape num_frames x 1 x 260 x 346
+        #         if depth.dim() == 3:                   # [T, H, W]
+        #             depth = depth.unsqueeze(1)
+
+        #     depths.append(depth)
+
+        # return torch.stack(depths)  # shape: [num_frames, 1, H, W]
 
 
     def __getitem__(self, i, seed=None, reg_factor=3.70378):
@@ -564,28 +588,33 @@ class UpsampledFramesDataset(Dataset):
         
         # metric_depth = depth.copy()
 
-        #######################
+        ##############################################
+        ####### 09032025 Change to load depth ########
+        ##############################################
+        metric_depth = self.load_depths(indices, seed)
+
+
 
         #### ADDED 0709 #######
 
         # 1. boundary에서 frame 시퀀스 범위 얻기
 # 1. boundary에서 frame 시퀀스 범위 얻기
-        start_idx, end_idx = self.boundaries[i]
+        # start_idx, end_idx = self.boundaries[i]
 
-        # 2. 중간 인덱스로 depth 선택
-        depth_idx = (start_idx + end_idx) // 2
-        depth_filename = f"{depth_idx:08d}.png"
+        # # 2. 중간 인덱스로 depth 선택
+        # depth_idx = (start_idx + end_idx) // 2
+        # depth_filename = f"{depth_idx:08d}.png"
 
-        # 3. depth 이미지 로드 (.png이므로 io.imread)
-        depth = io.imread(join(self.depth_folder, depth_filename)).astype(np.float32)
+        # # 3. depth 이미지 로드 (.png이므로 io.imread)
+        # depth = io.imread(join(self.depth_folder, depth_filename)).astype(np.float32)
 
         # 4. metric_depth는 raw 그대로 보존 (log 변환 전)
-        metric_depth = depth.copy()
-        metric_depth = torch.from_numpy(metric_depth)
+        # metric_depth = depth.copy()
+        # metric_depth = torch.from_numpy(metric_depth)
 
 
         
-        frame = depth.copy()
+        frame = self.load_depths(indices, seed)
         # changed to apply upsampled depth
         #######################
 
@@ -595,28 +624,28 @@ class UpsampledFramesDataset(Dataset):
         ##################################################
         ########## 0903 Frame log scale delete ###########
         
-        frame = np.clip(frame, 0.0, self.clip_distance)
+        # frame = np.clip(frame, 0.0, self.clip_distance)
 
-        # Normalize
-        frame = frame / np.amax(frame[~np.isnan(frame)])
-        div = abs(np.min(np.log(frame+self.eps)))
+        # # Normalize
+        # frame = frame / np.amax(frame[~np.isnan(frame)])
+        # div = abs(np.min(np.log(frame+self.eps)))
 
-        # Inverse depth
-        if self.inverse:
-            frame = 1.0 / frame
-            frame = frame / np.amax(frame[~np.isnan(frame)])
+        # # Inverse depth
+        # if self.inverse:
+        #     frame = 1.0 / frame
+        #     frame = frame / np.amax(frame[~np.isnan(frame)])
 
-        # #Convert to log depth
-        eps   = 1e-6
-        frame = 1.0 + np.log(frame + eps) / reg_factor
-        # # Clip between 0 and 1.0
-        frame = frame.clip(0, 1.0)
+        # # #Convert to log depth
+        # eps   = 1e-6
+        # frame = 1.0 + np.log(frame + eps) / reg_factor
+        # # # Clip between 0 and 1.0
+        # frame = frame.clip(0, 1.0)
 
-        if len(frame.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
-            frame = np.expand_dims(frame, -1)
+        # if len(frame.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
+        #     frame = np.expand_dims(frame, -1)
 
-        frame = np.moveaxis(frame, -1, 0)  # H x W x C -> C x H x W
-        frame = torch.from_numpy(frame) #numpy to tensor
+        # frame = np.moveaxis(frame, -1, 0)  # H x W x C -> C x H x W
+        # frame = torch.from_numpy(frame) #numpy to tensor
         ##################################################
         ##################################################
 
@@ -628,11 +657,11 @@ class UpsampledFramesDataset(Dataset):
         # Clip to maximum distance
         # metric_depth = np.clip(metric_depth, 0.0, self.clip_distance)
 
-        if len(metric_depth.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
-            metric_depth = np.expand_dims(metric_depth, -1)
+        # if len(metric_depth.shape) == 2:  # [H x W] grayscale image -> [H x W x 1]
+        #     metric_depth = np.expand_dims(metric_depth, -1)
 
-        metric_depth = np.moveaxis(metric_depth, -1, 0)  # H x W x C -> C x H x W
-        metric_depth = torch.from_numpy(metric_depth) #numpy to tensor
+        # metric_depth = np.moveaxis(metric_depth, -1, 0)  # H x W x C -> C x H x W
+        # metric_depth = torch.from_numpy(metric_depth) #numpy to tensor
 
         if self.transform:
             random.seed(seed)
