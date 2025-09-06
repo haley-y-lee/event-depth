@@ -522,10 +522,11 @@ class LSTMTrainer(BaseTrainer):
 
             if record:
                 with torch.no_grad():
-                    psfs = f.softplus(self.model.unetrecurrentpsf.psf_layer.psfs)
-                    psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
-                    psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
-                    self.writer.add_image('psf_preview', psf_grid, global_step=self.preview_count)
+                    # psfs = f.softplus(self.model.unetrecurrentpsf.psf_layer.psfs)
+                    # psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
+                    # psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                    # self.writer.add_image('psf_preview', psf_grid, global_step=self.preview_count)
+                    
                     #self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=self.current_epoch)
 
                     # Voxel Grid 시각화
@@ -809,28 +810,28 @@ class LSTMTrainer(BaseTrainer):
                     _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_upsampled_sequence(
                         sequence, record=True)
                     
-                    if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-                        try:
-                            psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach()
-                            psfs = f.softplus(psfs)
-                            psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
-                            psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
-                            self.writer.add_image("epochwise_psf_kernels", psf_grid, global_step=epoch)
-                        except Exception as e:
-                            print(f"[WARNING] PSF TensorBoard logging failed: {e}")
+                    # if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
+                    #     try:
+                    #         # psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach()
+                    #         # psfs = f.softplus(psfs)
+                    #         # psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
+                    #         # psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                    #         # self.writer.add_image("epochwise_psf_kernels", psf_grid, global_step=epoch)
+                    #     except Exception as e:
+                    #         print(f"[WARNING] PSF TensorBoard logging failed: {e}")
 
 
                     # === Log PSF Kernels after forward pass ===
-                    with torch.no_grad():
-                        try:
-                            psfs = self.model.unetrecurrentpsf.psf_layer.psfs  # [N,1,H,W]
-                            psfs = f.softplus(psfs)  # ensure positivity
-                            psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)  # normalize
-                            psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
-                            self.writer.add_image("psf_kernels", psf_grid, global_step=epoch)
-                            #self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=self.current_epoch)
-                        except Exception as e:
-                            print(f"[WARNING] Failed to log psf_kernels at epoch {epoch}: {e}")
+                    # with torch.no_grad():
+                    #     try:
+                    #         psfs = self.model.unetrecurrentpsf.psf_layer.psfs  # [N,1,H,W]
+                    #         psfs = f.softplus(psfs)  # ensure positivity
+                    #         psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)  # normalize
+                    #         psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+                    #         self.writer.add_image("psf_kernels", psf_grid, global_step=epoch)
+                    #         #self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=self.current_epoch)
+                    #     except Exception as e:
+                    #         print(f"[WARNING] Failed to log psf_kernels at epoch {epoch}: {e}")
 
 
                 else:
@@ -888,16 +889,16 @@ class LSTMTrainer(BaseTrainer):
             log = {**log, **val_log}
 
 
-        if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-            with torch.no_grad():
-                psfs = f.softplus(self.model.unetrecurrentpsf.psf_layer.psfs)
-                psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
-                psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
-                self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=epoch)
+        # if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
+        #     with torch.no_grad():
+        #         psfs = f.softplus(self.model.unetrecurrentpsf.psf_layer.psfs)
+        #         psfs = psfs / psfs.sum(dim=(-2, -1), keepdim=True)
+        #         psf_grid = utils.make_grid(psfs, nrow=8, normalize=True, scale_each=True)
+        #         self.writer.add_image('epochwise_psf_kernels', psf_grid, global_step=epoch)
 
-            raw_psfs = self.model.unetrecurrentpsf.psf_layer.psfs
-            if raw_psfs.grad is not None:
-                self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
+        #     raw_psfs = self.model.unetrecurrentpsf.psf_layer.psfs
+        #     if raw_psfs.grad is not None:
+        #         self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
     
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
             os.makedirs("0903_off_E300_P20_D_15_delta_point01", exist_ok=True)

@@ -508,7 +508,7 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         ##################################################################################################
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=16, psf_init='delta', psf_size=20)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=16, psf_init='delta', psf_size=5)
         ###### Change the depth bin Depth as well!! ########
 
         #################################################################################################
@@ -579,6 +579,10 @@ class UNetRecurrentPSF(nn.Module):
         #convolved_frames = self.psf_layer(masked_frames)
 
         initialized_psfs = self.psf_layer(masked_frames)
+
+        print(f"[DEBUG initialized psfs] : {initialized_psfs}")
+        print(f"[DEBUG psf weights] : {self.psf_layer.psfs}")
+
         C = masked_frames.shape[1]
         convolved_frames = F.conv2d(masked_frames, initialized_psfs, padding="same", groups=C)
         convolved_frames = convolved_frames.sum(dim=1)
