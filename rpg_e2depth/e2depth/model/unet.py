@@ -67,7 +67,7 @@ class BaseUNet(nn.Module):
     def build_decoders(self):
         decoder_input_sizes = list(reversed([self.base_num_channels * pow(2, i + 1) for i in range(self.num_encoders)]))
 
-        self.decoders = nn.ModuleList()
+        self.decoders = nn. ModuleList()
         for input_size in decoder_input_sizes:
             self.decoders.append(self.UpsampleLayer(input_size if self.skip_type == 'sum' else 2 * input_size,
                                                     input_size // 2,
@@ -398,10 +398,10 @@ class DepthDependentPSFLayer(nn.Module):
             # self.psfs = nn.Parameter(psfs, requires_grad=False)
 
 
-            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), 0.0, device=gpu)  
+            psfs = torch.full((self.num_depths, 1, psf_size, psf_size), -5.0, device=gpu)  
             center = psf_size // 2
-            psfs[:, 0, center, center] = 1.0
-            
+            psfs[:, 0, center, center] = 5.0
+            psfs = f.softplus(psfs)
             #self.psfs = nn.Parameter(psfs)
             self.psfs = nn.Parameter(psfs, requires_grad=False)
 
@@ -448,7 +448,7 @@ class DepthDependentPSFLayer(nn.Module):
         k = self.psf_size
 
         ######################## 09032025 : Softplus removed for delta function ###############################
-        # psfs = f.softplus(self.psfs)
+        
         
         # scaled = psfs
         # psfs  = scaled / scaled.sum(dim=(-2, -1), keepdim=True) * (self.psf_size ** 2)
