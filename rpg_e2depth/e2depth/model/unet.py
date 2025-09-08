@@ -338,12 +338,12 @@ class DepthDependentPSFLayer(nn.Module):
             for theta in angles: 
                 base = torch.zeros((psf_size, psf_size), dtype=torch.float32)
                 center = psf_size // 2
-                base[center, center] = 5
+                base[center, center] = 1
 
-                gauss = gaussian_filter(base.numpy(), sigma=[2.0, 7.0]) 
+                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 4.0]) 
                 rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
-                rotated /= rotated.sum()
-                psf_list.append(torch.tensor(rotated *100, dtype=torch.float32))
+                rotated = (rotated-rotated.min())/(rotated.max() - rotated.min())
+                psf_list.append(torch.tensor(rotated, dtype=torch.float32))
                 # eps = 1e-6
                 # inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
 
@@ -403,7 +403,13 @@ class DepthDependentPSFLayer(nn.Module):
             psfs[:, 0, center, center] = 5.0
             psfs = f.softplus(psfs)
             #self.psfs = nn.Parameter(psfs)
-            self.psfs = nn.Parameter(psfs, requires_grad=False)
+            psfs = psfs/psfs.sum(dim=(-2,-1),keepdim = True)
+
+            #psfs = (psfs-psfs.min())/(psfs.max() - psfs.min())
+
+               # psf_list.append(torch.tensor(rotated, dtype=torch.float32))
+            self.psfs = nn.Parameter(psfs)
+            #self.psfs = nn.Parameter(psfs, requires_grad=False)
 
         ##### Commented on 0829 #####
         # if lower is None or higher is None:
@@ -508,7 +514,7 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         ##################################################################################################
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=16, psf_init='delta', psf_size=5)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=16, psf_init='delta', psf_size=21)
         ###### Change the depth bin Depth as well!! ########
 
         #################################################################################################
@@ -580,8 +586,8 @@ class UNetRecurrentPSF(nn.Module):
 
         initialized_psfs = self.psf_layer(masked_frames)
 
-        print(f"[DEBUG initialized psfs] : {initialized_psfs}")
-        print(f"[DEBUG psf weights] : {self.psf_layer.psfs}")
+        # print(f"[DEBUG initialized psfs] : {initialized_psfs}")
+        # print(f"[DEBUG psf weights] : {self.psf_layer.psfs}")
 
         C = masked_frames.shape[1]
         convolved_frames = F.conv2d(masked_frames, initialized_psfs, padding="same", groups=C)
