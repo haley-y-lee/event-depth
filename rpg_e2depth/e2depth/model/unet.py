@@ -12,7 +12,6 @@ import os
 import math
 import torch.nn.functional as F
 # matplotlib.use('Qt5Agg')
-
 gpu = "cuda:0"
 #gpu = 'cpu'
 
@@ -215,7 +214,7 @@ def compute_event_frame(diff):
     """
 
     eps = 1e-4
-    C = 0.01
+    C = 0.06
     w = 100
     return ((diff + eps) / (torch.abs(diff) + eps)) * (1 / (1 + torch.exp(-w*torch.abs(diff)+w*C)))
 
@@ -314,7 +313,7 @@ def voxel_grid_batched(event_frames, timestamps, num_bins=5):
     return voxel.view(B, num_bins, H, W)
 
 
-class DepthDependentPSFLayer(nn.Module):
+class DepthDependentPSFLayer(nn.Module): 
     """Module containing a collection of learnable depth-dependent psfs"""
     def __init__(self, min_depth, max_depth, psf_init, psf_size=9,lower=None, higher=None):
         super().__init__()
@@ -332,7 +331,7 @@ class DepthDependentPSFLayer(nn.Module):
             self.psfs = nn.Parameter(psfs)
 
         if self.psf_init == 'rotated':
-            angles = torch.linspace(0, 180, steps=self.num_depths)  
+            angles = torch.linspace(0, 90, steps=self.num_depths)  
             psf_list = [] 
 
             for theta in angles: 
@@ -340,9 +339,11 @@ class DepthDependentPSFLayer(nn.Module):
                 center = psf_size // 2
                 base[center, center] = 1
 
-                gauss = gaussian_filter(base.numpy(), sigma=[1.0, 4.0]) 
+                gauss = gaussian_filter(base.numpy(), sigma=[0.5, 0.5]) 
                 rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
                 rotated = (rotated-rotated.min())/(rotated.max() - rotated.min())
+                rotated = rotated + 1e-6
+                rotated = np.clip(rotated, 1e-6, 1.0)
                 psf_list.append(torch.tensor(rotated, dtype=torch.float32))
                 # eps = 1e-6
                 # inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
@@ -384,7 +385,7 @@ class DepthDependentPSFLayer(nn.Module):
 
             psfs = torch.stack(psf_list, dim=0).unsqueeze(1).to(gpu)
 
-            self.psfs = nn.Parameter(psfs, requires_grad=False)
+            self.psfs = nn.Parameter(psfs)
 
 
 
@@ -460,6 +461,8 @@ class DepthDependentPSFLayer(nn.Module):
         # psfs  = scaled / scaled.sum(dim=(-2, -1), keepdim=True) * (self.psf_size ** 2)
         # psfs = torch.flip(psfs, (-2,-1))
         psfs = self.psfs
+    
+        psfs = psfs/psfs.sum(dim=(-2,-1),keepdim = True)
         #######################################################
 
 
@@ -497,7 +500,7 @@ class UNetRecurrentPSF(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='delta', scale_factor=1, max_depth = 16):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='delta', scale_factor=1, max_depth = 31):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -514,7 +517,7 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         ##################################################################################################
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=16, psf_init='delta', psf_size=21)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=31, psf_init='rotated', psf_size=21)
         ###### Change the depth bin Depth as well!! ########
 
         #################################################################################################
@@ -531,7 +534,7 @@ class UNetRecurrentPSF(nn.Module):
         """
 
         min_depth = 2.0
-        max_depth = 16.0
+        max_depth = 31.0
 
         N = len(cur_input)
 
@@ -586,6 +589,7 @@ class UNetRecurrentPSF(nn.Module):
 
         initialized_psfs = self.psf_layer(masked_frames)
 
+        ###### DEBUG PRINT PSF WEIGHTS #########
         # print(f"[DEBUG initialized psfs] : {initialized_psfs}")
         # print(f"[DEBUG psf weights] : {self.psf_layer.psfs}")
 

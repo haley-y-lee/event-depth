@@ -62,7 +62,7 @@
     "trainer": {
         "epochs": 300,
         "sequence_length": 20,
-        "save_dir": "saved/0907_off_P20_D_15_delta",
+        "save_dir": "saved/0919_off_P21_D30_delta_0_5",
         "save_freq": 4,
         "verbosity": 2,
         "monitor": "val_loss",

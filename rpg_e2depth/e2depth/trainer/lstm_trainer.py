@@ -844,13 +844,13 @@ class LSTMTrainer(BaseTrainer):
                     _, predicted_frames, groundtruth_frames, event_previews, grad_loss_frames = self.forward_pass_sequence(
                         sequence, record=True)
                     
-                hist_idx = len(predicted_frames) - 1  # choose an idx to plot
-                self.writer.add_histogram(f'{self.preview_count}_prediction',
-                                          predicted_frames[hist_idx],
-                                          global_step=epoch)
-                self.writer.add_histogram(f'{self.preview_count}_groundtruth',
-                                          groundtruth_frames[hist_idx],
-                                          global_step=epoch)
+                # hist_idx = len(predicted_frames) - 1  # choose an idx to plot
+                # self.writer.add_histogram(f'{self.preview_count}_prediction',
+                #                           predicted_frames[hist_idx],
+                #                           global_step=epoch)
+                # self.writer.add_histogram(f'{self.preview_count}_groundtruth',
+                #                           groundtruth_frames[hist_idx],
+                #                           global_step=epoch)
 
                 # fig = plot_grad_flow_bars(self.model.named_parameters())
                 # self.writer.add_figure('grad_figure', fig, global_step=epoch)
@@ -901,13 +901,13 @@ class LSTMTrainer(BaseTrainer):
         #         self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
     
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-            os.makedirs("0907_on_P20_D_15_delta", exist_ok=True)
+            os.makedirs("0919_off_P21_D30_delta_0_5", exist_ok=True)
             #os.makedirs("0811_psf_on_saved", exist_ok=True)
 
             with torch.no_grad():
                 psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach().cpu()
                 ###### PSF CHECKPOINTING 0811 #######
-                torch.save(psfs, f"0907_on_P20_D_15_delta/epoch_{epoch:03d}.pt")
+                torch.save(psfs, f"0919_off_P21_D30_delta_0_5/epoch_{epoch:03d}.pt")
                 #torch.save(psfs, f"0811_psf_on_saved/epoch_{epoch:03d}.pt")
                 #torch.save(psfs, f"0811_testing/epoch_{epoch:03d}.pt")
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
