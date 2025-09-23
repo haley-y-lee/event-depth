@@ -13,7 +13,7 @@ import math
 import torch.nn.functional as F
 # matplotlib.use('Qt5Agg')
 gpu = "cuda:0"
-#gpu = 'cpu'
+# gpu = 'cpu'
 
 def skip_concat(x1, x2):
     return torch.cat([x1, x2], dim=1)
@@ -214,7 +214,7 @@ def compute_event_frame(diff):
     """
 
     eps = 1e-4
-    C = 0.06
+    C = 0.05
     w = 100
     return ((diff + eps) / (torch.abs(diff) + eps)) * (1 / (1 + torch.exp(-w*torch.abs(diff)+w*C)))
 
@@ -341,9 +341,10 @@ class DepthDependentPSFLayer(nn.Module):
 
                 gauss = gaussian_filter(base.numpy(), sigma=[0.5, 0.5]) 
                 rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
-                rotated = (rotated-rotated.min())/(rotated.max() - rotated.min())
-                rotated = rotated + 1e-6
-                rotated = np.clip(rotated, 1e-6, 1.0)
+                #rotated = (rotated-rotated.min())/(rotated.max() - rotated.min())
+                rotated = rotated/rotated.sum(axis=(-2,-1),keepdims = True)
+                # rotated = rotated + 1e-6
+                # rotated = np.clip(rotated, 1e-6, 1.0)
                 psf_list.append(torch.tensor(rotated, dtype=torch.float32))
                 # eps = 1e-6
                 # inv_softplus = np.log(np.exp(rotated + eps) - 1.0)
@@ -500,7 +501,7 @@ class UNetRecurrentPSF(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='delta', scale_factor=1, max_depth = 31):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='rotated', scale_factor=1, max_depth = 31):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -565,6 +566,9 @@ class UNetRecurrentPSF(nn.Module):
             # depth = depth * (max_depth - min_depth) + 2
             #depth = depth * (max_depth - 2) + 2
             depth = depth * (max_depth - min_depth) + min_depth
+            #### Boosted depth for debugging #####
+            # print(f"[DEBUG] depth min : {depth.min()}, depth max : {depth.max()}")
+            #depth = depth * 100
 
         except Exception as e:
             print(f"[ERROR in depth calculation] cur_input[{i}]['metric_depth']: {cur_input[i].get('metric_depth', 'N/A')}")
@@ -589,9 +593,8 @@ class UNetRecurrentPSF(nn.Module):
 
         initialized_psfs = self.psf_layer(masked_frames)
 
-        ###### DEBUG PRINT PSF WEIGHTS #########
-        # print(f"[DEBUG initialized psfs] : {initialized_psfs}")
-        # print(f"[DEBUG psf weights] : {self.psf_layer.psfs}")
+        ##### 092325 DEBUG PSF output #####
+        #print(f"[DEBUG psf] : {self.psf_layer.psfs}")
 
         C = masked_frames.shape[1]
         convolved_frames = F.conv2d(masked_frames, initialized_psfs, padding="same", groups=C)
