@@ -901,13 +901,13 @@ class LSTMTrainer(BaseTrainer):
         #         self.writer.add_histogram('psf_gradients', raw_psfs.grad, global_step=epoch)
     
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):
-            os.makedirs("0923_off_P21_D30_delta_0_5", exist_ok=True)
+            os.makedirs("0929_off_E300_P20_D15_2delta", exist_ok=True)
             #os.makedirs("0811_psf_on_saved", exist_ok=True)
 
             with torch.no_grad():
                 psfs = self.model.unetrecurrentpsf.psf_layer.psfs.detach().cpu()
                 ###### PSF CHECKPOINTING 0811 #######
-                torch.save(psfs, f"0923_off_P21_D30_delta_0_5/epoch_{epoch:03d}.pt")
+                torch.save(psfs, f"0929_off_E300_P20_D15_2delta/epoch_{epoch:03d}.pt")
                 #torch.save(psfs, f"0811_psf_on_saved/epoch_{epoch:03d}.pt")
                 #torch.save(psfs, f"0811_testing/epoch_{epoch:03d}.pt")
         if self.use_psf and hasattr(self.model, 'unetrecurrentpsf'):

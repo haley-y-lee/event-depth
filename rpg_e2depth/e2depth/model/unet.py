@@ -13,7 +13,14 @@ import math
 import torch.nn.functional as F
 # matplotlib.use('Qt5Agg')
 gpu = "cuda:0"
-# gpu = 'cpu'
+#gpu = 'cpu'
+
+def gaussian_kernel(size=21, sigma=1.0):
+    x = torch.arange(size) - size//2
+    y = torch.arange(size) - size//2
+    X, Y = torch.meshgrid(x, y, indexing="ij")
+    g = torch.exp(-(X**2 + Y**2) / (2*sigma**2))
+    return (g-g.min())/g.max()
 
 def skip_concat(x1, x2):
     return torch.cat([x1, x2], dim=1)
@@ -21,6 +28,48 @@ def skip_concat(x1, x2):
 
 def skip_sum(x1, x2):
     return x1 + x2
+
+def rotate_deltas(img: torch.Tensor, theta_deg: float):
+    """
+    Rotate an NCHW tensor containing sparse delta(s) by theta_deg about the image center.
+    Keeps values as deltas (no interpolation). Nearest-pixel placement with center rotation.
+    
+    - img: (N, C, H, W) tensor
+    - theta_deg: rotation in degrees
+    Returns: tensor of same shape.
+    """
+    assert img.dim() == 4, "img must be NCHW"
+    N, C, H, W = img.shape
+    device, dtype = img.device, img.dtype
+
+    out = torch.zeros_like(img)
+
+    # center of rotation in pixel coords
+    cx = (W - 1) / 2.0
+    cy = (H - 1) / 2.0
+
+    th = torch.tensor(theta_deg, device=device, dtype=dtype) * torch.pi / 180
+    c, s = torch.cos(th), torch.sin(th)
+
+    # locations of nonzeros (N, C, y, x)
+    nz = (img != 0).nonzero(as_tuple=False)
+
+    for n, cidx, y, x in nz:
+        # shift to center, rotate, shift back
+        xr = (x.item() - cx)
+        yr = (y.item() - cy)
+        x2 = xr * float(c) - yr * float(s) + cx
+        y2 = xr * float(s) + yr * float(c) + cy
+
+        # nearest integer pixel
+        xi = int(round(x2))
+        yi = int(round(y2))
+
+        if 0 <= xi < W and 0 <= yi < H:
+            # keep as delta; if multiple land on same pixel, keep the max value
+            out[n, cidx, yi, xi] = torch.maximum(out[n, cidx, yi, xi], img[n, cidx, y, x])
+
+    return out
 
 
 class BaseUNet(nn.Module):
@@ -330,6 +379,48 @@ class DepthDependentPSFLayer(nn.Module):
             psfs = torch.randn((self.num_depths, 1, psf_size, psf_size), device=gpu) * 10000
             self.psfs = nn.Parameter(psfs)
 
+        ###############################################################################
+        if self.psf_init == 'two_points':
+
+            angles = torch.linspace(0, 90, steps=self.num_depths)
+            psf_list = []
+
+            center = psf_size // 2
+            space = 5 
+            img_init = torch.zeros((1, 1, psf_size, psf_size))
+            img_init[0, 0, center, center-space] = 1.0
+            img_init[0, 0, center, center+space] = 1.0
+
+            kernel = gaussian_kernel().unsqueeze(0).unsqueeze(0)
+
+            
+            for theta in angles:
+                base = rotate_deltas(img_init,theta)
+                conv = F.conv2d(base, kernel, padding = psf_size//2)
+                psf_list.append(torch.tensor(conv,dtype = torch.float32))
+            psfs = torch.stack(psf_list, dim=0).squeeze(1).to(gpu)  
+            self.psfs = nn.Parameter(psfs, requires_grad=False)
+
+        ###############################################################################
+        if self.psf_init == 'one_point':
+
+            angles = torch.linspace(0, 90, steps=self.num_depths)
+            psf_list = []
+
+            center = psf_size // 2
+            img_init = torch.zeros((1, 1, psf_size, psf_size))
+            img_init[0, 0, center, center] = 1.0
+
+            kernel = gaussian_kernel().unsqueeze(0).unsqueeze(0)
+        
+            for theta in angles:
+                base = img_init
+                conv = F.conv2d(base, kernel, padding = psf_size//2)
+                psf_list.append(torch.tensor(conv,dtype = torch.float32))
+            psfs = torch.stack(psf_list, dim=0).squeeze(1).to(gpu)  
+            self.psfs = nn.Parameter(psfs, requires_grad=False)
+            
+    ###############################################################################
         if self.psf_init == 'rotated':
             angles = torch.linspace(0, 90, steps=self.num_depths)  
             psf_list = [] 
@@ -501,7 +592,7 @@ class UNetRecurrentPSF(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='rotated', scale_factor=1, max_depth = 31):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='two_points', scale_factor=1, max_depth = 31):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -518,7 +609,7 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         ##################################################################################################
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=31, psf_init='rotated', psf_size=21)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=31, psf_init='two_points', psf_size=21)
         ###### Change the depth bin Depth as well!! ########
 
         #################################################################################################
@@ -596,6 +687,9 @@ class UNetRecurrentPSF(nn.Module):
         ##### 092325 DEBUG PSF output #####
         #print(f"[DEBUG psf] : {self.psf_layer.psfs}")
 
+
+        # print(f"[DEBUG] shape of initialized_psfs : {initialized_psfs.shape}")
+        # print(f"[DEBUG] shape of masked_frames : {masked_frames.shape}")
         C = masked_frames.shape[1]
         convolved_frames = F.conv2d(masked_frames, initialized_psfs, padding="same", groups=C)
         convolved_frames = convolved_frames.sum(dim=1)
