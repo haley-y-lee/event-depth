@@ -191,7 +191,7 @@ def main(config, resume, initial_checkpoint=None):
 
     ###### DEBUG : REDUCE DATASET ########
     # total = len(train_dataset)          # 예: 3 964
-    # k = 5                  # 50 %
+    # k = 10                  # 50 %
     # torch.manual_seed(0)               # 재현용(옵션)
     # indices = torch.randperm(total)[:k] # 섞어서 앞 k개 선택
     # train_dataset = Subset(train_dataset, indices)

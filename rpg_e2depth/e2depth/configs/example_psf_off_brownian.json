@@ -1,0 +1,88 @@
+{
+    "name": "example_psf",
+    "cuda": true,
+    "gpu": 0,
+    "data_loader": {
+        "train": {
+            "type": "SequenceUpsampledFramesDataset",
+            "base_folder": "train_sparse_v2",
+            "depth_folder": "imgs",
+            "frame_folder": "frames",
+            "flow_folder": "",
+            "event_folder": "",
+            "proba_pause_when_running": 0.0,
+            "proba_pause_when_paused": 0.0,
+            "step_size": 1,
+            "clip_distance":80.0,
+            "scale_factor": 1
+        },
+        "validation": {
+            "type": "SequenceUpsampledFramesDataset",
+            "base_folder": "valid_sparse_v2", 
+            "depth_folder": "imgs",
+            "frame_folder": "frames",
+            "flow_folder": "",
+            "event_folder": "",
+            "proba_pause_when_running": 0.0,
+            "proba_pause_when_paused": 0.0,
+            "step_size": 1,
+            "clip_distance":80.0,
+            "scale_factor":1
+        },
+        "batch_size": 8,
+        "num_workers": 7,
+        "pin_memory": false,
+        "normalize": true,
+        "shuffle": true,
+        "inverse": false
+    },
+    "lr_scheduler_type": "ExponentialLR",
+    "lr_scheduler_freq": 200,
+    "lr_scheduler": {
+        "gamma": 1.0
+    },
+    "optimizer_type": "Adam",
+    "optimizer": {
+        "lr": 0.0001,
+        "weight_decay": 0
+    },
+    "loss": {
+        "type": "scale_invariant_loss",
+        "config": {"weight": 1.0, "n_lambda" : 1.0}
+    },
+    "grad_loss": {
+        "weight": 0.25
+    },
+    "metrics": [
+        "mse",
+        "abs_rel_diff",
+        "scale_invariant_error",
+        "median_error"
+    ],
+    "trainer": {
+        "epochs": 200,
+        "sequence_length": 20,
+        "save_dir": "saved/1027_sparse_v2_two_points_[space_7]_0_75",
+        "save_freq": 4,
+        "verbosity": 2,
+        "monitor": "val_loss",
+        "monitor_mode": "min",
+        "num_previews": 2,
+        "num_val_previews": 2,
+        "still_previews": true,
+        "grid_loss": true
+    },
+    "arch": "E2VIDRecurrentPSF",
+    "model": {
+        "num_bins": 5,
+        "skip_type": "sum",
+        "recurrent_block_type": "convlstm",
+        "num_encoders": 3,
+        "base_num_channels": 32,
+        "num_residual_blocks": 2,
+        "use_upsample_conv": true,
+        "norm": "none",
+        "psf_init": "delta"
+    },
+    "use_psf": true
+}

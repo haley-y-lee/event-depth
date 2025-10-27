@@ -13,14 +13,22 @@ import math
 import torch.nn.functional as F
 # matplotlib.use('Qt5Agg')
 gpu = "cuda:0"
-#gpu = 'cpu'
+gpu = 'cpu'
 
-def gaussian_kernel(size=21, sigma=1.0):
+# def gaussian_kernel(size=21, sigma=0.5):
+#     x = torch.arange(size) - size//2
+#     y = torch.arange(size) - size//2
+#     X, Y = torch.meshgrid(x, y, indexing="ij")
+#     g = torch.exp(-(X**2 + Y**2) / (2*sigma**2))
+#     return (g-g.min())/g.max()
+
+def gaussian_kernel(size=21, sigma=0.75):
     x = torch.arange(size) - size//2
     y = torch.arange(size) - size//2
     X, Y = torch.meshgrid(x, y, indexing="ij")
     g = torch.exp(-(X**2 + Y**2) / (2*sigma**2))
     return (g-g.min())/g.max()
+
 
 def skip_concat(x1, x2):
     return torch.cat([x1, x2], dim=1)
@@ -263,8 +271,8 @@ def compute_event_frame(diff):
     """
 
     eps = 1e-4
-    C = 0.05
-    w = 100
+    C = 0.3
+    w = 50
     return ((diff + eps) / (torch.abs(diff) + eps)) * (1 / (1 + torch.exp(-w*torch.abs(diff)+w*C)))
 
 
@@ -386,7 +394,7 @@ class DepthDependentPSFLayer(nn.Module):
             psf_list = []
 
             center = psf_size // 2
-            space = 5 
+            space = 7
             img_init = torch.zeros((1, 1, psf_size, psf_size))
             img_init[0, 0, center, center-space] = 1.0
             img_init[0, 0, center, center+space] = 1.0
@@ -430,7 +438,7 @@ class DepthDependentPSFLayer(nn.Module):
                 center = psf_size // 2
                 base[center, center] = 1
 
-                gauss = gaussian_filter(base.numpy(), sigma=[0.5, 0.5]) 
+                gauss = gaussian_filter(base.numpy(), sigma=[0.75, 2.0]) 
                 rotated = rotate(gauss, angle=float(theta), reshape=False, order=1, mode='nearest')
                 #rotated = (rotated-rotated.min())/(rotated.max() - rotated.min())
                 rotated = rotated/rotated.sum(axis=(-2,-1),keepdims = True)
@@ -592,7 +600,7 @@ class UNetRecurrentPSF(nn.Module):
 
     def __init__(self, num_input_channels, num_output_channels=1, skip_type='sum',
                  recurrent_block_type='convlstm', activation='sigmoid', num_encoders=4, base_num_channels=32,
-                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='two_points', scale_factor=1, max_depth = 31):
+                 num_residual_blocks=2, norm=None, use_upsample_conv=True, psf_init='rotated', scale_factor=1, max_depth = 21):
         super().__init__()
 
         self.unet_recurrent = UNetRecurrent(
@@ -609,7 +617,7 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         ##################################################################################################
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=31, psf_init='two_points', psf_size=21)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=21, psf_init='two_points', psf_size=21)
         ###### Change the depth bin Depth as well!! ########
 
         #################################################################################################
@@ -626,7 +634,7 @@ class UNetRecurrentPSF(nn.Module):
         """
 
         min_depth = 2.0
-        max_depth = 31.0
+        max_depth = 21.0
 
         N = len(cur_input)
 
@@ -653,7 +661,8 @@ class UNetRecurrentPSF(nn.Module):
 
         try:
             depth = cur_input[i]['metric_depth']
-            # depth = depth / 255.0
+            #print(f"[DEBUG] depth min : {depth.min()}, depth max : {depth.max()}")
+            #depth = depth / 255.0
             # depth = depth * (max_depth - min_depth) + 2
             #depth = depth * (max_depth - 2) + 2
             depth = depth * (max_depth - min_depth) + min_depth
@@ -688,7 +697,7 @@ class UNetRecurrentPSF(nn.Module):
         #print(f"[DEBUG psf] : {self.psf_layer.psfs}")
 
 
-        # print(f"[DEBUG] shape of initialized_psfs : {initialized_psfs.shape}")
+        #print(f"[DEBUG] shape of initialized_psfs : {initialized_psfs.shape}")
         # print(f"[DEBUG] shape of masked_frames : {masked_frames.shape}")
         C = masked_frames.shape[1]
         convolved_frames = F.conv2d(masked_frames, initialized_psfs, padding="same", groups=C)
@@ -703,7 +712,7 @@ class UNetRecurrentPSF(nn.Module):
 
         # print(f"shape of convolved_frames : {convolved_frames.shape}")
         if measure_time: t0 = time.time()
-        epsilon = 1e-6
+        epsilon = 1e-3
         log_frames = torch.log(convolved_frames + epsilon)
 
         diffs = log_frames[1:] - log_frames[:-1] 
