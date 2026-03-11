@@ -72,9 +72,10 @@ def plotgrid(stack):
 # %load_ext autoreload
 # %autoreload 2
 
-PATH_TO_MODEL = '/home/yl3836/mono_event/rpg_e2depth/e2depth/saved/1025_sparse_v2_one_points/example_psf/model_best.pth.tar'
+
+PATH_TO_MODEL = '/home/yl3836/mono_event/rpg_e2depth/e2depth/saved/1027_sparse_v2_two_points_[space_7]_0_75/example_psf/model_best.pth.tar'
 #PATH_TO_MODEL = '/home/yl3836/mono_event/rpg_e2depth/e2depth/saved/1025_sparse_v2_one_points/example_psf/checkpoint-epoch088-loss-0.0069.pth.tar'
-tag = " [1025_rotated_0_75_0_75]"
+tag = " [1027_two_points_space_7]"
 #PATH_TO_MODEL = '/home/yl3836/mono_event/rpg_e2depth/e2depth/saved/0912_off_P21_D30_rotated_0_5_2_0/example_psf/model_best.pth.tar'
 BASE_FOLDER = '/home/yl3836/DENSE/valid_sparse_v2/valid_seed_50/'
 #BASE_FOLDER = '/home/yl3836/DENSE/train_upsampled/train_sequence_03_town04/'

@@ -22,7 +22,7 @@ gpu = 'cpu'
 #     g = torch.exp(-(X**2 + Y**2) / (2*sigma**2))
 #     return (g-g.min())/g.max()
 
-def gaussian_kernel(size=21, sigma=0.75):
+def gaussian_kernel(size=21, sigma=0.1):
     x = torch.arange(size) - size//2
     y = torch.arange(size) - size//2
     X, Y = torch.meshgrid(x, y, indexing="ij")
@@ -617,7 +617,7 @@ class UNetRecurrentPSF(nn.Module):
         )
 
         ##################################################################################################
-        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=21, psf_init='two_points', psf_size=21)
+        self.psf_layer = DepthDependentPSFLayer(min_depth=2, max_depth=21, psf_init='one_point', psf_size=21)
         ###### Change the depth bin Depth as well!! ########
 
         #################################################################################################

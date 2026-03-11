@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=1027_sparse_v2_two_points_[space_7]_0_75
+#SBATCH --job-name=1028_sparse_v2_one_point_complete_delta
 #SBATCH --output=slurm_logs/%x-%j.out
 #SBATCH --error=slurm_logs/%x-%j.err
 #SBATCH --partition=monakhova

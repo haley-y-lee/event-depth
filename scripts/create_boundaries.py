@@ -8,7 +8,7 @@ import numpy as np
 
 dt = 0.0333
 # frame_folder = "/home/abc256/mono/DENSE/test_upsampled_3/test_sequence_00_town10/frames"
-frame_folder = "/home/yl3836/DENSE/valid_upsampled/valid_sequence_01_town07/frames"
+frame_folder = "/home/yl3836/DENSE/train_sparse/validate_seed_50/frames"
 
 frame_stamps = np.loadtxt(
     os.path.join(frame_folder, 'timestamps.txt'))

@@ -66614,3 +66614,1541 @@ Train Epoch: 196 [1792/2648 (68%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000
 Train Epoch: 196 [1808/2648 (68%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
 Train Epoch: 196 [1824/2648 (69%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
 Train Epoch: 196 [1840/2648 (69%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 196 [1856/2648 (70%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 196 [1872/2648 (71%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 196 [1888/2648 (71%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 196 [1904/2648 (72%)] loss: 0.0082 L_si: 0.0082 L_grad: 0.0000 
+Train Epoch: 196 [1920/2648 (73%)] loss: 0.0053 L_si: 0.0053 L_grad: 0.0000 
+Train Epoch: 196 [1936/2648 (73%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 196 [1952/2648 (74%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 196 [1968/2648 (74%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 196 [1984/2648 (75%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 196 [2000/2648 (76%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 196 [2016/2648 (76%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 196 [2032/2648 (77%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 196 [2048/2648 (77%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 196 [2064/2648 (78%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 196 [2080/2648 (79%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 196 [2096/2648 (79%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 196 [2112/2648 (80%)] loss: 0.0054 L_si: 0.0054 L_grad: 0.0000 
+Train Epoch: 196 [2128/2648 (80%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 196 [2144/2648 (81%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 196 [2160/2648 (82%)] loss: 0.0053 L_si: 0.0053 L_grad: 0.0000 
+Train Epoch: 196 [2176/2648 (82%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 196 [2192/2648 (83%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 196 [2208/2648 (83%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 196 [2224/2648 (84%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 196 [2240/2648 (85%)] loss: 0.0054 L_si: 0.0054 L_grad: 0.0000 
+Train Epoch: 196 [2256/2648 (85%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 196 [2272/2648 (86%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 196 [2288/2648 (86%)] loss: 0.0050 L_si: 0.0050 L_grad: 0.0000 
+Train Epoch: 196 [2304/2648 (87%)] loss: 0.0083 L_si: 0.0083 L_grad: 0.0000 
+Train Epoch: 196 [2320/2648 (88%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 196 [2336/2648 (88%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 196 [2352/2648 (89%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 196 [2368/2648 (89%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 196 [2384/2648 (90%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 196 [2400/2648 (91%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 196 [2416/2648 (91%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 196 [2432/2648 (92%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 196 [2448/2648 (92%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 196 [2464/2648 (93%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 196 [2480/2648 (94%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 196 [2496/2648 (94%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 196 [2512/2648 (95%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 196 [2528/2648 (95%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 196 [2544/2648 (96%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 196 [2560/2648 (97%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 196 [2576/2648 (97%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 196 [2592/2648 (98%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 196 [2608/2648 (98%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 196 [2624/2648 (99%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 196 [2640/2648 (100%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Validation: [0/888 (0%)]
+Validation: [16/888 (2%)]
+Validation: [32/888 (4%)]
+Validation: [48/888 (5%)]
+Validation: [64/888 (7%)]
+Validation: [80/888 (9%)]
+Validation: [96/888 (11%)]
+Validation: [112/888 (13%)]
+Validation: [128/888 (14%)]
+Validation: [144/888 (16%)]
+Validation: [160/888 (18%)]
+Validation: [176/888 (20%)]
+Validation: [192/888 (22%)]
+Validation: [208/888 (23%)]
+Validation: [224/888 (25%)]
+Validation: [240/888 (27%)]
+Validation: [256/888 (29%)]
+Validation: [272/888 (31%)]
+Validation: [288/888 (32%)]
+Validation: [304/888 (34%)]
+Validation: [320/888 (36%)]
+Validation: [336/888 (38%)]
+Validation: [352/888 (40%)]
+Validation: [368/888 (41%)]
+Validation: [384/888 (43%)]
+Validation: [400/888 (45%)]
+Validation: [416/888 (47%)]
+Validation: [432/888 (49%)]
+Validation: [448/888 (50%)]
+Validation: [464/888 (52%)]
+Validation: [480/888 (54%)]
+Validation: [496/888 (56%)]
+Validation: [512/888 (58%)]
+Validation: [528/888 (59%)]
+Validation: [544/888 (61%)]
+Validation: [560/888 (63%)]
+Validation: [576/888 (65%)]
+Validation: [592/888 (67%)]
+Validation: [608/888 (68%)]
+Validation: [624/888 (70%)]
+Validation: [640/888 (72%)]
+Validation: [656/888 (74%)]
+Validation: [672/888 (76%)]
+Validation: [688/888 (77%)]
+Validation: [704/888 (79%)]
+Validation: [720/888 (81%)]
+Validation: [736/888 (83%)]
+Validation: [752/888 (85%)]
+Validation: [768/888 (86%)]
+Validation: [784/888 (88%)]
+Validation: [800/888 (90%)]
+Validation: [816/888 (92%)]
+Validation: [832/888 (94%)]
+Validation: [848/888 (95%)]
+Validation: [864/888 (97%)]
+Validation: [880/888 (99%)]
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+Saving checkpoint: saved/1026_sparse_v2_rotated_0_75_2_0/example_psf/checkpoint-epoch196-loss-0.0067.pth.tar ...
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Train Epoch: 197 [0/2648 (0%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [16/2648 (1%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 197 [32/2648 (1%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [48/2648 (2%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [64/2648 (2%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [80/2648 (3%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [96/2648 (4%)] loss: 0.0054 L_si: 0.0054 L_grad: 0.0000 
+Train Epoch: 197 [112/2648 (4%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [128/2648 (5%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 197 [144/2648 (5%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 197 [160/2648 (6%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 197 [176/2648 (7%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [192/2648 (7%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 197 [208/2648 (8%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 197 [224/2648 (8%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 197 [240/2648 (9%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 197 [256/2648 (10%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [272/2648 (10%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 197 [288/2648 (11%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [304/2648 (11%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [320/2648 (12%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 197 [336/2648 (13%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 197 [352/2648 (13%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [368/2648 (14%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [384/2648 (15%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [400/2648 (15%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [416/2648 (16%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [432/2648 (16%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [448/2648 (17%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [464/2648 (18%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 197 [480/2648 (18%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [496/2648 (19%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [512/2648 (19%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [528/2648 (20%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 197 [544/2648 (21%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 197 [560/2648 (21%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [576/2648 (22%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [592/2648 (22%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [608/2648 (23%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [624/2648 (24%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [640/2648 (24%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [656/2648 (25%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 197 [672/2648 (25%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [688/2648 (26%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 197 [704/2648 (27%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 197 [720/2648 (27%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [736/2648 (28%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [752/2648 (28%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [768/2648 (29%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 197 [784/2648 (30%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 197 [800/2648 (30%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [816/2648 (31%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [832/2648 (31%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 197 [848/2648 (32%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [864/2648 (33%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [880/2648 (33%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 197 [896/2648 (34%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [912/2648 (34%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [928/2648 (35%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [944/2648 (36%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 197 [960/2648 (36%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [976/2648 (37%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [992/2648 (37%)] loss: 0.0053 L_si: 0.0053 L_grad: 0.0000 
+Train Epoch: 197 [1008/2648 (38%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 197 [1024/2648 (39%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [1040/2648 (39%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 197 [1056/2648 (40%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 197 [1072/2648 (40%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [1088/2648 (41%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [1104/2648 (42%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [1120/2648 (42%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 197 [1136/2648 (43%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [1152/2648 (44%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [1168/2648 (44%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [1184/2648 (45%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 197 [1200/2648 (45%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [1216/2648 (46%)] loss: 0.0083 L_si: 0.0083 L_grad: 0.0000 
+Train Epoch: 197 [1232/2648 (47%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [1248/2648 (47%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [1264/2648 (48%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [1280/2648 (48%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 197 [1296/2648 (49%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [1312/2648 (50%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 197 [1328/2648 (50%)] loss: 0.0049 L_si: 0.0049 L_grad: 0.0000 
+Train Epoch: 197 [1344/2648 (51%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 197 [1360/2648 (51%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [1376/2648 (52%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [1392/2648 (53%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [1408/2648 (53%)] loss: 0.0080 L_si: 0.0080 L_grad: 0.0000 
+Train Epoch: 197 [1424/2648 (54%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 197 [1440/2648 (54%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [1456/2648 (55%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [1472/2648 (56%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 197 [1488/2648 (56%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [1504/2648 (57%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [1520/2648 (57%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 197 [1536/2648 (58%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [1552/2648 (59%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 197 [1568/2648 (59%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [1584/2648 (60%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 197 [1600/2648 (60%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 197 [1616/2648 (61%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 197 [1632/2648 (62%)] loss: 0.0052 L_si: 0.0052 L_grad: 0.0000 
+Train Epoch: 197 [1648/2648 (62%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 197 [1664/2648 (63%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [1680/2648 (63%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 197 [1696/2648 (64%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 197 [1712/2648 (65%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [1728/2648 (65%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [1744/2648 (66%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [1760/2648 (66%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 197 [1776/2648 (67%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [1792/2648 (68%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [1808/2648 (68%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [1824/2648 (69%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [1840/2648 (69%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [1856/2648 (70%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [1872/2648 (71%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [1888/2648 (71%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 197 [1904/2648 (72%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [1920/2648 (73%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [1936/2648 (73%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 197 [1952/2648 (74%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 197 [1968/2648 (74%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 197 [1984/2648 (75%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 197 [2000/2648 (76%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [2016/2648 (76%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [2032/2648 (77%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [2048/2648 (77%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [2064/2648 (78%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 197 [2080/2648 (79%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [2096/2648 (79%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [2112/2648 (80%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [2128/2648 (80%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [2144/2648 (81%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [2160/2648 (82%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [2176/2648 (82%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [2192/2648 (83%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 197 [2208/2648 (83%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 197 [2224/2648 (84%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 197 [2240/2648 (85%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [2256/2648 (85%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 197 [2272/2648 (86%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 197 [2288/2648 (86%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 197 [2304/2648 (87%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [2320/2648 (88%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [2336/2648 (88%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [2352/2648 (89%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 197 [2368/2648 (89%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [2384/2648 (90%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [2400/2648 (91%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 197 [2416/2648 (91%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 197 [2432/2648 (92%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 197 [2448/2648 (92%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 197 [2464/2648 (93%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 197 [2480/2648 (94%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 197 [2496/2648 (94%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 197 [2512/2648 (95%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [2528/2648 (95%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [2544/2648 (96%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 197 [2560/2648 (97%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 197 [2576/2648 (97%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 197 [2592/2648 (98%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 197 [2608/2648 (98%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 197 [2624/2648 (99%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 197 [2640/2648 (100%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Validation: [0/888 (0%)]
+Validation: [16/888 (2%)]
+Validation: [32/888 (4%)]
+Validation: [48/888 (5%)]
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Validation: [64/888 (7%)]
+Validation: [80/888 (9%)]
+Validation: [96/888 (11%)]
+Validation: [112/888 (13%)]
+Validation: [128/888 (14%)]
+Validation: [144/888 (16%)]
+Validation: [160/888 (18%)]
+Validation: [176/888 (20%)]
+Validation: [192/888 (22%)]
+Validation: [208/888 (23%)]
+Validation: [224/888 (25%)]
+Validation: [240/888 (27%)]
+Validation: [256/888 (29%)]
+Validation: [272/888 (31%)]
+Validation: [288/888 (32%)]
+Validation: [304/888 (34%)]
+Validation: [320/888 (36%)]
+Validation: [336/888 (38%)]
+Validation: [352/888 (40%)]
+Validation: [368/888 (41%)]
+Validation: [384/888 (43%)]
+Validation: [400/888 (45%)]
+Validation: [416/888 (47%)]
+Validation: [432/888 (49%)]
+Validation: [448/888 (50%)]
+Validation: [464/888 (52%)]
+Validation: [480/888 (54%)]
+Validation: [496/888 (56%)]
+Validation: [512/888 (58%)]
+Validation: [528/888 (59%)]
+Validation: [544/888 (61%)]
+Validation: [560/888 (63%)]
+Validation: [576/888 (65%)]
+Validation: [592/888 (67%)]
+Validation: [608/888 (68%)]
+Validation: [624/888 (70%)]
+Validation: [640/888 (72%)]
+Validation: [656/888 (74%)]
+Validation: [672/888 (76%)]
+Validation: [688/888 (77%)]
+Validation: [704/888 (79%)]
+Validation: [720/888 (81%)]
+Validation: [736/888 (83%)]
+Validation: [752/888 (85%)]
+Validation: [768/888 (86%)]
+Validation: [784/888 (88%)]
+Validation: [800/888 (90%)]
+Validation: [816/888 (92%)]
+Validation: [832/888 (94%)]
+Validation: [848/888 (95%)]
+Validation: [864/888 (97%)]
+Validation: [880/888 (99%)]
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Train Epoch: 198 [0/2648 (0%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 198 [16/2648 (1%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 198 [32/2648 (1%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [48/2648 (2%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 198 [64/2648 (2%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [80/2648 (3%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [96/2648 (4%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [112/2648 (4%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [128/2648 (5%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 198 [144/2648 (5%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [160/2648 (6%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 198 [176/2648 (7%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 198 [192/2648 (7%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 198 [208/2648 (8%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [224/2648 (8%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 198 [240/2648 (9%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 198 [256/2648 (10%)] loss: 0.0049 L_si: 0.0049 L_grad: 0.0000 
+Train Epoch: 198 [272/2648 (10%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [288/2648 (11%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [304/2648 (11%)] loss: 0.0082 L_si: 0.0082 L_grad: 0.0000 
+Train Epoch: 198 [320/2648 (12%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [336/2648 (13%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [352/2648 (13%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [368/2648 (14%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [384/2648 (15%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [400/2648 (15%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [416/2648 (16%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [432/2648 (16%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [448/2648 (17%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 198 [464/2648 (18%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [480/2648 (18%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [496/2648 (19%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [512/2648 (19%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 198 [528/2648 (20%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [544/2648 (21%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [560/2648 (21%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [576/2648 (22%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [592/2648 (22%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [608/2648 (23%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [624/2648 (24%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 198 [640/2648 (24%)] loss: 0.0053 L_si: 0.0053 L_grad: 0.0000 
+Train Epoch: 198 [656/2648 (25%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 198 [672/2648 (25%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 198 [688/2648 (26%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [704/2648 (27%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [720/2648 (27%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [736/2648 (28%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [752/2648 (28%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 198 [768/2648 (29%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [784/2648 (30%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 198 [800/2648 (30%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 198 [816/2648 (31%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [832/2648 (31%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [848/2648 (32%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 198 [864/2648 (33%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [880/2648 (33%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 198 [896/2648 (34%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 198 [912/2648 (34%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 198 [928/2648 (35%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 198 [944/2648 (36%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 198 [960/2648 (36%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [976/2648 (37%)] loss: 0.0049 L_si: 0.0049 L_grad: 0.0000 
+Train Epoch: 198 [992/2648 (37%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [1008/2648 (38%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [1024/2648 (39%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 198 [1040/2648 (39%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 198 [1056/2648 (40%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [1072/2648 (40%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 198 [1088/2648 (41%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [1104/2648 (42%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 198 [1120/2648 (42%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [1136/2648 (43%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 198 [1152/2648 (44%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [1168/2648 (44%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [1184/2648 (45%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 198 [1200/2648 (45%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 198 [1216/2648 (46%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [1232/2648 (47%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 198 [1248/2648 (47%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [1264/2648 (48%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 198 [1280/2648 (48%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [1296/2648 (49%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 198 [1312/2648 (50%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [1328/2648 (50%)] loss: 0.0080 L_si: 0.0080 L_grad: 0.0000 
+Train Epoch: 198 [1344/2648 (51%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [1360/2648 (51%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 198 [1376/2648 (52%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 198 [1392/2648 (53%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [1408/2648 (53%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 198 [1424/2648 (54%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [1440/2648 (54%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [1456/2648 (55%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 198 [1472/2648 (56%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 198 [1488/2648 (56%)] loss: 0.0053 L_si: 0.0053 L_grad: 0.0000 
+Train Epoch: 198 [1504/2648 (57%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [1520/2648 (57%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [1536/2648 (58%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [1552/2648 (59%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [1568/2648 (59%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [1584/2648 (60%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 198 [1600/2648 (60%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 198 [1616/2648 (61%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 198 [1632/2648 (62%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 198 [1648/2648 (62%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [1664/2648 (63%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 198 [1680/2648 (63%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 198 [1696/2648 (64%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 198 [1712/2648 (65%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [1728/2648 (65%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 198 [1744/2648 (66%)] loss: 0.0053 L_si: 0.0053 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 198 [1760/2648 (66%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [1776/2648 (67%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 198 [1792/2648 (68%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [1808/2648 (68%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [1824/2648 (69%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 198 [1840/2648 (69%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [1856/2648 (70%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [1872/2648 (71%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [1888/2648 (71%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [1904/2648 (72%)] loss: 0.0049 L_si: 0.0049 L_grad: 0.0000 
+Train Epoch: 198 [1920/2648 (73%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [1936/2648 (73%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [1952/2648 (74%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 198 [1968/2648 (74%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 198 [1984/2648 (75%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [2000/2648 (76%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 198 [2016/2648 (76%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [2032/2648 (77%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 198 [2048/2648 (77%)] loss: 0.0080 L_si: 0.0080 L_grad: 0.0000 
+Train Epoch: 198 [2064/2648 (78%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [2080/2648 (79%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 198 [2096/2648 (79%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [2112/2648 (80%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 198 [2128/2648 (80%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [2144/2648 (81%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [2160/2648 (82%)] loss: 0.0052 L_si: 0.0052 L_grad: 0.0000 
+Train Epoch: 198 [2176/2648 (82%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [2192/2648 (83%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [2208/2648 (83%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 198 [2224/2648 (84%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [2240/2648 (85%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [2256/2648 (85%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [2272/2648 (86%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [2288/2648 (86%)] loss: 0.0083 L_si: 0.0083 L_grad: 0.0000 
+Train Epoch: 198 [2304/2648 (87%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [2320/2648 (88%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 198 [2336/2648 (88%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [2352/2648 (89%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 198 [2368/2648 (89%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 198 [2384/2648 (90%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 198 [2400/2648 (91%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [2416/2648 (91%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 198 [2432/2648 (92%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 198 [2448/2648 (92%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [2464/2648 (93%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [2480/2648 (94%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 198 [2496/2648 (94%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 198 [2512/2648 (95%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 198 [2528/2648 (95%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 198 [2544/2648 (96%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 198 [2560/2648 (97%)] loss: 0.0054 L_si: 0.0054 L_grad: 0.0000 
+Train Epoch: 198 [2576/2648 (97%)] loss: 0.0050 L_si: 0.0050 L_grad: 0.0000 
+Train Epoch: 198 [2592/2648 (98%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 198 [2608/2648 (98%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 198 [2624/2648 (99%)] loss: 0.0050 L_si: 0.0050 L_grad: 0.0000 
+Train Epoch: 198 [2640/2648 (100%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Validation: [0/888 (0%)]
+Validation: [16/888 (2%)]
+Validation: [32/888 (4%)]
+Validation: [48/888 (5%)]
+Validation: [64/888 (7%)]
+Validation: [80/888 (9%)]
+Validation: [96/888 (11%)]
+Validation: [112/888 (13%)]
+Validation: [128/888 (14%)]
+Validation: [144/888 (16%)]
+Validation: [160/888 (18%)]
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Validation: [176/888 (20%)]
+Validation: [192/888 (22%)]
+Validation: [208/888 (23%)]
+Validation: [224/888 (25%)]
+Validation: [240/888 (27%)]
+Validation: [256/888 (29%)]
+Validation: [272/888 (31%)]
+Validation: [288/888 (32%)]
+Validation: [304/888 (34%)]
+Validation: [320/888 (36%)]
+Validation: [336/888 (38%)]
+Validation: [352/888 (40%)]
+Validation: [368/888 (41%)]
+Validation: [384/888 (43%)]
+Validation: [400/888 (45%)]
+Validation: [416/888 (47%)]
+Validation: [432/888 (49%)]
+Validation: [448/888 (50%)]
+Validation: [464/888 (52%)]
+Validation: [480/888 (54%)]
+Validation: [496/888 (56%)]
+Validation: [512/888 (58%)]
+Validation: [528/888 (59%)]
+Validation: [544/888 (61%)]
+Validation: [560/888 (63%)]
+Validation: [576/888 (65%)]
+Validation: [592/888 (67%)]
+Validation: [608/888 (68%)]
+Validation: [624/888 (70%)]
+Validation: [640/888 (72%)]
+Validation: [656/888 (74%)]
+Validation: [672/888 (76%)]
+Validation: [688/888 (77%)]
+Validation: [704/888 (79%)]
+Validation: [720/888 (81%)]
+Validation: [736/888 (83%)]
+Validation: [752/888 (85%)]
+Validation: [768/888 (86%)]
+Validation: [784/888 (88%)]
+Validation: [800/888 (90%)]
+Validation: [816/888 (92%)]
+Validation: [832/888 (94%)]
+Validation: [848/888 (95%)]
+Validation: [864/888 (97%)]
+Validation: [880/888 (99%)]
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Train Epoch: 199 [0/2648 (0%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 199 [16/2648 (1%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [32/2648 (1%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [48/2648 (2%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [64/2648 (2%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [80/2648 (3%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [96/2648 (4%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [112/2648 (4%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [128/2648 (5%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 199 [144/2648 (5%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 199 [160/2648 (6%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 199 [176/2648 (7%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 199 [192/2648 (7%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [208/2648 (8%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 199 [224/2648 (8%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [240/2648 (9%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [256/2648 (10%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [272/2648 (10%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [288/2648 (11%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 199 [304/2648 (11%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 199 [320/2648 (12%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 199 [336/2648 (13%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 199 [352/2648 (13%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [368/2648 (14%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 199 [384/2648 (15%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 199 [400/2648 (15%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [416/2648 (16%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [432/2648 (16%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 199 [448/2648 (17%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 199 [464/2648 (18%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 199 [480/2648 (18%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [496/2648 (19%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [512/2648 (19%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [528/2648 (20%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [544/2648 (21%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 199 [560/2648 (21%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 199 [576/2648 (22%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 199 [592/2648 (22%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [608/2648 (23%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [624/2648 (24%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [640/2648 (24%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [656/2648 (25%)] loss: 0.0050 L_si: 0.0050 L_grad: 0.0000 
+Train Epoch: 199 [672/2648 (25%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [688/2648 (26%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 199 [704/2648 (27%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 199 [720/2648 (27%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [736/2648 (28%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [752/2648 (28%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 199 [768/2648 (29%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 199 [784/2648 (30%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 199 [800/2648 (30%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 199 [816/2648 (31%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 199 [832/2648 (31%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [848/2648 (32%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [864/2648 (33%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 199 [880/2648 (33%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 199 [896/2648 (34%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [912/2648 (34%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [928/2648 (35%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [944/2648 (36%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [960/2648 (36%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 199 [976/2648 (37%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [992/2648 (37%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [1008/2648 (38%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [1024/2648 (39%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [1040/2648 (39%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 199 [1056/2648 (40%)] loss: 0.0054 L_si: 0.0054 L_grad: 0.0000 
+Train Epoch: 199 [1072/2648 (40%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [1088/2648 (41%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [1104/2648 (42%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 199 [1120/2648 (42%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [1136/2648 (43%)] loss: 0.0080 L_si: 0.0080 L_grad: 0.0000 
+Train Epoch: 199 [1152/2648 (44%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [1168/2648 (44%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 199 [1184/2648 (45%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [1200/2648 (45%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 199 [1216/2648 (46%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [1232/2648 (47%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 199 [1248/2648 (47%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [1264/2648 (48%)] loss: 0.0080 L_si: 0.0080 L_grad: 0.0000 
+Train Epoch: 199 [1280/2648 (48%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [1296/2648 (49%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 199 [1312/2648 (50%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [1328/2648 (50%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [1344/2648 (51%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [1360/2648 (51%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 199 [1376/2648 (52%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 199 [1392/2648 (53%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 199 [1408/2648 (53%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [1424/2648 (54%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 199 [1440/2648 (54%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [1456/2648 (55%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 199 [1472/2648 (56%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [1488/2648 (56%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [1504/2648 (57%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 199 [1520/2648 (57%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [1536/2648 (58%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [1552/2648 (59%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 199 [1568/2648 (59%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 199 [1584/2648 (60%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 199 [1600/2648 (60%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [1616/2648 (61%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [1632/2648 (62%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [1648/2648 (62%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [1664/2648 (63%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 199 [1680/2648 (63%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 199 [1696/2648 (64%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [1712/2648 (65%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [1728/2648 (65%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 199 [1744/2648 (66%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [1760/2648 (66%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [1776/2648 (67%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 199 [1792/2648 (68%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [1808/2648 (68%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 199 [1824/2648 (69%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [1840/2648 (69%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [1856/2648 (70%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [1872/2648 (71%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 199 [1888/2648 (71%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 199 [1904/2648 (72%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 199 [1920/2648 (73%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [1936/2648 (73%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [1952/2648 (74%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 199 [1968/2648 (74%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 199 [1984/2648 (75%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2000/2648 (76%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [2016/2648 (76%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 199 [2032/2648 (77%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 199 [2048/2648 (77%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [2064/2648 (78%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [2080/2648 (79%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [2096/2648 (79%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [2112/2648 (80%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [2128/2648 (80%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [2144/2648 (81%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 199 [2160/2648 (82%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [2176/2648 (82%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 199 [2192/2648 (83%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 199 [2208/2648 (83%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [2224/2648 (84%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2240/2648 (85%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 199 [2256/2648 (85%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 199 [2272/2648 (86%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 199 [2288/2648 (86%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 199 [2304/2648 (87%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [2320/2648 (88%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 199 [2336/2648 (88%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [2352/2648 (89%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 199 [2368/2648 (89%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 199 [2384/2648 (90%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 199 [2400/2648 (91%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2416/2648 (91%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [2432/2648 (92%)] loss: 0.0054 L_si: 0.0054 L_grad: 0.0000 
+Train Epoch: 199 [2448/2648 (92%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 199 [2464/2648 (93%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [2480/2648 (94%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2496/2648 (94%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2512/2648 (95%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 199 [2528/2648 (95%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 199 [2544/2648 (96%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 199 [2560/2648 (97%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2576/2648 (97%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 199 [2592/2648 (98%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 199 [2608/2648 (98%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 199 [2624/2648 (99%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 199 [2640/2648 (100%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Validation: [0/888 (0%)]
+Validation: [16/888 (2%)]
+Validation: [32/888 (4%)]
+Validation: [48/888 (5%)]
+Validation: [64/888 (7%)]
+Validation: [80/888 (9%)]
+Validation: [96/888 (11%)]
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Validation: [112/888 (13%)]
+Validation: [128/888 (14%)]
+Validation: [144/888 (16%)]
+Validation: [160/888 (18%)]
+Validation: [176/888 (20%)]
+Validation: [192/888 (22%)]
+Validation: [208/888 (23%)]
+Validation: [224/888 (25%)]
+Validation: [240/888 (27%)]
+Validation: [256/888 (29%)]
+Validation: [272/888 (31%)]
+Validation: [288/888 (32%)]
+Validation: [304/888 (34%)]
+Validation: [320/888 (36%)]
+Validation: [336/888 (38%)]
+Validation: [352/888 (40%)]
+Validation: [368/888 (41%)]
+Validation: [384/888 (43%)]
+Validation: [400/888 (45%)]
+Validation: [416/888 (47%)]
+Validation: [432/888 (49%)]
+Validation: [448/888 (50%)]
+Validation: [464/888 (52%)]
+Validation: [480/888 (54%)]
+Validation: [496/888 (56%)]
+Validation: [512/888 (58%)]
+Validation: [528/888 (59%)]
+Validation: [544/888 (61%)]
+Validation: [560/888 (63%)]
+Validation: [576/888 (65%)]
+Validation: [592/888 (67%)]
+Validation: [608/888 (68%)]
+Validation: [624/888 (70%)]
+Validation: [640/888 (72%)]
+Validation: [656/888 (74%)]
+Validation: [672/888 (76%)]
+Validation: [688/888 (77%)]
+Validation: [704/888 (79%)]
+Validation: [720/888 (81%)]
+Validation: [736/888 (83%)]
+Validation: [752/888 (85%)]
+Validation: [768/888 (86%)]
+Validation: [784/888 (88%)]
+Validation: [800/888 (90%)]
+Validation: [816/888 (92%)]
+Validation: [832/888 (94%)]
+Validation: [848/888 (95%)]
+Validation: [864/888 (97%)]
+Validation: [880/888 (99%)]
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Train Epoch: 200 [0/2648 (0%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [16/2648 (1%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [32/2648 (1%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [48/2648 (2%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 200 [64/2648 (2%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 200 [80/2648 (3%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 200 [96/2648 (4%)] loss: 0.0051 L_si: 0.0051 L_grad: 0.0000 
+Train Epoch: 200 [112/2648 (4%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [128/2648 (5%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [144/2648 (5%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 200 [160/2648 (6%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 200 [176/2648 (7%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [192/2648 (7%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 200 [208/2648 (8%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 200 [224/2648 (8%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 200 [240/2648 (9%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [256/2648 (10%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [272/2648 (10%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 200 [288/2648 (11%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [304/2648 (11%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [320/2648 (12%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [336/2648 (13%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [352/2648 (13%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 200 [368/2648 (14%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [384/2648 (15%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [400/2648 (15%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 200 [416/2648 (16%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [432/2648 (16%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [448/2648 (17%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 200 [464/2648 (18%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [480/2648 (18%)] loss: 0.0081 L_si: 0.0081 L_grad: 0.0000 
+Train Epoch: 200 [496/2648 (19%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 200 [512/2648 (19%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [528/2648 (20%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [544/2648 (21%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 200 [560/2648 (21%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 200 [576/2648 (22%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [592/2648 (22%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [608/2648 (23%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [624/2648 (24%)] loss: 0.0061 L_si: 0.0061 L_grad: 0.0000 
+Train Epoch: 200 [640/2648 (24%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 200 [656/2648 (25%)] loss: 0.0050 L_si: 0.0050 L_grad: 0.0000 
+Train Epoch: 200 [672/2648 (25%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [688/2648 (26%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [704/2648 (27%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [720/2648 (27%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [736/2648 (28%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [752/2648 (28%)] loss: 0.0083 L_si: 0.0083 L_grad: 0.0000 
+Train Epoch: 200 [768/2648 (29%)] loss: 0.0056 L_si: 0.0056 L_grad: 0.0000 
+Train Epoch: 200 [784/2648 (30%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [800/2648 (30%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [816/2648 (31%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [832/2648 (31%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [848/2648 (32%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [864/2648 (33%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 200 [880/2648 (33%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 200 [896/2648 (34%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [912/2648 (34%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [928/2648 (35%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [944/2648 (36%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [960/2648 (36%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [976/2648 (37%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [992/2648 (37%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [1008/2648 (38%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [1024/2648 (39%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [1040/2648 (39%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 200 [1056/2648 (40%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 200 [1072/2648 (40%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1088/2648 (41%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [1104/2648 (42%)] loss: 0.0057 L_si: 0.0057 L_grad: 0.0000 
+Train Epoch: 200 [1120/2648 (42%)] loss: 0.0080 L_si: 0.0080 L_grad: 0.0000 
+Train Epoch: 200 [1136/2648 (43%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [1152/2648 (44%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 200 [1168/2648 (44%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [1184/2648 (45%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [1200/2648 (45%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [1216/2648 (46%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 200 [1232/2648 (47%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [1248/2648 (47%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 200 [1264/2648 (48%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [1280/2648 (48%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 200 [1296/2648 (49%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1312/2648 (50%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [1328/2648 (50%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 200 [1344/2648 (51%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [1360/2648 (51%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [1376/2648 (52%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [1392/2648 (53%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [1408/2648 (53%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1424/2648 (54%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [1440/2648 (54%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1456/2648 (55%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [1472/2648 (56%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 200 [1488/2648 (56%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 200 [1504/2648 (57%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [1520/2648 (57%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [1536/2648 (58%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Train Epoch: 200 [1552/2648 (59%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [1568/2648 (59%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 200 [1584/2648 (60%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [1600/2648 (60%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [1616/2648 (61%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [1632/2648 (62%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 200 [1648/2648 (62%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [1664/2648 (63%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1680/2648 (63%)] loss: 0.0079 L_si: 0.0079 L_grad: 0.0000 
+Train Epoch: 200 [1696/2648 (64%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [1712/2648 (65%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [1728/2648 (65%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [1744/2648 (66%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 200 [1760/2648 (66%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [1776/2648 (67%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [1792/2648 (68%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 200 [1808/2648 (68%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [1824/2648 (69%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 200 [1840/2648 (69%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1856/2648 (70%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 200 [1872/2648 (71%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [1888/2648 (71%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [1904/2648 (72%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [1920/2648 (73%)] loss: 0.0076 L_si: 0.0076 L_grad: 0.0000 
+Train Epoch: 200 [1936/2648 (73%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [1952/2648 (74%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 200 [1968/2648 (74%)] loss: 0.0074 L_si: 0.0074 L_grad: 0.0000 
+Train Epoch: 200 [1984/2648 (75%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [2000/2648 (76%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [2016/2648 (76%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [2032/2648 (77%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [2048/2648 (77%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 200 [2064/2648 (78%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [2080/2648 (79%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 200 [2096/2648 (79%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [2112/2648 (80%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [2128/2648 (80%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [2144/2648 (81%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [2160/2648 (82%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 200 [2176/2648 (82%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [2192/2648 (83%)] loss: 0.0064 L_si: 0.0064 L_grad: 0.0000 
+Train Epoch: 200 [2208/2648 (83%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 200 [2224/2648 (84%)] loss: 0.0071 L_si: 0.0071 L_grad: 0.0000 
+Train Epoch: 200 [2240/2648 (85%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+Train Epoch: 200 [2256/2648 (85%)] loss: 0.0066 L_si: 0.0066 L_grad: 0.0000 
+Train Epoch: 200 [2272/2648 (86%)] loss: 0.0055 L_si: 0.0055 L_grad: 0.0000 
+Train Epoch: 200 [2288/2648 (86%)] loss: 0.0063 L_si: 0.0063 L_grad: 0.0000 
+Train Epoch: 200 [2304/2648 (87%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [2320/2648 (88%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [2336/2648 (88%)] loss: 0.0065 L_si: 0.0065 L_grad: 0.0000 
+Train Epoch: 200 [2352/2648 (89%)] loss: 0.0059 L_si: 0.0059 L_grad: 0.0000 
+Train Epoch: 200 [2368/2648 (89%)] loss: 0.0068 L_si: 0.0068 L_grad: 0.0000 
+Train Epoch: 200 [2384/2648 (90%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [2400/2648 (91%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 200 [2416/2648 (91%)] loss: 0.0069 L_si: 0.0069 L_grad: 0.0000 
+Train Epoch: 200 [2432/2648 (92%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 200 [2448/2648 (92%)] loss: 0.0060 L_si: 0.0060 L_grad: 0.0000 
+Train Epoch: 200 [2464/2648 (93%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [2480/2648 (94%)] loss: 0.0058 L_si: 0.0058 L_grad: 0.0000 
+Train Epoch: 200 [2496/2648 (94%)] loss: 0.0077 L_si: 0.0077 L_grad: 0.0000 
+Train Epoch: 200 [2512/2648 (95%)] loss: 0.0072 L_si: 0.0072 L_grad: 0.0000 
+Train Epoch: 200 [2528/2648 (95%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 200 [2544/2648 (96%)] loss: 0.0062 L_si: 0.0062 L_grad: 0.0000 
+Train Epoch: 200 [2560/2648 (97%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [2576/2648 (97%)] loss: 0.0067 L_si: 0.0067 L_grad: 0.0000 
+Train Epoch: 200 [2592/2648 (98%)] loss: 0.0078 L_si: 0.0078 L_grad: 0.0000 
+Train Epoch: 200 [2608/2648 (98%)] loss: 0.0075 L_si: 0.0075 L_grad: 0.0000 
+Train Epoch: 200 [2624/2648 (99%)] loss: 0.0070 L_si: 0.0070 L_grad: 0.0000 
+Train Epoch: 200 [2640/2648 (100%)] loss: 0.0073 L_si: 0.0073 L_grad: 0.0000 
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:208: UserWarning: The parameter 'pretrained' is deprecated since 0.13 and will be removed in 0.15, please use 'weights' instead.
+  warnings.warn(
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torchvision/models/_utils.py:223: UserWarning: Arguments other than a weight enum or `None` for 'weights' are deprecated since 0.13 and will be removed in 0.15. The current behavior is equivalent to passing `weights=VGG16_Weights.IMAGENET1K_V1`. You can also use `weights=VGG16_Weights.DEFAULT` to get the most up-to-date weights.
+  warnings.warn(msg)
+Validation: [0/888 (0%)]
+Validation: [16/888 (2%)]
+Validation: [32/888 (4%)]
+Validation: [48/888 (5%)]
+[W CudaIPCTypes.cpp:92] Producer process tried to deallocate over 1000 memory blocks referred by consumer processes. Deallocation might be significantly slowed down. We assume it will never going to be the case, but if it is, please file but to https://github.com/pytorch/pytorch
+Validation: [64/888 (7%)]
+Validation: [80/888 (9%)]
+Validation: [96/888 (11%)]
+Validation: [112/888 (13%)]
+Validation: [128/888 (14%)]
+Validation: [144/888 (16%)]
+Validation: [160/888 (18%)]
+Validation: [176/888 (20%)]
+Validation: [192/888 (22%)]
+Validation: [208/888 (23%)]
+Validation: [224/888 (25%)]
+Validation: [240/888 (27%)]
+Validation: [256/888 (29%)]
+Validation: [272/888 (31%)]
+Validation: [288/888 (32%)]
+Validation: [304/888 (34%)]
+Validation: [320/888 (36%)]
+Validation: [336/888 (38%)]
+Validation: [352/888 (40%)]
+Validation: [368/888 (41%)]
+Validation: [384/888 (43%)]
+Validation: [400/888 (45%)]
+Validation: [416/888 (47%)]
+Validation: [432/888 (49%)]
+Validation: [448/888 (50%)]
+Validation: [464/888 (52%)]
+Validation: [480/888 (54%)]
+Validation: [496/888 (56%)]
+Validation: [512/888 (58%)]
+Validation: [528/888 (59%)]
+Validation: [544/888 (61%)]
+Validation: [560/888 (63%)]
+Validation: [576/888 (65%)]
+Validation: [592/888 (67%)]
+Validation: [608/888 (68%)]
+Validation: [624/888 (70%)]
+Validation: [640/888 (72%)]
+Validation: [656/888 (74%)]
+Validation: [672/888 (76%)]
+Validation: [688/888 (77%)]
+Validation: [704/888 (79%)]
+Validation: [720/888 (81%)]
+Validation: [736/888 (83%)]
+Validation: [752/888 (85%)]
+Validation: [768/888 (86%)]
+Validation: [784/888 (88%)]
+Validation: [800/888 (90%)]
+Validation: [816/888 (92%)]
+Validation: [832/888 (94%)]
+Validation: [848/888 (95%)]
+Validation: [864/888 (97%)]
+Validation: [880/888 (99%)]
+[W CudaIPCTypes.cpp:15] Producer process has been terminated before all shared CUDA tensors released. See Note [Sharing CUDA tensors]
+Saving checkpoint: saved/1026_sparse_v2_rotated_0_75_2_0/example_psf/checkpoint-epoch200-loss-0.0068.pth.tar ...
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:156: UserWarning: The epoch parameter in `scheduler.step()` was not necessary and is being deprecated where possible. Please use `scheduler.step()` to step the scheduler. During the deprecation, if epoch is different from None, the closed form is used instead of the new chainable form, where available. Please open an issue if you are unable to replicate your use case: https://github.com/pytorch/pytorch/issues/new/choose.
+  warnings.warn(EPOCH_DEPRECATION_WARNING, UserWarning)
+/home/yl3836/.conda/envs/mevent/lib/python3.9/site-packages/torch/optim/lr_scheduler.py:574: UserWarning: To get the last learning rate computed by the scheduler, please use `get_last_lr()`.
+  warnings.warn("To get the last learning rate computed by the scheduler, "
+New Learning Rate: 0.000100
