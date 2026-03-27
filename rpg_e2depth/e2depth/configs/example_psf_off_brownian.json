@@ -62,7 +62,7 @@
     "trainer": {
         "epochs": 200,
         "sequence_length": 20,
-        "save_dir": "saved/1028_sparse_v2_one_point_complete_delta",
+        "save_dir": "saved/0310_sparse_v2_one_point_complete_delta",
         "save_freq": 4,
         "verbosity": 2,
         "monitor": "val_loss",

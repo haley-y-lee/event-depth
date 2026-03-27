@@ -10,18 +10,17 @@ from utils import Upsampler
 
 def get_flags():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input_dir", required=True)
-    parser.add_argument("--output_dir", required=True)
-    parser.add_argument("--timestamps_file", required=True, help="Path to reference timestamps.txt")
-    return parser.parse_args()
-
+    parser.add_argument("--input_dir", required=True, help='Path to input directory. See README.md for expected structure of the directory.')
+    parser.add_argument("--output_dir", required=True, help='Path to non-existing output directory. This script will generate the directory.')
+    args = parser.parse_args()
+    return args
 
 
 def main():
     flags = get_flags()
-    upsampler = Upsampler(flags.input_dir, flags.output_dir, flags.timestamps_file)
-    upsampler.upsample()
 
+    upsampler = Upsampler(input_dir=flags.input_dir, output_dir=flags.output_dir)
+    upsampler.upsample()
 
 
 if __name__ == '__main__':
