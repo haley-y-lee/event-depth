@@ -14,19 +14,16 @@ from .utils import get_sequence_or_none
 class Upsampler:
     _timestamps_filename = 'timestamps.txt'
 
-    def __init__(self, input_dir: str, output_dir: str, timestamps_file : str):
+    def __init__(self, input_dir: str, output_dir: str):
         assert os.path.isdir(input_dir), 'The input directory must exist'
         assert not os.path.exists(output_dir), 'The output directory must not exist'
 
         self._prepare_output_dir(input_dir, output_dir)
         self.src_dir = input_dir
         self.dest_dir = output_dir
-#         path = os.path.join(os.path.dirname(__file__), " /home/yl3836/mono_event/rpg_vid2e/pretrained_models/film_net/Style/saved_model")
+
         path = os.path.join(os.path.dirname(__file__), "../../pretrained_models/film_net/Style/saved_model")
         self.interpolator = Interpolator(path, None)
-
-        with open(timestamps_file, 'r') as f:
-            self.reference_timestamps = [float(line.strip()) for line in f.readlines()]
 
     def upsample(self):
         sequence_counter = 0
@@ -41,121 +38,34 @@ class Upsampler:
             dest_timestamps_filepath = os.path.join(self.dest_dir, reldirpath, self._timestamps_filename)
             self.upsample_sequence(sequence, dest_imgs_dir, dest_timestamps_filepath)
 
-    # def upsample_sequence(self, sequence: Sequence, dest_imgs_dir: str, dest_timestamps_filepath: str):
-    #     os.makedirs(dest_imgs_dir, exist_ok=True)
-    #     timestamps_list = list()
-
-    #     idx = 0
-    #     for img_pair, time_pair in tqdm(next(sequence), total=len(sequence), desc=type(sequence).__name__):
-    #         I0 = img_pair[0][None]
-    #         I1 = img_pair[1][None]
-    #         t0, t1 = time_pair
-
-    #         total_frames, total_timestamps = self._upsample_adaptive(I0, I1, t0, t1)
-    #         total_frames = [I0[0]] + total_frames
-    #         timestamps = [t0] + total_timestamps
-
-    #         sorted_indices = np.argsort(timestamps)
-    #         total_frames = [total_frames[j] for j in sorted_indices]
-    #         timestamps = [timestamps[i] for i in sorted_indices]
-
-    #         timestamps_list += timestamps
-    #         for frame in total_frames:
-    #             # breakpoint()
-    #             frame = frame[:260, :346]   # crop back to original size
-    #             self._write_img(frame, idx, dest_imgs_dir)
-    #             idx += 1
-
-    #     # TODO CROP IMAGE BACK TO ORIGINAL DIMENSION
-    #     # breakpoint()
-
-    #     timestamps_list.append(t1)
-    #     # self._write_img(I1[0, ...], idx, dest_imgs_dir)
-    #     self._write_img(I1[0, ...][:260, :346], idx, dest_imgs_dir)       # crop back to original size
-    #     self._write_timestamps(timestamps_list, dest_timestamps_filepath)
-
     def upsample_sequence(self, sequence: Sequence, dest_imgs_dir: str, dest_timestamps_filepath: str):
         os.makedirs(dest_imgs_dir, exist_ok=True)
-        reference_ts = self.reference_timestamps
-        timestamps_list = []
+        timestamps_list = list()
+
         idx = 0
+        for img_pair, time_pair in tqdm(next(sequence), total=len(sequence), desc=type(sequence).__name__):
+            I0 = img_pair[0][None]
+            I1 = img_pair[1][None]
+            t0, t1 = time_pair
 
-        # 전체 프레임 쌍과 타임스탬프 쌍 얻기
-        frames, time_pairs = sequence.get_all_pairs()
+            total_frames, total_timestamps = self._upsample_adaptive(I0, I1, t0, t1)
+            total_frames = [I0[0]] + total_frames
+            timestamps = [t0] + total_timestamps
 
-        for t in reference_ts:
-            for (img_pair, (t0, t1)) in zip(frames, time_pairs):
-                if t0 <= t <= t1:
-                    I0 = img_pair[0][None]
-                    I1 = img_pair[1][None]
+            sorted_indices = np.argsort(timestamps)
+            total_frames = [total_frames[j] for j in sorted_indices]
+            timestamps = [timestamps[i] for i in sorted_indices]
 
-                    # Grayscale → RGB 변환
-                    if I0.shape[-1] == 1:
-                        I0 = np.repeat(I0, 3, axis=-1)
-                    if I1.shape[-1] == 1:
-                        I1 = np.repeat(I1, 3, axis=-1)
+            timestamps_list += timestamps
+            for frame in total_frames:
+                self._write_img(frame, idx, dest_imgs_dir)
+                idx += 1
 
-                    # t가 정확히 경계에 있는 경우 예외 처리
-                    if t == t0:
-                        img = I0
-                    elif t == t1:
-                        img = I1
-                    else:
-                        dt = np.array([(t - t0) / (t1 - t0)], dtype=np.float32)
-                        img, _, _ = self.interpolator.interpolate(I0, I1, dt)
-
-                    self._write_img(img[0, :260, :346], idx, dest_imgs_dir)
-                    timestamps_list.append(t)
-                    idx += 1
-                    break
-
+        timestamps_list.append(t1)
+        self._write_img(I1[0, ...], idx, dest_imgs_dir)
         self._write_timestamps(timestamps_list, dest_timestamps_filepath)
 
-
-
-
-
-    # def upsample_sequence(self, sequence: Sequence, dest_imgs_dir: str, dest_timestamps_filepath: str):
-    #     os.makedirs(dest_imgs_dir, exist_ok=True)
-    #     timestamps_list = []
-    #     idx = 0
-    #     reference_ts = self.reference_timestamps
-
-    #     for img_pair, time_pair in tqdm(next(sequence), total=len(sequence), desc=type(sequence).__name__):
-    #         I0 = img_pair[0][None]
-    #         I1 = img_pair[1][None]
-    #         t0, t1 = time_pair
-
-    #         # Grayscale → RGB 변환
-    #         if I0.shape[-1] == 1:
-    #             I0 = np.repeat(I0, 3, axis=-1)
-    #         if I1.shape[-1] == 1:
-    #             I1 = np.repeat(I1, 3, axis=-1)
-
-    #         # 이 프레임 쌍에 해당하는 보간 타임스탬프만 추출
-    #         segment_ts = [t for t in reference_ts if t0 < t < t1]
-
-    #         # 첫 번째 프레임 저장
-    #         timestamps_list.append(t0)
-    #         self._write_img(I0[0, :260, :346], idx, dest_imgs_dir)
-    #         idx += 1
-
-    #         for t in segment_ts:
-    #             dt = np.array([(t - t0) / (t1 - t0)], dtype=np.float32)
-    #             img, _, _ = self.interpolator.interpolate(I0, I1, dt)
-    #             timestamps_list.append(t)
-    #             self._write_img(img[0, :260, :346], idx, dest_imgs_dir)
-    #             idx += 1
-
-    #     # 마지막 프레임 저장
-    #     timestamps_list.append(t1)
-    #     self._write_img(I1[0, :260, :346], idx, dest_imgs_dir)
-
-    #     self._write_timestamps(timestamps_list, dest_timestamps_filepath)
-
-
     def _upsample_adaptive(self, I0, I1, t0, t1, num_bisections=-1):
-        # breakpoint()
         if num_bisections == 0:
             return [], []
 
