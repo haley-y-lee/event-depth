@@ -5,21 +5,21 @@ from PIL import ImageFile
 ImageFile.LOAD_TRUNCATED_IMAGES = True
 os.environ['CUDA_DEVICE_ORDER'] = 'PCI_BUS_ID'
 
-from utils import Upsampler
+from utils.upsampler_depth import Upsampler
 
 
 def get_flags():
     parser = argparse.ArgumentParser()
     parser.add_argument("--input_dir", required=True)
     parser.add_argument("--output_dir", required=True)
-    #parser.add_argument("--timestamps_file", required=True, help="Path to reference timestamps.txt")
+    parser.add_argument("--timestamps_file", required=True, help="Path to reference timestamps.txt")
     return parser.parse_args()
 
 
 
 def main():
     flags = get_flags()
-    upsampler = Upsampler(flags.input_dir, flags.output_dir)
+    upsampler = Upsampler(flags.input_dir, flags.output_dir, flags.timestamps_file)
     upsampler.upsample()
 
 
