@@ -6,7 +6,7 @@ import numpy as np
 from tqdm import tqdm
 
 from . import Sequence
-from .const import imgs_dirname
+from .const import imgs_dirname, imgs_name
 from .interpolator import Interpolator
 from .utils import get_sequence_or_none
 
@@ -16,7 +16,6 @@ class Upsampler:
 
     def __init__(self, input_dir: str, output_dir: str, timestamps_file : str):
         assert os.path.isdir(input_dir), 'The input directory must exist'
-        assert not os.path.exists(output_dir), 'The output directory must not exist'
 
         self._prepare_output_dir(input_dir, output_dir)
         self.src_dir = input_dir
@@ -31,13 +30,13 @@ class Upsampler:
     def upsample(self):
         sequence_counter = 0
         for src_absdirpath, dirnames, filenames in os.walk(self.src_dir):
-            sequence = get_sequence_or_none(src_absdirpath)
+            sequence = get_sequence_or_none(src_absdirpath, dirname=imgs_name)
             if sequence is None:
                 continue
             sequence_counter += 1
             print('Processing sequence number {}'.format(src_absdirpath))
             reldirpath = os.path.relpath(src_absdirpath, self.src_dir)
-            dest_imgs_dir = os.path.join(self.dest_dir, reldirpath, imgs_dirname)
+            dest_imgs_dir = os.path.join(self.dest_dir, reldirpath, imgs_name)
             dest_timestamps_filepath = os.path.join(self.dest_dir, reldirpath, self._timestamps_filename)
             self.upsample_sequence(sequence, dest_imgs_dir, dest_timestamps_filepath)
 
@@ -83,7 +82,7 @@ class Upsampler:
         # 전체 프레임 쌍과 타임스탬프 쌍 얻기
         frames, time_pairs = sequence.get_all_pairs()
 
-        for t in reference_ts:
+        for t in tqdm(reference_ts, desc="Upsampling Depth"):
             for (img_pair, (t0, t1)) in zip(frames, time_pairs):
                 if t0 <= t <= t1:
                     I0 = img_pair[0][None]
@@ -181,7 +180,7 @@ class Upsampler:
         # Copy directory structure.
         def ignore_files(directory, files):
             return [f for f in files if os.path.isfile(os.path.join(directory, f))]
-        shutil.copytree(src_dir, dest_dir, ignore=ignore_files)
+        shutil.copytree(src_dir, dest_dir, ignore=ignore_files, dirs_exist_ok=True)
 
     @staticmethod
     def _write_img(img: np.ndarray, idx: int, imgs_dir: str):

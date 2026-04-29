@@ -14,8 +14,8 @@ def get_fps_file(dirpath: str) -> Union[None, str]:
         return fps_file
     return None
 
-def get_imgs_directory(dirpath: str) -> Union[None, str]:
-    imgs_dir = os.path.join(dirpath, imgs_dirname)
+def get_imgs_directory(dirpath: str, dirname: str = imgs_dirname) -> Union[None, str]:
+    imgs_dir = os.path.join(dirpath, dirname)
     if os.path.isdir(imgs_dir):
         return imgs_dir
     return None
@@ -35,12 +35,12 @@ def fps_from_file(fps_file) -> float:
     assert fps > 0, 'Expected fps to be larger than 0. Instead got fps={}'.format(fps)
     return fps
 
-def get_sequence_or_none(dirpath: str) -> Union[None, Sequence]:
+def get_sequence_or_none(dirpath: str, dirname: str = imgs_dirname) -> Union[None, Sequence]:
     fps_file = get_fps_file(dirpath)
     if fps_file:
         # Must be a sequence (either ImageSequence or VideoSequence)
         fps = fps_from_file(fps_file)
-        imgs_dir = get_imgs_directory(dirpath)
+        imgs_dir = get_imgs_directory(dirpath, dirname)
         if imgs_dir:
             return ImageSequence(imgs_dir, fps)
         video_file = get_video_file(dirpath)
