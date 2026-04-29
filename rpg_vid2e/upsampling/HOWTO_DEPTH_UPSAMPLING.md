@@ -27,8 +27,8 @@ device=0
 # device=cpu
 
 CUDA_VISIBLE_DEVICES=$device python upsample.py \
-    --input_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse/test_seed_210_rgb \
-    --output_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210_rgb
+    --input_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse/test_seed_210 \
+    --output_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210
 ```
 
 ## Step 2: Upsample the Depth Maps
@@ -39,9 +39,9 @@ Once the RGB frames have been upsampled, you use the newly generated `timestamps
 CUDA_VISIBLE_DEVICES=$device python upsample_depth.py \
     --input_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse/test_seed_210 \
     --output_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210 \
-    --timestamps_file /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210_rgb/timestamps.txt
+    --timestamps_file /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210/timestamps.txt
 ```
-*(Note: Ensure the `--timestamps_file` points to the `timestamps.txt` created in Step 1 inside the `_rgb` output directory).*
+*(Note: Ensure the `--timestamps_file` points to the `timestamps.txt` created in Step 1 inside the upsampled output directory).*
 
 ## Directory Structures
 
