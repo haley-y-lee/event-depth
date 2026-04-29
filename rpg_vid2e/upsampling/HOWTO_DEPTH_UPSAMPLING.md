@@ -48,32 +48,30 @@ CUDA_VISIBLE_DEVICES=$device python upsample_depth.py \
 **Expected Input Directory Structure:**
 ```text
 /share/monakhova/depthpsf_simul/square_dataset/test_sparse/
-├── test_seed_210_rgb
-│   └── frames
+├── test_seed_210
+│   ├── frames
+│   │   ├── 00000001.png
+│   │   ├── 00000002.png
+│   │   └── ...
+│   └── imgs
 │       ├── 00000001.png
 │       ├── 00000002.png
 │       └── ...
-└── test_seed_210
-    └── imgs
-        ├── 00000001.png
-        ├── 00000002.png
-        └── ...
 ```
 
 **Resulting Output Directory Structure:**
 ```text
 /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/
-├── test_seed_210_rgb
+├── test_seed_210
 │   ├── frames
 │   │   ├── 00000001.png
 │   │   ├── 00000002.png
 │   │   └── ...
 │   └── timestamps.txt
-└── test_seed_210
-    └── imgs
-        ├── 00000001.png
-        ├── 00000002.png
-        └── ...
+└── imgs
+    ├── 00000001.png
+    ├── 00000002.png
+    └── ...
 ```
 
 The upsampled `frames/` and `imgs/` directories will contain a larger, identical number of files, corresponding exactly one-to-one with the number of timestamps in the generated `timestamps.txt` file.
