@@ -31,6 +31,20 @@ CUDA_VISIBLE_DEVICES=$device python upsample.py \
     --output_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210
 ```
 
+
+```bash
+cd /home/sp2577/computational_imaging/event-depth/rpg_vid2e/upsampling && \
+CUDA_VISIBLE_DEVICES=0 python upsample.py \
+    --input_dir /share/monakhova/depthpsf_simul/complex_dataset/complex_1 \
+    --output_dir /share/monakhova/depthpsf_simul/complex_dataset/complex_1_upsampled
+```
+```bash
+CUDA_VISIBLE_DEVICES=0 python upsample_depth.py \
+    --input_dir /share/monakhova/depthpsf_simul/complex_dataset/complex_1 \
+    --output_dir /share/monakhova/depthpsf_simul/complex_dataset/complex_1_upsampled \
+    --timestamps_file /share/monakhova/depthpsf_simul/complex_dataset/complex_1_upsampled/timestamps.txt
+```
+
 ## Step 2: Upsample the Depth Maps
 
 Once the RGB frames have been upsampled, you use the newly generated `timestamps.txt` file to upsample the depth maps. This ensures the depth sequence matches the RGB sequence perfectly on a frame-by-frame basis.
