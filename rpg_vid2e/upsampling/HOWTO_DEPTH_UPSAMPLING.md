@@ -55,6 +55,13 @@ CUDA_VISIBLE_DEVICES=$device python upsample_depth.py \
     --output_dir /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210 \
     --timestamps_file /share/monakhova/depthpsf_simul/square_dataset/test_sparse_upsampled/test_seed_210/timestamps.txt
 ```
+```bash
+CUDA_VISIBLE_DEVICES=0 python upsample_depth.py \
+    --input_dir /share/monakhova/depthpsf_simul/complex_dataset/complex_1 \
+    --output_dir /share/monakhova/depthpsf_simul/complex_dataset/complex_1_upsampled \
+    --timestamps_file /share/monakhova/depthpsf_simul/complex_dataset/complex_1_upsampled/timestamps.txt
+```
+
 *(Note: Ensure the `--timestamps_file` points to the `timestamps.txt` created in Step 1 inside the upsampled output directory).*
 
 ## Directory Structures
